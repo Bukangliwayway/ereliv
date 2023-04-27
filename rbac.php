@@ -3,15 +3,7 @@
 <html>
   <head>
     <title>PUPQC e-ReLiv</title>
-    <link
-      rel="stylesheet"
-      href="https://meyerweb.com/eric/tools/css/reset/reset.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css"
-    />
-    <link rel="stylesheet" href="styles/welcome-page.css" />
+   
     <link rel="stylesheet" href="styles/main.css" />
   </head>
   <!--Elements that are not visible on the page-->
