@@ -2,7 +2,7 @@
 <!--This tells the browser to use an updated version of html-->
 <html>
   <head>
-    <title>PUPQC e-ReLiv</title>
+    <title>PUPQC Research Management System</title>
    
     <link rel="stylesheet" href="styles/main.css" />
   </head>

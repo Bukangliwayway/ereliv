@@ -10,7 +10,7 @@ CREATE TABLE Students (
   Approver INT,
   DateRegistered DATE NOT NULL DEFAULT CURRENT_DATE,
   DateApproved DATE,
-  CONSTRAINT fk_approver FOREIGN KEY (Approver) REFERENCES Faculty(AcademicStaffID),
+  CONSTRAINT fk_approver FOREIGN KEY (Approver) REFERENCES Staff(AcademicStaffID),
   INDEX(StudentNumber),
   UNIQUE(StudentNumber),
   UNIQUE(EmailAddress)
