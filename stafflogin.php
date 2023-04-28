@@ -49,25 +49,28 @@
             />
             <label for="username" class="form-label">Username</label>
           </div>
-          <div class="form-floating mb-3">
-            <input
-              type="password"
-              minlength="8"
-              maxlength="20"
-              class="form-control"
-              id="password"
-              name="password"
-              placeholder="Must be 8-20 long"
-              required
-            />
-            <label for="password" class="form-label">Password</label>
+           <div class="input-group mb-3">
+            <div class="form-floating">
+              <input type="password" minlength="8" maxlength="20"
+              class="form-control" id="password" name="password"
+              placeholder="Must be 8-20 long" required">
+              <label for="password" class="form-label">Password</label>
+            </div>
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="toggle-password"
+              onclick="togglePasswordVisibility()"
+            >
+              <i class="bi bi-eye" id="icon-password"></i>
+            </button>
           </div>
           <button type="submit" class="btn btn-primary">Sign In</button>
         </form>
         <a
           href="#"
           id="forgot-pass"
-          class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+          class="link-danger link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover"
         >
           <b>🗝️ I forgot my password</b>
         </a>
@@ -86,3 +89,5 @@
     </div>
   </body>
 </html>
+
+<script src="scripts/main.js"></script>

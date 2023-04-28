@@ -11,6 +11,11 @@
       integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
       crossorigin="anonymous"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css"
+    />
+
     <link rel="stylesheet" href="styles/main.css" />
   </head>
   <body>
@@ -95,25 +100,27 @@
               placeholder="Select Section"
               required
             >
-              <option value="BSIT 3-1"></option>
               <option value="BSIT 3-1">BSIT 3-1</option>
               <option value="BSIT 3-2">BSIT 3-2</option>
               <option value="BSIT 4-1">BSIT 4-1</option>
             </select>
             <label for="section" class="form-label">Section:</label>
           </div>
-          <div class="form-floating mb-3">
-            <input
-              type="password"
-              minlength="8"
-              maxlength="20"
-              class="form-control"
-              id="password"
-              name="password"
-              placeholder="Must be 8-20 long"
-              required
-            />
-            <label for="password" class="form-label">Password</label>
+          <div class="input-group mb-3">
+            <div class="form-floating">
+              <input type="password" minlength="8" maxlength="20"
+              class="form-control" id="password" name="password"
+              placeholder="Must be 8-20 long" required">
+              <label for="password" class="form-label">Password</label>
+            </div>
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="toggle-password"
+              onclick="togglePasswordVisibility()"
+            >
+              <i class="bi bi-eye" id="icon-password"></i>
+            </button>
           </div>
           <button type="submit" class="btn btn-primary">Register</button>
         </form>
@@ -139,3 +146,5 @@
     </div>
   </body>
 </html>
+
+<script src="scripts/main.js"></script>

@@ -60,7 +60,6 @@
               placeholder="Select Section"
               required
             >
-              <option value="BSIT 3-1"></option>
               <option value="BSIT 3-1">BSIT 3-1</option>
               <option value="BSIT 3-2">BSIT 3-2</option>
               <option value="BSIT 4-1">BSIT 4-1</option>
@@ -82,13 +81,22 @@
           </div>
           <button type="submit" class="btn btn-primary">Sign In</button>
         </form>
+        <div class="container d-flex gap-3 justify-content-center">
+          <a
+          href="studregis.php"
+          id="register"
+          class="link-danger link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover fs-6 text-capitalize"
+          >
+          <b>I Don't Have an Account</b>
+        </a>
         <a
-          href="#"
+        href="#"
           id="forgot-pass"
-          class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
-        >
+          class="link-danger link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover text-capitalize"
+          >
           <b>🗝️ I forgot my password</b>
         </a>
+      </div>
         <p class="fw-light">
           By using this service, you understood and agree to the PUP Online
           Services
