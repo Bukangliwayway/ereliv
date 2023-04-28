@@ -11,6 +11,10 @@
       integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
       crossorigin="anonymous"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css"
+    />
     <link rel="stylesheet" href="styles/main.css" />
   </head>
   <body>
@@ -68,7 +72,7 @@
           <button type="submit" class="btn btn-primary">Sign In</button>
         </form>
         <a
-          href="#"
+          href="forgotpass.php"
           id="forgot-pass"
           class="link-danger link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover"
         >

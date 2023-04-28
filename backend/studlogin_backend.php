@@ -12,6 +12,6 @@ send_message_and_redirect("There is no ".$student_number." in the system.", "/er
 if(!verified_student($conn, $student_number, $section, $password))
 send_message_and_redirect("Wrong Credentials", "/ereliv/studlogin.php");
 
-header("Location: /ereliv/success.php");
+header("Location: /ereliv/users/StudentPage/studentdashboard.php");
 
 ?>

@@ -85,6 +85,16 @@ function verified_student($conn, $student_number, $section, $password) {
   return ($row['Section'] === $section && password_verify($password, $row['Password']));
 }
 
+function verified_staff($conn, $username, $password) {
+  // Prepare the SQL statement to search for a matching student number
+  $stmt = $conn->prepare("SELECT Password FROM Staff WHERE UserName = :username");
+  $stmt->bindParam(':username', $username);
+  $stmt->execute();
+  // Fetch the row from the result set
+  $row = $stmt->fetch(PDO::FETCH_ASSOC);
+  return password_verify($password, $row['Password']);
+}
+
 
 
 ?>

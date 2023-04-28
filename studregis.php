@@ -125,11 +125,11 @@
           <button type="submit" class="btn btn-primary">Register</button>
         </form>
         <a
-          href="#"
-          id="forgot-pass"
+          href="studlogin.php"
+          id="back-to-login"
           class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
         >
-          <b>🗝️ I forgot my password</b>
+          <b class="text-capitalize">Sign In Instead</b>
         </a>
         <p class="fw-light">
           By using this service, you understood and agree to the PUP Online

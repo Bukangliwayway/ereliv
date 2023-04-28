@@ -1,7 +1,7 @@
-CREATE TABLE Faculty (
+CREATE TABLE Staff (
     AcademicStaffID int PRIMARY KEY AUTO_INCREMENT,
     UserName varchar(50) NOT NULL,
-    Password varchar(50) NOT NULL,
+    Password VARCHAR(60) NOT NULL,
     ContactNumber varchar(20) NOT NULL,
     EmailAddress varchar(50) NOT NULL,
     FirstName varchar(50) NOT NULL,
