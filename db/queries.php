@@ -95,7 +95,9 @@ function verified_staff($conn, $username, $password) {
   return password_verify($password, $row['Password']);
 }
 
-
+function generateCode(){
+  return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(10/strlen($x)) )),1,10);
+}
 
 ?>
 
