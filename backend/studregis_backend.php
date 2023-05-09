@@ -14,7 +14,7 @@ if (studentNumberCheck($conn, $student_number)) {
   send_message_and_redirect("Student number is already in use", "/ereliv/studregis.php");
 }
 
-if (emailAddressCheck($conn, $email)) {
+if (emailAddressCheck($conn, $email, 'Student')) {
   send_message_and_redirect("Email is already in use", "/ereliv/studregis.php");
 } 
 

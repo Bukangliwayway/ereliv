@@ -7,7 +7,7 @@ CREATE TABLE Faculty (
   status ENUM('Active', 'Inactive') NOT NULL DEFAULT 'Active',
   dateregistered DATE NOT NULL DEFAULT CURRENT_DATE,
   code VARCHAR(255),
-  category ENUM('Manager', 'Faculty') NOT NULL
+  category ENUM('Supervisor', 'Advisor') NOT NULL DEFAULT 'Advisor'
 );
 
 CREATE TABLE Student (
@@ -19,7 +19,7 @@ CREATE TABLE Student (
   emailadd VARCHAR(255) UNIQUE NOT NULL,
   firstname VARCHAR(255) NOT NULL,
   lastname VARCHAR(255) NOT NULL,
-  status ENUM('Active', 'Inactive') NOT NULL,
+  status ENUM('Active', 'Inactive') NOT NULL DEFAULT 'Inactive',
   advisor INT NOT NULL,
   dateregistered DATE NOT NULL DEFAULT CURRENT_DATE,
   code VARCHAR(255),

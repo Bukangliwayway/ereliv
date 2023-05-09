@@ -24,12 +24,12 @@ function staff_username_exists($conn, $username) {
   return ($num_rows ==! 0);
 }
 
-function emailAddressCheck($conn, $email) {
-  $stmt = $conn->prepare("SELECT * FROM Students WHERE EmailAddress = :email");
+function emailAddressCheck($conn, $email, $type) {
+  $stmt = $conn->prepare("SELECT * FROM $type WHERE emailadd = :email");
   $stmt->bindParam(':email', $email);
   $stmt->execute();
-  $student = $stmt->fetch();
-  return ($student);
+  $result = $stmt->fetch();
+  return ($result);
 }
 
 function add_student($conn, $student_number, $section, $email, $first_name, $last_name, $password) {
@@ -44,6 +44,19 @@ function add_student($conn, $student_number, $section, $email, $first_name, $las
     $stmt->execute();
   }catch (PDOException $e) {
     send_message_and_redirect("Error: ".$e->getMessage(), "/ereliv/studregis.php");
+  }
+}
+function add_faculty($conn, $firstname, $lastname, $emailadd, $password, $category) {
+  $stmt = $conn->prepare("INSERT into Faculty (firstname, lastname, emailadd, password, category) VALUES (:firstname, :lastname, :emailadd, :password, :category)");
+  $stmt->bindParam(':firstname', $firstname);
+  $stmt->bindParam(':lastname', $lastname);
+  $stmt->bindParam(':emailadd', $emailadd);
+  $stmt->bindParam(':password', $password);
+  $stmt->bindParam(':category', $category);
+  try {
+    $stmt->execute();
+  }catch (PDOException $e) {
+    send_message_and_redirect("Error: ".$e->getMessage(), "/ereliv/admin/facultyregis.php");
   }
 }
 

@@ -8,6 +8,12 @@
   background: rgba(0, 13, 255, 0.2);
 }
 
+.contain-professional {
+  background: rgb(200, 200, 200);
+  border: 1px solid rgb(56, 56, 56);
+  border-radius: 5%;
+}
+
 .rand-bg {
   background-size: cover;
   background-repeat: no-repeat;
