@@ -60,7 +60,6 @@ function add_faculty($conn, $firstname, $lastname, $emailadd, $password, $catego
   }
 }
 
-
 function send_message_and_redirect($message, $redirect_url) {
   echo "<script>
         setTimeout(function() {
@@ -110,6 +109,74 @@ function verified_staff($conn, $username, $password) {
 
 function generateCode(){
   return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(10/strlen($x)) )),1,10);
+}
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+function sendEmail($conn, $email, $title, $body, $redirect) {
+  //Load Composer's autoloader
+  require '../mail/Exception.php';
+  require '../mail/SMTP.php';
+  require '../mail/PHPMailer.php';
+
+  $mail = new PHPMailer(true);
+  try {
+    //Server settings
+    $mail->isSMTP();                                            //Send using SMTP
+    $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
+    $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+    $mail->Username   = 'erelivsmtpmailer@gmail.com';                     //SMTP username
+    $mail->Password   = 'rizzsvztalpdbwjq';                               //SMTP password
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;            //Enable implicit TLS encryption
+    $mail->Port       = 587;                                    
+
+    //Recipients
+    $mail->setFrom('erelivsmtpmailer@gmail.com', 'Admin');
+    $mail->addAddress($email);
+
+    //Content
+    $mail->isHTML(true);                                  //Set email format to HTML
+    $mail->Subject = $title;
+    $mail->Body    = $body;
+    $mail->send();
+  }catch (Exception $e) {
+    send_message_and_redirect("Message could not be sent. Mailer Error: ".$e->getMessage(), $redirect);
+  }
+}
+
+function updateCode($conn, $code, $type, $emailadd, $redirect){
+  $stmt = $conn->prepare("UPDATE $type SET code = :code WHERE emailadd = :email");
+  $stmt->bindParam(':code', $code);
+  $stmt->bindParam(':emailadd', $emailadd);
+  try {
+    $stmt->execute();
+  }catch (PDOException $e) {
+    send_message_and_redirect("Error: ".$e->getMessage(), $redirect);
+  }
+}
+
+function updatePassword($conn, $password, $type, $emailadd, $redirect){
+  $stmt = $conn->prepare("UPDATE $type SET password = :password WHERE emailadd = :email");
+  $stmt->bindParam(':password', $password);
+  $stmt->bindParam(':emailadd', $emailadd);
+  try {
+    $stmt->execute();
+  }catch (PDOException $e) {
+    send_message_and_redirect("Error: ".$e->getMessage(), $redirect);
+  }
+}
+
+function checkCode($conn, $type, $code, $emailadd){
+  $stmt = $conn->prepare("SELECT * FROM $type WHERE code = :code AND emailadd = :emailadd");
+  $stmt->bindParam(':code', $code);
+  $stmt->bindParam(':emailadd', $emailadd);
+  $stmt->execute();
+  $result = $stmt->fetch();
+
+  if ($result) return true;
+  return false; 
 }
 
 ?>

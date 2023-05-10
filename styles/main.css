@@ -4,6 +4,10 @@
   right: 0;
 }
 
+body{
+  background: whitesmoke;
+}
+
 .contain-form {
   background: rgba(0, 13, 255, 0.2);
 }
