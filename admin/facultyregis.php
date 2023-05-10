@@ -69,22 +69,6 @@
             />
             <label for="email" class="form-label">Email</label>
           </div>
-          <div class="input-group mb-3">
-            <div class="form-floating">
-              <input type="password" minlength="8" maxlength="20"
-              class="form-control" id="password" name="password"
-              placeholder="Must be 8-20 long" required">
-              <label for="password" class="form-label">Password</label>
-            </div>
-            <button
-              class="btn btn-outline-secondary"
-              type="button"
-              id="toggle-password"
-              onclick="togglePasswordVisibility()"
-            >
-              <i class="bi bi-eye" id="icon-password"></i>
-            </button>
-          </div>
           <div class="form-group mt-2 mb-3">
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="radio" name="category" id="supervisorcat" value="Advisor" checked>
@@ -102,4 +86,4 @@
   </body>
 </html>
 
-<script src="../scripts/main.js"></script>
+<!-- <script src="../scripts/main.js"></script> -->

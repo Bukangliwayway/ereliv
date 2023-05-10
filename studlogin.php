@@ -123,9 +123,6 @@
         </p>
       </div>
     </div>
-
-    <!-- Button trigger modal -->
-
     <!-- Modal -->
     <div
       class="modal fade"
@@ -159,7 +156,7 @@
                 <input
                   type="email"
                   id="email"
-                  name="email"
+                  name="emailadd"
                   class="form-control"
                   placeholder="email"
                   required

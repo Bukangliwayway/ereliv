@@ -24,9 +24,9 @@ function staff_username_exists($conn, $username) {
   return ($num_rows ==! 0);
 }
 
-function emailAddressCheck($conn, $email, $type) {
-  $stmt = $conn->prepare("SELECT * FROM $type WHERE emailadd = :email");
-  $stmt->bindParam(':email', $email);
+function emailAddressCheck($conn, $emailadd, $type) {
+  $stmt = $conn->prepare("SELECT * FROM $type WHERE emailadd = :emailadd");
+  $stmt->bindParam(':emailadd', $emailadd);
   $stmt->execute();
   $result = $stmt->fetch();
   return ($result);
@@ -147,7 +147,7 @@ function sendEmail($conn, $email, $title, $body, $redirect) {
 }
 
 function updateCode($conn, $code, $type, $emailadd, $redirect){
-  $stmt = $conn->prepare("UPDATE $type SET code = :code WHERE emailadd = :email");
+  $stmt = $conn->prepare("UPDATE $type SET code = :code WHERE emailadd = :emailadd");
   $stmt->bindParam(':code', $code);
   $stmt->bindParam(':emailadd', $emailadd);
   try {
@@ -158,7 +158,7 @@ function updateCode($conn, $code, $type, $emailadd, $redirect){
 }
 
 function updatePassword($conn, $password, $type, $emailadd, $redirect){
-  $stmt = $conn->prepare("UPDATE $type SET password = :password WHERE emailadd = :email");
+  $stmt = $conn->prepare("UPDATE $type SET password = :password WHERE emailadd = :emailadd");
   $stmt->bindParam(':password', $password);
   $stmt->bindParam(':emailadd', $emailadd);
   try {

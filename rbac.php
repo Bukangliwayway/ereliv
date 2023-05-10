@@ -31,7 +31,7 @@
         </p>
         <div class="d-flex justify-content-stretch flex-column gap-2 w-100">
           <a href="studlogin.php" class="btn btn-primary">Student</a>
-          <a href="stafflogin.php" class="btn btn-danger">Faculty </a>
+          <a href="facultylogin.php" class="btn btn-danger">Faculty </a>
         </div>
         <p class="fw-light">
           By using this service, you understood and agree to the PUP Online

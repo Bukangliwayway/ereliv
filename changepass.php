@@ -21,6 +21,7 @@
       include_once '/opt/lampp/htdocs/ereliv/backend/randbg_generate.php';
       $code = $_GET['code'];
       $type = $_GET['type'];
+      $current_url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     ?>
   <body>
     <div
@@ -37,7 +38,7 @@
           <input
             type="hidden"
             name="redirect"
-            value="/ereliv/rbac.php"
+            value="<?php echo $current_url ?>"
           />
           <input type="hidden" name="code" value="<?php echo $code ?>" />
           <input type="hidden" name="type" value="<?php echo $type ?>" />
@@ -45,7 +46,7 @@
             <input
             type="email"
             id="email"
-            name="email"
+            name="emailadd"
             class="form-control"
             placeholder="email"
             required
@@ -63,7 +64,6 @@
               class="btn btn-outline-secondary"
               type="button"
               id="toggle-password"
-              onclick="togglePasswordVisibility()"
             >
               <i class="bi bi-eye" id="icon-password"></i>
             </button>

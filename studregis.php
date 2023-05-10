@@ -117,7 +117,6 @@
               class="btn btn-outline-secondary"
               type="button"
               id="toggle-password"
-              onclick="togglePasswordVisibility()"
             >
               <i class="bi bi-eye" id="icon-password"></i>
             </button>
