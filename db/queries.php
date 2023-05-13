@@ -179,6 +179,145 @@ function checkCode($conn, $type, $code, $emailadd){
   return false; 
 }
 
+function getList($conn, $column, $table) {
+  $stmt = $conn->prepare("SELECT $column FROM $table");
+  $stmt->execute();
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getSectionList($conn, $programID) {
+  $stmt = $conn->prepare("SELECT s.name
+                          FROM Programsections ps
+                          JOIN Section s ON ps.sectionID = s.SectionID
+                          WHERE ps.programID = :programID");
+  $stmt->bindParam(':programID', $programID);
+  $stmt->execute();
+  $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  return $result;
+}
+
+function addSection($conn, $name, $programID){
+  $stmt = $conn->prepare("INSERT INTO Section (name) Values (:name)");
+  $stmt->bindParam(':name', $name);
+  try {
+    $stmt->execute();
+  }catch (PDOException $e) {
+    $e->getMessage();
+    return false;
+  }
+  if(!linkSectionAndProgram($conn, $name, $programID)) return false;
+  return true;
+}
+
+function linkSectionAndProgram($conn, $name, $programID){
+  echo $programID;
+  $sectionID = getSectionID($conn, $name);
+  $stmt = $conn->prepare("INSERT INTO Programsections (programID, sectionID) Values (:programID, :sectionID)");
+  $stmt->bindParam(':programID', $programID);
+  $stmt->bindParam(':sectionID', $sectionID);
+  try {
+    $stmt->execute();
+  }catch (PDOException $e) {
+    echo $e->getMessage();
+    return false;
+  }
+  return true;
+}
+
+function getSectionID($conn, $name){
+  $stmt = $conn->prepare("SELECT sectionID FROM Section WHERE name = :name");
+  $stmt->bindParam(':name', $name);
+  $stmt->execute();
+  $result = $stmt->fetch();
+  $id = $result['sectionID'];
+  return strval($id);
+}
+
+function sectionDuplicateCheck($conn, $name){
+  $stmt = $conn->prepare("SELECT * FROM Section WHERE LOWER(name) = LOWER(:name)");
+  $stmt->bindParam(':name', $name);
+  $stmt->execute();
+  $section = $stmt->fetch();
+  if ($section) return true;
+  return false;
+}
+function editSection($conn, $name, $original){
+  $stmt = $conn->prepare("UPDATE Section SET name = :name WHERE name = :original");
+  $stmt->bindParam(':name', $name);
+  $stmt->bindParam(':original', $original);
+  try {
+    $stmt->execute();
+  }catch (PDOException $e) {
+    echo $e->getMessage();
+    return false;
+  }
+  return true;
+}
+
+function deleteSection($conn, $name){
+  $stmt = $conn->prepare("DELETE FROM Section WHERE name = :name");
+  $stmt->bindParam(':name', $name);
+  try {
+    $stmt->execute();
+  }catch (PDOException $e) {
+    echo $e->getMessage();
+    return false;
+  }
+  return true;
+}
+
+
+function addProgram($conn, $name){
+  $stmt = $conn->prepare("INSERT INTO Program (name) Values (:name)");
+  $stmt->bindParam(':name', $name);
+  try {
+    $stmt->execute();
+  }catch (PDOException $e) {
+    $e->getMessage();
+    return false;
+  }
+  return true;
+}
+
+function programDuplicateCheck($conn, $name){
+  $stmt = $conn->prepare("SELECT * FROM Program WHERE LOWER(name) = LOWER(:name)");
+  $stmt->bindParam(':name', $name);
+  $stmt->execute();
+  $section = $stmt->fetch();
+  if ($section) return true;
+  return false;
+}
+
+function editProgram($conn, $name, $original){
+  $stmt = $conn->prepare("UPDATE Program SET name = :name WHERE name = :original");
+  $stmt->bindParam(':name', $name);
+  $stmt->bindParam(':original', $original);
+  try {
+    $stmt->execute();
+  }catch (PDOException $e) {
+    echo $e->getMessage();
+    return false;
+  }
+  return true;
+}
+
+
+function deleteProgram($conn, $name){
+  $stmt = $conn->prepare("DELETE FROM Program WHERE name = :name");
+  $stmt->bindParam(':name', $name);
+  try {
+    $stmt->execute();
+  }catch (PDOException $e) {
+    echo $e->getMessage();
+    return false;
+  }
+  return true;
+}
+
+
+
 ?>
+
+
 
 

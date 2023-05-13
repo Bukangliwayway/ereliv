@@ -13,3 +13,4 @@ togglePassword.addEventListener("click", () => {
     iconPassword.classList.add("bi-eye");
   }
 });
+

@@ -28,3 +28,13 @@ body{
 .bwct {
   padding-top: 10vh;
 }
+
+.cb {
+  box-sizing: content-box;
+}
+
+.cp-b {
+  box-sizing: content-box;
+  padding: 20px;
+}
+
