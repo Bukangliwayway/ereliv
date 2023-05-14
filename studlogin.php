@@ -61,6 +61,7 @@
               >Student Number</label
             >
           </div>
+          
           <div class="form-floating mb-3">
             <select
               id="section"
@@ -68,10 +69,9 @@
               class="form-select"
               placeholder="Select Section"
               required
+              disabled
             >
-              <option value="BSIT 3-1">BSIT 3-1</option>
-              <option value="BSIT 3-2">BSIT 3-2</option>
-              <option value="BSIT 4-1">BSIT 4-1</option>
+              <option value="" disabled selected>Select Section</option>
             </select>
             <label for="section" class="form-label">Section</label>
           </div>

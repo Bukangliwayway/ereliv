@@ -9,21 +9,6 @@ function studentNumberCheck($conn, $student_number) {
   return false;
 }
 
-function staff_username_exists($conn, $username) {
-  $stmt = $conn->prepare("SELECT * FROM Staff WHERE UserName = :username");
-  $stmt->bindParam(':username', $username);
-  $stmt->execute();
-  $staff = $stmt->fetch();
-  
-  // Execute the query
-  $stmt->execute();
-
-  // Get the number of rows returned by the query
-  $num_rows = $stmt->rowCount();
-
-  return ($num_rows ==! 0);
-}
-
 function emailAddressCheck($conn, $emailadd, $type) {
   $stmt = $conn->prepare("SELECT * FROM $type WHERE emailadd = :emailadd");
   $stmt->bindParam(':emailadd', $emailadd);
@@ -97,12 +82,15 @@ function verified_student($conn, $student_number, $section, $password) {
   return ($row['Section'] === $section && password_verify($password, $row['Password']));
 }
 
-function verified_staff($conn, $username, $password) {
+function verifyFaculty($conn, $emailadd, $password) {
   // Prepare the SQL statement to search for a matching student number
-  $stmt = $conn->prepare("SELECT Password FROM Staff WHERE UserName = :username");
-  $stmt->bindParam(':username', $username);
+  $stmt = $conn->prepare("SELECT Password FROM Faculty WHERE emailadd = :emailadd");
+  $stmt->bindParam(':emailadd', $emailadd);
   $stmt->execute();
-  // Fetch the row from the result set
+
+  //Return if wrong Email
+  if($stmt->rowCount() === 0) return false;
+
   $row = $stmt->fetch(PDO::FETCH_ASSOC);
   return password_verify($password, $row['Password']);
 }
@@ -314,7 +302,26 @@ function deleteProgram($conn, $name){
   return true;
 }
 
+function getLinkedSection($conn, $programID){
+  $stmt = $conn->prepare("
+    SELECT s.*
+    FROM Section s
+    INNER JOIN Programsections ps ON s.sectionID = ps.sectionID
+    WHERE ps.programID = :programID;
+  ");
+  $stmt->bindParam(':programID', $programID);
+  $stmt->execute();
+  $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  return $result;
+}
 
+function getProgramID(){
+  if (isset($_POST['content'])) {
+    $content = $_POST['content'];
+    // do something with $content
+    echo "Received content: " . $content;
+  } 
+}
 
 ?>
 

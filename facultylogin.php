@@ -37,14 +37,14 @@
       >
         <img
           src="assets/puplogo.png"
-          alt="logohehe"
+          alt="logo hehe"
           width="60%"
           class="align-self-center"
         />
         <h1 class="fs-2 fw-bold text-uppercase">PUPQC Faculty Login Form</h1>
         <form
           method="POST"
-          action="backend/stafflogin_backend.php"
+          action="backend/facultylogin_backend.php"
           class="d-flex flex-column gap-1 px-3"
         >
           <div class="form-floating mb-3">

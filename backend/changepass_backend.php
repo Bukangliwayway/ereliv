@@ -16,7 +16,7 @@ if (!emailAddressCheck($conn, $emailadd, $type)) {
 if(!checkCode($conn, $type, $code, $emailadd))
 send_message_and_redirect("Invalid Reset Request", $redirect);
 
-updatePassword($conn, $password, $type, $emailadd, $redirect);
+updatePassword($conn, $hashed_password, $type, $emailadd, $redirect);
 send_message_and_redirect('Your Password has been Changed', "http://localhost/ereliv/rbac.php");
 
 

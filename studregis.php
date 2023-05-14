@@ -17,9 +17,13 @@
     />
 
     <link rel="stylesheet" href="styles/main.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
   </head>
   <body>
     <?php
+      include 'db/db.php';
+      include 'db/queries.php';
       include_once '/opt/lampp/htdocs/ereliv/backend/randbg_generate.php';
     ?>
     <div class="row vh-100 m-0">
@@ -47,65 +51,81 @@
           <div class="form-floating mb-3">
             <input
               type="text"
-              id="student_number"
+              id="studentnumber"
               class="form-control"
-              name="student_number"
+              name="studentnumber"
               required
               pattern="\d{4}-\d{5}-[A-Z]{2}-\d"
               title="Please enter a valid student number in the format 2020-00001-CM-0"
               placeholder="Example format 2020-00001-CM-0"
             />
-            <label for="student_number" class="form-label"
+            <label for="studentnumber" class="form-label"
               >Student Number</label
             >
           </div>
           <div class="form-floating mb-3">
             <input
               type="text"
-              id="first_name"
-              name="first_name"
+              id="firstname"
+              name="firstname"
               class="form-control"
-              placeholder="first_name"
+              placeholder="firstname"
               required
             />
-            <label for="first_name" class="form-label">First Name</label>
+            <label for="firstname" class="form-label">First Name</label>
           </div>
           <div class="form-floating mb-3">
             <input
               type="text"
-              id="last_name"
-              name="last_name"
+              id="lastname"
+              name="lastname"
               class="form-control"
-              placeholder="last_name"
+              placeholder="lastname"
               required
             />
-            <label for="last_name" class="form-label">Last Name</label>
+            <label for="lastname" class="form-label">Last Name</label>
           </div>
           <div class="form-floating mb-3">
             <input
-              type="email"
-              id="email"
-              name="email"
+              type="emailadd"
+              id="emailadd"
+              name="emailadd"
               class="form-control"
-              placeholder="email"
+              placeholder="emailadd"
               required
             />
-            <label for="email" class="form-label">Email</label>
+            <label for="emailadd" class="form-label">Email</label>
+          </div>
+          <div class="form-floating mb-3">
+            <select
+              id="program"
+              name="program"
+              class="form-select"
+              required
+            >
+              <option value="" disabled selected>Select Program</option>
+              <?php 
+                $program = getList($conn, '*','Program');
+                foreach ($program as $programData) {
+                  echo '<option value="'.$programData['programID'].'">'.$programData['name'].'</option>';
+                };
+              ?>
+            </select>
+            <label for="program" class="form-label">Program</label>
           </div>
           <div class="form-floating mb-3">
             <select
               id="section"
               name="section"
               class="form-select"
-              placeholder="Select Section"
               required
+              disabled
             >
-              <option value="BSIT 3-1">BSIT 3-1</option>
-              <option value="BSIT 3-2">BSIT 3-2</option>
-              <option value="BSIT 4-1">BSIT 4-1</option>
+              <option value="" disabled selected>Select Section</option>
             </select>
-            <label for="section" class="form-label">Section:</label>
+            <label for="section" class="form-label">Section</label>
           </div>
+          
           <div class="input-group mb-3">
             <div class="form-floating">
               <input type="password" minlength="8" maxlength="20"
@@ -147,3 +167,40 @@
 </html>
 
 <script src="scripts/main.js"></script>
+<script>
+  const programInput = document.querySelector('#program');
+  const sectionInput = document.querySelector('#section');
+
+  programInput.addEventListener('change', () => {
+    //Clears the option
+    sectionInput.innerHTML = '';
+    
+    //Add the Disabled Element
+    const sectionOption = document.createElement('option');
+    sectionOption.value = '';
+    sectionOption.textContent = 'Select Section';
+    sectionOption.disabled = true;
+    sectionOption.selected = true;
+    sectionInput.appendChild(sectionOption);
+    // Enable the Section Select
+    sectionInput.disabled = (programInput.value === '');
+    
+    $.ajax({
+      url: 'http://localhost/ereliv/backend/getSections.php',
+      method: 'POST',
+      data: {programID: programInput.value},
+      success: function(response){
+        var data = JSON.parse(response); // Parse the JSON response
+        var options = data.options; // Extract the options from the response
+
+        $('#section').html(options); // Update section options
+      }
+    });
+ 
+  
+  });
+  
+</script>
+
+
+
