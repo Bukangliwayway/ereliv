@@ -18,13 +18,8 @@
 
     <link rel="stylesheet" href="../styles/main.css" />
   </head>
-  <body>
-
-    <?php
-      include_once 'opt/lampp/htdocs/ereliv/backend/randbg_generate.php';
-    ?>
-    
-    <div class="container vh-100 m-0 mx-auto d-flex flex-column justify-content-center  align-items-center">
+  <body class="vh-100">
+    <div class="container m-0 mx-auto d-flex flex-column justify-content-center  align-items-center">
       <div
         class="col-sm-auto d-flex flex-column justify-content-center align-items-stretch text-center gap-3 contain-professional mx-auto p-5"
       >
