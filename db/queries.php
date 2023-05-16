@@ -1,13 +1,13 @@
 <?php
-function studentNumberCheck($conn, $student_number) {
-  $stmt = $conn->prepare("SELECT * FROM Students WHERE StudentNumber = :student_number");
-  $stmt->bindParam(':student_number', $student_number);
-  $stmt->execute();
-  $student = $stmt->fetch();
+// function studentNumberCheck($conn, $studentnumber) {
+//   $stmt = $conn->prepare("SELECT * FROM Student WHERE studentnumber = :studentnumber");
+//   $stmt->bindParam(':studentnumber', $studentnumber);
+//   $stmt->execute();
+//   $student = $stmt->fetch();
 
-  if ($student) return true;
-  return false;
-}
+//   if ($student) return true;
+//   return false;
+// }
 
 function emailAddressCheck($conn, $emailadd, $type) {
   $stmt = $conn->prepare("SELECT * FROM $type WHERE emailadd = :emailadd");
@@ -17,20 +17,23 @@ function emailAddressCheck($conn, $emailadd, $type) {
   return ($result);
 }
 
-function add_student($conn, $student_number, $section, $email, $first_name, $last_name, $password) {
-  $stmt = $conn->prepare("INSERT into Students (StudentNumber, Section, EmailAddress, FirstName, LastName, Password) VALUES (:student_number, :section, :email, :first_name, :last_name, :password)");
-  $stmt->bindParam(':student_number', $student_number);
+function addStudent($conn, $studentnumber, $program, $section, $emailadd, $firstname, $lastname, $password, $advisor) {
+  $stmt = $conn->prepare("INSERT into Student (studentnumber, program, section, emailadd, firstname, lastname, password, advisor) VALUES (:studentnumber, :program, :section, :emailadd, :firstname, :lastname, :password, :advisor)");
+  $stmt->bindParam(':studentnumber', $studentnumber);
+  $stmt->bindParam(':program', $program);
   $stmt->bindParam(':section', $section);
-  $stmt->bindParam(':email', $email);
-  $stmt->bindParam(':first_name', $first_name);
-  $stmt->bindParam(':last_name', $last_name);
+  $stmt->bindParam(':emailadd', $emailadd);
+  $stmt->bindParam(':firstname', $firstname);
+  $stmt->bindParam(':lastname', $lastname);
   $stmt->bindParam(':password', $password);
+  $stmt->bindParam(':advisor', $advisor);
   try {
     $stmt->execute();
   }catch (PDOException $e) {
-    send_message_and_redirect("Error: ".$e->getMessage(), "/ereliv/studregis.php");
+    send_message_and_redirect("Error: ".$e->getMessage(), "http://localhost/ereliv/studregis.php");
   }
 }
+
 function add_faculty($conn, $firstname, $lastname, $emailadd, $password, $category) {
   $stmt = $conn->prepare("INSERT into Faculty (firstname, lastname, emailadd, password, category) VALUES (:firstname, :lastname, :emailadd, :password, :category)");
   $stmt->bindParam(':firstname', $firstname);
@@ -41,7 +44,7 @@ function add_faculty($conn, $firstname, $lastname, $emailadd, $password, $catego
   try {
     $stmt->execute();
   }catch (PDOException $e) {
-    send_message_and_redirect("Error: ".$e->getMessage(), "/ereliv/admin/facultyregis.php");
+    send_message_and_redirect("Error: ".$e->getMessage(), "http://localhost/ereliv/admin/facultyregis.php");
   }
 }
 
@@ -55,12 +58,12 @@ function send_message_and_redirect($message, $redirect_url) {
   exit;
 }
 
-function student_number_exists($conn, $student_number) {
+function studentNumberExists($conn, $studentnumber) {
   // Prepare a statement to search for the given student number
-  $stmt = $conn->prepare("SELECT * FROM Students WHERE StudentNumber = :student_number");
+  $stmt = $conn->prepare("SELECT * FROM Student WHERE studentnumber = :studentnumber");
 
   // Bind the student number parameter to the prepared statement
-  $stmt->bindParam(':student_number', $student_number);
+  $stmt->bindParam(':studentnumber', $studentnumber);
 
   // Execute the query
   $stmt->execute();
@@ -72,14 +75,15 @@ function student_number_exists($conn, $student_number) {
 }
 
 
-function verified_student($conn, $student_number, $section, $password) {
+function verifyStudent($conn, $studentnumber, $section, $password) {
   // Prepare the SQL statement to search for a matching student number
-  $stmt = $conn->prepare("SELECT Section, Password FROM Students WHERE StudentNumber = :student_number");
-  $stmt->bindParam(':student_number', $student_number);
+  $stmt = $conn->prepare("SELECT section, password FROM Student WHERE studentnumber = :studentnumber");
+  $stmt->bindParam(':studentnumber', $studentnumber);
   $stmt->execute();
   // Fetch the row from the result set
   $row = $stmt->fetch(PDO::FETCH_ASSOC);
-  return ($row['Section'] === $section && password_verify($password, $row['Password']));
+  echo password_verify($password, $row['password']).' N saved:'.$row['section']." choice:".$section;
+  return $row['section'] === $section && password_verify($password, $row['password']);
 }
 
 function verifyFaculty($conn, $emailadd, $password) {
@@ -315,12 +319,28 @@ function getLinkedSection($conn, $programID){
   return $result;
 }
 
-function getProgramID(){
-  if (isset($_POST['content'])) {
-    $content = $_POST['content'];
-    // do something with $content
-    echo "Received content: " . $content;
-  } 
+
+function linkStudentAndAdvisor($conn, $emailadd, $facultyID){
+  $studentID = getStudentID($conn, $emailadd);
+  echo $facultyID." nani ".$studentID;
+  $stmt = $conn->prepare("INSERT INTO Adviserteam (facultyID, studentID) Values (:facultyID, :studentID)");
+  $stmt->bindParam(':facultyID', $facultyID);
+  $stmt->bindParam(':studentID', $studentID);
+  try {
+    $stmt->execute();
+  }catch (PDOException $e) {
+    echo $e->getMessage();
+    return false;
+  }
+  return true;
+}
+
+function getStudentID($conn, $emailadd){
+  $stmt = $conn->prepare("SELECT studentID FROM Student WHERE emailadd = :emailadd");
+  $stmt->bindParam(':emailadd', $emailadd);
+  $stmt->execute();
+  $result = $stmt->fetch();
+  return $result["studentID"];
 }
 
 ?>

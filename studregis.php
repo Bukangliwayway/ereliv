@@ -107,7 +107,7 @@
               <?php 
                 $program = getList($conn, '*','Program');
                 foreach ($program as $programData) {
-                  echo '<option value="'.$programData['programID'].'">'.$programData['name'].'</option>';
+                  echo '<option value="'.$programData['name'].'" data-id="'.$programData["programID"].'">'.$programData['name'].'</option>';
                 };
               ?>
             </select>
@@ -125,7 +125,27 @@
             </select>
             <label for="section" class="form-label">Section</label>
           </div>
-          
+          <div class="form-floating mb-3">
+            <select
+              id="advisor"
+              name="advisor"
+              class="form-select"
+              required
+            >
+              <option value="" disabled selected>Select Advisor</option>
+              <?php 
+                $advisor = getList($conn, '*','Faculty');
+                foreach ($advisor as $advisorData) {
+                  $nameParts = explode(' ', $advisorData['firstname']);
+                $initials = '';
+                foreach ($nameParts as $part) $initials .= strtoupper(substr($part, 0, 1)).'. ';
+    
+                  echo '<option value="'.$advisorData['facultyID'].'" class="text-capitalize"> Prof. '.ucwords($advisorData['lastname']).' '.$initials.'</option>';
+                };
+              ?>
+            </select>
+            <label for="advisor" class="form-label">Advisor</label>
+          </div>
           <div class="input-group mb-3">
             <div class="form-floating">
               <input type="password" minlength="8" maxlength="20"
@@ -170,7 +190,7 @@
 <script>
   const programInput = document.querySelector('#program');
   const sectionInput = document.querySelector('#section');
-
+  
   programInput.addEventListener('change', () => {
     //Clears the option
     sectionInput.innerHTML = '';
@@ -183,21 +203,23 @@
     sectionOption.selected = true;
     sectionInput.appendChild(sectionOption);
     // Enable the Section Select
-    sectionInput.disabled = (programInput.value === '');
+    const programID = programInput.options[programInput.selectedIndex].dataset.id;
+    sectionInput.disabled = (programID === '');
     
     $.ajax({
       url: 'http://localhost/ereliv/backend/getSections.php',
       method: 'POST',
-      data: {programID: programInput.value},
+      data: {programID: programID},
       success: function(response){
         var data = JSON.parse(response); // Parse the JSON response
         var options = data.options; // Extract the options from the response
-
+        
         $('#section').html(options); // Update section options
       }
     });
- 
-  
+
+    
+    
   });
   
 </script>

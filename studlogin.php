@@ -24,6 +24,8 @@
   </head>
   <body>
     <?php
+      include 'db/db.php';
+      include 'db/queries.php';
       include_once '/opt/lampp/htdocs/ereliv/backend/randbg_generate.php';
     ?>
     <div class="row vh-100 m-0">
@@ -51,13 +53,13 @@
               type="text"
               id="student_number"
               class="form-control"
-              name="student_number"
+              name="studentnumber"
               required
               pattern="\d{4}-\d{5}-[A-Z]{2}-\d"
               title="Please enter a valid student number in the format 2020-00001-CM-0"
               placeholder="Example format 2020-00001-CM-0"
             />
-            <label for="student_number" class="form-label"
+            <label for="studentnumber" class="form-label"
               >Student Number</label
             >
           </div>
@@ -69,9 +71,14 @@
               class="form-select"
               placeholder="Select Section"
               required
-              disabled
             >
               <option value="" disabled selected>Select Section</option>
+              <?php 
+                $section = getList($conn, '*','Section');
+                foreach ($section as $sectionData) {
+                  echo '<option value="'.$sectionData['name'].'">'.$sectionData['name'].'</option>';
+                };
+              ?>
             </select>
             <label for="section" class="form-label">Section</label>
           </div>

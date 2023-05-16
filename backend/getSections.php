@@ -9,9 +9,9 @@ if(isset($_POST['programID'])){
 	$sections = getLinkedSection($conn, $programID);
 
 	// Generate HTML options for sections
-	$options = '';
+	$options = '<option value="" disabled selected>Select Section</option>';
 	foreach($sections as $section){
-		$options .= '<option value="'.$section['sectionID'].'">'.$section['name'].'</option>';
+		$options .= '<option value="'.$section['name'].'">'.$section['name'].'</option>';
 	}
 
 	// Prepare JSON response
