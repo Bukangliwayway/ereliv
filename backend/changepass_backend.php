@@ -10,15 +10,11 @@ $emailadd = filter_input(INPUT_POST, 'emailadd', FILTER_SANITIZE_EMAIL);
 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
 if (!emailAddressCheck($conn, $emailadd, $type)) {
-  send_message_and_redirect($emailadd.' is not on the system', $redirect);
+  send_message_and_redirect($emailadd . ' is not on the system', $redirect);
 }
 
-if(!checkCode($conn, $type, $code, $emailadd))
-send_message_and_redirect("Invalid Reset Request", $redirect);
+if (!checkCode($conn, $type, $code, $emailadd))
+  send_message_and_redirect("Invalid Reset Request", $redirect);
 
 updatePassword($conn, $hashed_password, $type, $emailadd, $redirect);
 send_message_and_redirect('Your Password has been Changed', "http://localhost/ereliv/rbac.php");
-
-
-
-

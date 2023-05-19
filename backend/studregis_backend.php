@@ -12,8 +12,8 @@ $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
 $advisor = filter_input(INPUT_POST, 'advisor', FILTER_SANITIZE_STRING);
 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-if(studentNumberExists($conn, $studentnumber))
-send_message_and_redirect("Student number is already in use", "/ereliv/studregis.php");
+if (studentNumberExists($conn, $studentnumber))
+  send_message_and_redirect("Student number is already in use", "/ereliv/studregis.php");
 
 if (emailAddressCheck($conn, $emailadd, 'Student'))
   send_message_and_redirect("Email is already in use", "/ereliv/studregis.php");
@@ -30,5 +30,5 @@ sendEmail($conn, $emailadd, $title, $body, $redirect);
 send_message_and_redirect("Student Account has been Submitted", $redirect);
 
 
-    
+
 ?>

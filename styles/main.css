@@ -4,7 +4,7 @@
   right: 0;
 }
 
-body{
+body {
   background: whitesmoke;
 }
 
@@ -40,7 +40,6 @@ body{
 
 .custom-bolder {
   font-weight: bolder;
-
 }
 
 .bg-professional {
