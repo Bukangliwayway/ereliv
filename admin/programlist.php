@@ -52,13 +52,6 @@
                   </a>
                 </h1>
               </div>
-              <div class="row">
-                <h1>  
-                  <a href="#viewprogrammodal" class="viewprogrambutton icon-link border border-primary rounded p-2" data-bs-toggle="modal" data-string ="' . $programData['name'] . '">
-                    <i class="bi bi-book"></i>
-                  </a>
-                </h1>
-              </div>
             </div>
             <div
               class="col-5 d-flex flex-column justify-content-center align-items-stretch gap-2"
@@ -79,11 +72,6 @@
                           <h1>
                             <a href="#deletesectionmodal" class="deletesectionbutton icon-link border border-primary rounded p-2" data-string ="' . $row['name'] . '" data-bs-toggle="modal">
                               <i class="bi bi-trash"></i>
-                            </a>
-                          </h1>
-                          <h1>
-                            <a href="#viewsectionmodal" class="viewsectionbutton icon-link border border-primary rounded p-2" data-string ="' . $row['name'] . '" data-bs-toggle="modal">
-                              <i class="bi bi-book"></i>
                             </a>
                           </h1>
                       </div>
@@ -232,7 +220,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5 text-capitalize">
+          <h1 class="modal-title fs-5 text  -capitalize">
             Edit Program
           </h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
