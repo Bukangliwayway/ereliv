@@ -321,6 +321,16 @@ function editProgram($conn, $name, $original)
   return true;
 }
 
+function noSectionBeforeProgramDeletion($conn, $name)
+{
+  $stmt = $conn->prepare("SELECT * FROM Programsections ps
+                          INNER JOIN Program p ON ps.programID = p.programID
+                          WHERE p.name = :name");
+  $stmt->bindParam(':name', $name);
+  $stmt->execute();
+  return ($stmt->rowCount() == 0);
+}
+
 
 function deleteProgram($conn, $name)
 {
