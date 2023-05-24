@@ -375,4 +375,70 @@ function getStudentID($conn, $emailadd)
   return $result["studentID"];
 }
 
+
+function getStudentAccounts($conn)
+{
+  $stmt = $conn->prepare("SELECT * FROM Student");
+  $stmt->execute();
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getFacultyAccounts($conn)
+{
+  $stmt = $conn->prepare("SELECT * FROM Faculty");
+  $stmt->execute();
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getAccountsByOrder($conn, $table, $column, $order)
+{
+  if ($column == 'priority' && $order == 'asc') {
+    $sql = "SELECT * FROM " . $table . " ORDER BY CASE priority WHEN 'low' THEN 1 WHEN 'medium' THEN 2 WHEN 'high' THEN 3 END ASC";
+  } elseif ($column == 'priority' && $order == 'desc') {
+    $sql = "SELECT * FROM " . $table . " ORDER BY CASE priority WHEN 'low' THEN 1 WHEN 'medium' THEN 2 WHEN 'high' THEN 3 END DESC";
+  } else {
+    $sql = "SELECT * FROM " . $table . " ORDER BY " . $column . " " . $order;
+  }
+  $stmt = $conn->prepare($sql);
+  $stmt->execute();
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getAdvisorName($conn, $advisorID)
+{
+  $stmt = $conn->prepare("SELECT * FROM Faculty WHERE facultyID = :advisorID");
+  $stmt->bindParam(':advisorID', $advisorID);
+  $stmt->execute();
+  $result = $stmt->fetch();
+  return "Prof. " . $result["firstname"] . " " . $result["lastname"];
+
+}
+
+function toggleFacultyAccount($conn, $facultyID, $status)
+{
+  $stmt = $conn->prepare("UPDATE Faculty SET status = :status WHERE facultyID = :facultyID");
+  $stmt->bindParam(':status', $status);
+  $stmt->bindParam(':facultyID', $facultyID);
+  try {
+    $stmt->execute();
+  } catch (PDOException $e) {
+    echo $e->getMessage();
+    return false;
+  }
+  return true;
+}
+
+function toggleStudentAccount($conn, $studentID, $status)
+{
+  $stmt = $conn->prepare("UPDATE Student SET status = :status WHERE studentID = :studentID");
+  $stmt->bindParam(':status', $status);
+  $stmt->bindParam(':studentID', $studentID);
+  try {
+    $stmt->execute();
+  } catch (PDOException $e) {
+    echo $e->getMessage();
+    return false;
+  }
+  return true;
+}
 ?>
