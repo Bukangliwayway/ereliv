@@ -17,10 +17,7 @@
 </head>
 
 <body>
-  <?php
-  include '../db/db.php';
-  include '../db/queries.php';
-  ?>
+
   <div class="container d-flex flex-column gap-3 text-center justify-content-center">
     <?php
     $program = getList($conn, '*', 'Program');

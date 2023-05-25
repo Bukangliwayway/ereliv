@@ -13,15 +13,10 @@
     crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css" />
   <link rel="stylesheet" href="../styles/main.css" />
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </head>
 
 <body>
-  <?php
-  include '../db/db.php';
-  include '../db/queries.php';
-  ?>
 
   <div class="container col-8 m-auto">
     <div class="table-responsive" id="studentList">
@@ -163,7 +158,7 @@
       </table>
     </div>
   </div>
-  
+
   <!-- Modals -->
   <div class="modal fade" id="activatemodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="activatemodal" aria-hidden="true">
@@ -210,74 +205,76 @@
       </div>
     </div>
   </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+
+    $(document).ready(function () {
+      $(document).on('click', '.sortStudent', function () {
+
+        var column_name = $(this).data("student");
+        var order = $(this).data("order");
+        var arrow = '';
+        if (order == 'desc') {
+          arrow = '&nbsp;<span class="bi bi-arrow-down"></span>';
+        }
+        else {
+          arrow = '&nbsp;<span class="bi bi-arrow-up"></span>';
+        }
+        $.ajax({
+          url: "../backend/sortStudentAccounts.php",
+          method: "POST",
+          data: { column_name: column_name, order: order },
+          success: function (data) {
+            $('#studentList').html(data);
+            $('[data-student="' + column_name + '"]').append(arrow);
+          }
+        })
+      });
+
+      $(document).on('click', '.sortFaculty', function () {
+        var column_name = $(this).data("faculty");
+        var order = $(this).data("order");
+        var arrow = '';
+        if (order == 'desc') {
+          arrow = '&nbsp;<span class="bi bi-arrow-down"></span>';
+        }
+        else {
+          arrow = '&nbsp;<span class="bi bi-arrow-up"></span>';
+        }
+        $.ajax({
+          url: "../backend/sortFacultyAccounts.php",
+          method: "POST",
+          data: { column_name: column_name, order: order },
+          success: function (data) {
+            $('#facultyList').html(data);
+            $('[data-faculty="' + column_name + '"]').append(arrow);
+          }
+        })
+      });
+    });
+
+    const activateButton = document.querySelectorAll('.activatebutton');
+    activateButton.forEach(button => {
+      button.addEventListener('click', function () {
+        const accountID = button.getAttribute('data-string');
+        const user = button.getAttribute('data-user');
+        document.querySelector('#activateAccountID').value = accountID;
+        document.querySelector('#activateUserType').value = user;
+      });
+    });
+
+    const deactivateButton = document.querySelectorAll('.deactivatebutton');
+    deactivateButton.forEach(button => {
+      button.addEventListener('click', function () {
+        const accountID = button.getAttribute('data-string');
+        const user = button.getAttribute('data-user');
+        document.querySelector('#deactivateAccountID').value = accountID;
+        document.querySelector('#deactivateUserType').value = user;
+      });
+    });
+  </script>
+
 </body>
 
 </html>
-
-<script>
-
-  $(document).ready(function () {
-    $(document).on('click', '.sortStudent', function () {
-
-      var column_name = $(this).data("student");
-      var order = $(this).data("order");
-      var arrow = '';
-      if (order == 'desc') {
-        arrow = '&nbsp;<span class="bi bi-arrow-down"></span>';
-      }
-      else {
-        arrow = '&nbsp;<span class="bi bi-arrow-up"></span>';
-      }
-      $.ajax({
-        url: "../backend/sortStudentAccounts.php",
-        method: "POST",
-        data: { column_name: column_name, order: order },
-        success: function (data) {
-          $('#studentList').html(data);
-          $('[data-student="' + column_name + '"]').append(arrow);
-        }
-      })
-    });
-
-    $(document).on('click', '.sortFaculty', function () {
-      var column_name = $(this).data("faculty");
-      var order = $(this).data("order");
-      var arrow = '';
-      if (order == 'desc') {
-        arrow = '&nbsp;<span class="bi bi-arrow-down"></span>';
-      }
-      else {
-        arrow = '&nbsp;<span class="bi bi-arrow-up"></span>';
-      }
-      $.ajax({
-        url: "../backend/sortFacultyAccounts.php",
-        method: "POST",
-        data: { column_name: column_name, order: order },
-        success: function (data) {
-          $('#facultyList').html(data);
-          $('[data-faculty="' + column_name + '"]').append(arrow);
-        }
-      })
-    });
-  });
-
-  const activateButton = document.querySelectorAll('.activatebutton');
-  activateButton.forEach(button => {
-    button.addEventListener('click', function () {
-      const accountID = button.getAttribute('data-string');
-      const user = button.getAttribute('data-user');
-      document.querySelector('#activateAccountID').value = accountID;
-      document.querySelector('#activateUserType').value = user;
-    });
-  });
-
-  const deactivateButton = document.querySelectorAll('.deactivatebutton');
-  deactivateButton.forEach(button => {
-    button.addEventListener('click', function () {
-      const accountID = button.getAttribute('data-string');
-      const user = button.getAttribute('data-user');
-      document.querySelector('#deactivateAccountID').value = accountID;
-      document.querySelector('#deactivateUserType').value = user;
-    });
-  });
-</script>

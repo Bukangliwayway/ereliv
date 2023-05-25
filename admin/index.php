@@ -13,6 +13,7 @@
     crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css" />
   <link rel="stylesheet" href="../styles/main.css" />
+
 </head>
 
 <body>
@@ -20,6 +21,8 @@
   $folder_path = "../assets/randbg/";
   $files = glob($folder_path . "*");
   $img_src = $files[array_rand($files)];
+  include '../db/db.php';
+  include '../db/queries.php';
   ?>
   <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark p-5" data-bs-theme="dark">
     <div class="container-fluid">
@@ -40,7 +43,10 @@
         <div class="d-flex gap-3">
           <button class="btn btn-outline-success" id="addFacultyBtn"><i class="bi bi-plus-lg"></i> Faculty</button>
           <button class="btn btn-outline-success" id="addProgramsBtn"><i class="bi bi-plus-lg"></i> Programs and
-            Sections</button>
+            Sections
+          </button>
+          <button class="btn btn-outline-success" id="viewAccountsBtn"><i class="bi bi-eye-fill"></i> View Accounts
+          </button>
 
         </div>
       </div>
@@ -54,50 +60,75 @@
       <div id="facultyRegistrationContainer">
         <?php include 'facultyregis.php'; ?>
       </div>
+      <div id="viewAccountsContainer">
+        <?php include 'viewaccounts.php'; ?>
+
+      </div>
     </div>
   </div>
-</body>
 
 
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    // Get the container elements
-    var programListContainer = document.getElementById("programListContainer");
-    var facultyRegistrationContainer = document.getElementById("facultyRegistrationContainer");
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var programListContainer = document.getElementById("programListContainer");
+      var facultyRegistrationContainer = document.getElementById("facultyRegistrationContainer");
+      var viewAccountsContainer = document.getElementById("viewAccountsContainer");
+      // Get the container elements
 
-    // Initially hide the containers
-    programListContainer.style.display = "none";
-    facultyRegistrationContainer.style.display = "none";
-
-    // Get the button elements
-    var addProgramsBtn = document.getElementById("addProgramsBtn");
-    var addFacultyBtn = document.getElementById("addFacultyBtn");
-
-    // Button click event for Add Programs
-    addProgramsBtn.addEventListener("click", function () {
-      // Show the program list container
-      programListContainer.style.display = "block";
-      // Hide the faculty registration container
-      facultyRegistrationContainer.style.display = "none";
-
-      // Add active class to the clicked button
-      addProgramsBtn.classList.add("active");
-      addFacultyBtn.classList.remove("active");
-    });
-
-    // Button click event for Add Faculty
-    addFacultyBtn.addEventListener("click", function () {
-      // Show the faculty registration container
-      facultyRegistrationContainer.style.display = "block";
-      // Hide the program list container
+      // Initially hide the containers
       programListContainer.style.display = "none";
+      facultyRegistrationContainer.style.display = "none";
+      viewAccountsContainer.style.display = "none";
 
-      // Add active class to the clicked button
-      addFacultyBtn.classList.add("active");
-      addProgramsBtn.classList.remove("active");
+      // Get the button elements
+      var addProgramsBtn = document.getElementById("addProgramsBtn");
+      var addFacultyBtn = document.getElementById("addFacultyBtn");
+      var viewAccountsBtn = document.getElementById("viewAccountsBtn");
+
+      // Button click event for Add Programs
+      addProgramsBtn.addEventListener("click", function () {
+        // Show the program list container
+        programListContainer.style.display = "block";
+        // Hide the faculty registration container
+        facultyRegistrationContainer.style.display = "none";
+        viewAccountsContainer.style.display = "none";
+
+        // Add active class to the clicked button
+        addProgramsBtn.classList.add("active");
+        addFacultyBtn.classList.remove("active");
+        viewAccountsBtn.classList.remove("active");
+      });
+
+      // Button click event for Add Faculty
+      addFacultyBtn.addEventListener("click", function () {
+        // Show the faculty registration container
+        facultyRegistrationContainer.style.display = "block";
+        // Hide the program list container
+        programListContainer.style.display = "none";
+        viewAccountsContainer.style.display = "none";
+
+        // Add active class to the clicked button
+        addFacultyBtn.classList.add("active");
+        addProgramsBtn.classList.remove("active");
+        viewAccountsBtn.classList.remove("active");
+      });
+
+      // Button click event for View Account
+      viewAccountsBtn.addEventListener("click", function () {
+        // Show the faculty registration container
+        viewAccountsContainer.style.display = "block";
+        facultyRegistrationContainer.style.display = "none";
+        // Hide the program list container
+        programListContainer.style.display = "none";
+
+        // Add active class to the clicked button
+        viewAccountsBtn.classList.add("active");
+        addProgramsBtn.classList.remove("active");
+        addFacultyBtn.classList.remove("active");
+      });
     });
-  });
 
-</script>
+  </script>
+</body>
 
 </html>
