@@ -23,15 +23,15 @@
       <h3 class="text-center">Student Accounts</h3>
       <table class="table table-bordered">
         <tr>
-          <th><a class="sortStudent" data-student="studentID" data-order="desc" href="#">ID</a></th>
-          <th><a class="sortStudent" data-student="firstname" data-order="desc" href="#">First Name</a></th>
-          <th><a class="sortStudent" data-student="lastname" data-order="desc" href="#">Last Name</a></th>
-          <th><a class="sortStudent" data-student="program" data-order="desc" href="#">Program</a></th>
-          <th><a class="sortStudent" data-student="section" data-order="desc" href="#">Section</a></th>
-          <th><a class="sortStudent" data-student="advisor" data-order="desc" href="#">Advisor</a></th>
-          <th><a class="sortStudent" data-student="status" data-order="desc" href="#">Status</a></th>
-          <th><a class="sortStudent" data-student="priority" data-order="desc" href="#">Priority</a></th>
-          <th class="sortFaculty">Toggle Status</th>
+          <th class="text-center"><a class="sortStudent" data-student="studentID" data-order="desc" href="#">ID</a></th>
+          <th class="text-center"><a class="sortStudent" data-student="firstname" data-order="desc" href="#">First Name</a></th>
+          <th class="text-center"><a class="sortStudent" data-student="lastname" data-order="desc" href="#">Last Name</a></th>
+          <th class="text-center"><a class="sortStudent" data-student="program" data-order="desc" href="#">Program</a></th>
+          <th class="text-center"><a class="sortStudent" data-student="section" data-order="desc" href="#">Section</a></th>
+          <th class="text-center"><a class="sortStudent" data-student="advisor" data-order="desc" href="#">Advisor</a></th>
+          <th class="text-center"><a class="sortStudent" data-student="status" data-order="desc" href="#">Status</a></th>
+          <th class="text-center"><a class="sortStudent" data-student="priority" data-order="desc" href="#">Priority</a></th>
+          <th class="text-center"> Toggle Status</th>
         </tr>
         <?php
         $students = getStudentAccounts($conn);
@@ -39,7 +39,7 @@
           if ($student["status"] == "Active") {
             $button = '<a
               href="#deactivatemodal"
-              class="deactivatebutton text-capitalize btn btn-danger"
+              class="deactivatebutton text-capitalize text-center btn btn-danger"
               data-bs-toggle="modal"
               data-string =' . $student['studentID'] . '
               data-user ="Student"
@@ -49,7 +49,7 @@
           } else {
             $button = '<a
               href="#activatemodal"
-              class="activatebutton text-capitalize btn btn-primary"
+              class="activatebutton text-capitalize text-center btn btn-primary"
               data-bs-toggle="modal"
               data-string =' . $student['studentID'] . '
               data-user ="Student"
@@ -59,31 +59,31 @@
           }
           echo '
             <tr>
-              <td class="text-capitalize">
+              <td class="text-capitalize text-center">
                 ' . $student["studentID"] . '
               </td>
-              <td class="text-capitalize">
+              <td class="text-capitalize text-center">
                 ' . $student["firstname"] . '
               </td>
-              <td class="text-capitalize">
+              <td class="text-capitalize text-center">
                 ' . $student["lastname"] . '
               </td>
-              <td class="text-capitalize">
+              <td class="text-capitalize text-center">
                 ' . $student["program"] . '
               </td>
-              <td class="text-capitalize">
+              <td class="text-capitalize text-center">
                 ' . $student["section"] . '
               </td>
-              <td class="text-capitalize">
+              <td class="text-capitalize text-center">
                 ' . getAdvisorName($conn, $student["advisor"]) . '
               </td>
-              <td class="text-capitalize">
+              <td class="text-capitalize text-center">
                 ' . $student["status"] . '
               </td>
-              <td class="text-capitalize">
+              <td class="text-capitalize text-center">
                 ' . $student["priority"] . '
               </td>
-              <td class="text-capitalize">
+              <td class="text-capitalize text-center">
                 ' . $button . '
               </td>
             </tr>
@@ -98,12 +98,12 @@
       <h3 class="text-center">Faculty Accounts</h3>
       <table class="table table-bordered">
         <tr>
-          <th><a class="sortFaculty" data-faculty="facultyID" data-order="desc" href="#">ID</a></th>
-          <th><a class="sortFaculty" data-faculty="firstname" data-order="desc" href="#">First Name</a></th>
-          <th><a class="sortFaculty" data-faculty="lastname" data-order="desc" href="#">Last Name</a></th>
-          <th><a class="sortFaculty" data-faculty="status" data-order="desc" href="#">Status</a></th>
-          <th><a class="sortFaculty" data-faculty="priority" data-order="desc" href="#">Priority</a></th>
-          <th>Toggle Status </th>
+          <th class="text-center"><a class="sortFaculty" data-faculty="facultyID" data-order="desc" href="#">ID</a></th>
+          <th class="text-center"><a class="sortFaculty" data-faculty="firstname" data-order="desc" href="#">First Name</a></th>
+          <th class="text-center"><a class="sortFaculty" data-faculty="lastname" data-order="desc" href="#">Last Name</a></th>
+          <th class="text-center"><a class="sortFaculty" data-faculty="status" data-order="desc" href="#">Status</a></th>
+          <th class="text-center"><a class="sortFaculty" data-faculty="priority" data-order="desc" href="#">Priority</a></th>
+          <th class="text-center">Toggle Status </th>
         </tr>
         <?php
         $faculties = getFacultyAccounts($conn);
@@ -111,7 +111,7 @@
           if ($faculty["status"] == "Active") {
             $button = '<a
               href="#deactivatemodal"
-              class="deactivatebutton text-capitalize btn btn-danger"
+              class="deactivatebutton text-capitalize text-center btn btn-danger"
               data-bs-toggle="modal"
               data-string =' . $faculty['facultyID'] . '
               data-user ="Faculty"
@@ -121,7 +121,7 @@
           } else {
             $button = '<a
               href="#activatemodal"
-              class="activatebutton text-capitalize btn btn-primary"
+              class="activatebutton text-capitalize text-center btn btn-primary"
               data-bs-toggle="modal"
               data-string =' . $faculty['facultyID'] . '
               data-user ="Faculty"
@@ -131,22 +131,22 @@
           }
           echo '
             <tr>
-              <td class="text-capitalize">
+              <td class="text-capitalize text-center">
                 ' . $faculty["facultyID"] . '
               </td>
-              <td class="text-capitalize">
+              <td class="text-capitalize text-center">
                 ' . $faculty["firstname"] . '
               </td>
-              <td class="text-capitalize">
+              <td class="text-capitalize text-center">
                 ' . $faculty["lastname"] . '
               </td>
-              <td class="text-capitalize">
+              <td class="text-capitalize text-center">
                 ' . $faculty["status"] . '
               </td>
-              <td class="text-capitalize">
+              <td class="text-capitalize text-center">
                 ' . $faculty["priority"] . '
               </td>
-               <td class="text-capitalize">
+               <td class="text-capitalize text-center">
                 ' . $button . '
               </td>
             </tr>
@@ -165,7 +165,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5 text-capitalize">
+          <h1 class="modal-title fs-5 text-capitalize text-center">
             Activate Account
           </h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -188,7 +188,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5 text-capitalize">
+          <h1 class="modal-title fs-5 text-capitalize text-center">
             Deactivate Account
           </h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
