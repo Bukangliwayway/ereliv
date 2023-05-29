@@ -1,13 +1,4 @@
 <?php
-// function studentNumberCheck($conn, $studentnumber) {
-//   $stmt = $conn->prepare("SELECT * FROM Student WHERE studentnumber = :studentnumber");
-//   $stmt->bindParam(':studentnumber', $studentnumber);
-//   $stmt->execute();
-//   $student = $stmt->fetch();
-
-//   if ($student) return true;
-//   return false;
-// }
 
 function emailAddressCheck($conn, $emailadd, $type)
 {
@@ -120,6 +111,14 @@ function verifyAdmin($conn, $username, $password)
   $row = $stmt->fetch(PDO::FETCH_ASSOC);
   echo $password;
   return password_verify($password, $row['Password']);
+}
+
+function returnAdminID($conn, $username){
+  $stmt = $conn->prepare("SELECT adminID FROM Admin WHERE username = :username");
+  $stmt->bindParam(':username', $username);
+  $stmt->execute();
+  $row = $stmt->fetch(PDO::FETCH_ASSOC);
+  return $row['adminID'];
 }
 
 function generateCode()

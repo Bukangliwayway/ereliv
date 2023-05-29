@@ -1,6 +1,4 @@
-<?php
-require_once("../backend/session_check.php");
-?>
+<?php require_once("../backend/session_check.php"); ?>
 
 <!DOCTYPE html>
 <html lang="en">

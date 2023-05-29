@@ -1,8 +1,7 @@
 <?php
+session_start(); // Start the session
 include '../db/db.php';
 include '../db/queries.php';
-
-session_start(); // Start the session
 
 $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
 $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
@@ -12,9 +11,8 @@ if (!verifyAdmin($conn, $username, $password)) {
   exit(); // Stop further execution of the script
 }
 
-
 // Set the session variable
-$_SESSION['userID'] = $username;
+$_SESSION['userID'] = returnAdminID($conn, $username);
 
 header("Location: /ereliv/admin");
 exit(); // Stop further execution of the script

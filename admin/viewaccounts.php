@@ -1,7 +1,4 @@
-<?php
-require_once("../backend/session_check.php");
-?>
-
+<?php require_once("../backend/session_check.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,13 +25,20 @@ require_once("../backend/session_check.php");
       <table class="table table-bordered">
         <tr>
           <th class="text-center"><a class="sortStudent" data-student="studentID" data-order="desc" href="#">ID</a></th>
-          <th class="text-center"><a class="sortStudent" data-student="firstname" data-order="desc" href="#">First Name</a></th>
-          <th class="text-center"><a class="sortStudent" data-student="lastname" data-order="desc" href="#">Last Name</a></th>
-          <th class="text-center"><a class="sortStudent" data-student="program" data-order="desc" href="#">Program</a></th>
-          <th class="text-center"><a class="sortStudent" data-student="section" data-order="desc" href="#">Section</a></th>
-          <th class="text-center"><a class="sortStudent" data-student="advisor" data-order="desc" href="#">Advisor</a></th>
-          <th class="text-center"><a class="sortStudent" data-student="status" data-order="desc" href="#">Status</a></th>
-          <th class="text-center"><a class="sortStudent" data-student="priority" data-order="desc" href="#">Priority</a></th>
+          <th class="text-center"><a class="sortStudent" data-student="firstname" data-order="desc" href="#">First
+              Name</a></th>
+          <th class="text-center"><a class="sortStudent" data-student="lastname" data-order="desc" href="#">Last
+              Name</a></th>
+          <th class="text-center"><a class="sortStudent" data-student="program" data-order="desc" href="#">Program</a>
+          </th>
+          <th class="text-center"><a class="sortStudent" data-student="section" data-order="desc" href="#">Section</a>
+          </th>
+          <th class="text-center"><a class="sortStudent" data-student="advisor" data-order="desc" href="#">Advisor</a>
+          </th>
+          <th class="text-center"><a class="sortStudent" data-student="status" data-order="desc" href="#">Status</a>
+          </th>
+          <th class="text-center"><a class="sortStudent" data-student="priority" data-order="desc" href="#">Priority</a>
+          </th>
           <th class="text-center"> Toggle Status</th>
         </tr>
         <?php
@@ -103,10 +107,14 @@ require_once("../backend/session_check.php");
       <table class="table table-bordered">
         <tr>
           <th class="text-center"><a class="sortFaculty" data-faculty="facultyID" data-order="desc" href="#">ID</a></th>
-          <th class="text-center"><a class="sortFaculty" data-faculty="firstname" data-order="desc" href="#">First Name</a></th>
-          <th class="text-center"><a class="sortFaculty" data-faculty="lastname" data-order="desc" href="#">Last Name</a></th>
-          <th class="text-center"><a class="sortFaculty" data-faculty="status" data-order="desc" href="#">Status</a></th>
-          <th class="text-center"><a class="sortFaculty" data-faculty="priority" data-order="desc" href="#">Priority</a></th>
+          <th class="text-center"><a class="sortFaculty" data-faculty="firstname" data-order="desc" href="#">First
+              Name</a></th>
+          <th class="text-center"><a class="sortFaculty" data-faculty="lastname" data-order="desc" href="#">Last
+              Name</a></th>
+          <th class="text-center"><a class="sortFaculty" data-faculty="status" data-order="desc" href="#">Status</a>
+          </th>
+          <th class="text-center"><a class="sortFaculty" data-faculty="priority" data-order="desc" href="#">Priority</a>
+          </th>
           <th class="text-center">Toggle Status </th>
         </tr>
         <?php
