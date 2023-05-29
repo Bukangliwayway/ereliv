@@ -18,6 +18,7 @@
 
 <body>
   <?php
+  require_once("../backend/session_check.php");
   $folder_path = "../assets/randbg/";
   $files = glob($folder_path . "*");
   $img_src = $files[array_rand($files)];
