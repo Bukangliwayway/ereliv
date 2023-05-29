@@ -13,6 +13,8 @@ if (!verifyAdmin($conn, $username, $password)) {
 
 // Set the session variable
 $_SESSION['userID'] = returnAdminID($conn, $username);
+$_SESSION['usertype'] = "admin";
+$_SESSION['username'] = $username;
 
 header("Location: /ereliv/admin");
 exit(); // Stop further execution of the script

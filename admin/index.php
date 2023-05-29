@@ -27,9 +27,9 @@
   $img_src = $files[array_rand($files)];
 
   // For Setting Display Attr
-  $programListContainer = $_GET['programListContainer'] ?? '';
-  $facultyRegistrationContainer = $_GET['facultyRegistrationContainer'] ?? '';
-  $viewAccountsContainer = $_GET['viewAccountsContainer'] ?? '';
+  $programListContainer = $_GET['programListContainer'] ?? 'none';
+  $facultyRegistrationContainer = $_GET['facultyRegistrationContainer'] ?? 'none';
+  $viewAccountsContainer = $_GET['viewAccountsContainer'] ?? 'none';
   ?>
   <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark p-5" data-bs-theme="dark">
     <div class="container-fluid">
@@ -61,13 +61,13 @@
   </nav>
   <div class="row m-0">
     <div class="col-md-12 rand-bg p-5">
-      <div id="programListContainer" style="display: <?php echo $programListContainer; ?>">
+      <div id="programListContainer">
         <?php include 'programlist.php'; ?>
       </div>
-      <div id="facultyRegistrationContainer" style="display: <?php echo $programListContainer; ?>">
+      <div id="facultyRegistrationContainer">
         <?php include 'facultyregis.php'; ?>
       </div>
-      <div id="viewAccountsContainer" style="display: <?php echo $programListContainer; ?>">
+      <div id="viewAccountsContainer">
         <?php include 'viewaccounts.php'; ?>
       </div>
 
@@ -80,16 +80,16 @@
       var viewAccountsContainer = document.getElementById("viewAccountsContainer");
 
       // Initially hide the containers
-      programListContainer.style.display = "none";
-      facultyRegistrationContainer.style.display = "none";
-      viewAccountsContainer.style.display = "none";
+      programListContainer.style.display = "<?php echo $programListContainer ?>";
+      facultyRegistrationContainer.style.display = "<?php echo $facultyRegistrationContainer ?>";
+      viewAccountsContainer.style.display = "<?php echo $viewAccountsContainer ?>";
 
       // Get the button elements
       var addProgramsBtn = document.getElementById("addProgramsBtn");
       var addFacultyBtn = document.getElementById("addFacultyBtn");
       var viewAccountsBtn = document.getElementById("viewAccountsBtn");
 
-    //   // Button click event for Add Programs
+      //   // Button click event for Add Programs
       addProgramsBtn.addEventListener("click", function () {
         // Show the program list container
         programListContainer.style.display = "block";
