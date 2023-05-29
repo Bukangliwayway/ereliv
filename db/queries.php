@@ -106,6 +106,21 @@ function verifyFaculty($conn, $emailadd, $password)
   $row = $stmt->fetch(PDO::FETCH_ASSOC);
   return password_verify($password, $row['Password']);
 }
+function verifyAdmin($conn, $username, $password)
+{
+  // Prepare the SQL statement to search for a matching student number
+  $stmt = $conn->prepare("SELECT Password FROM Admin WHERE username = :username");
+  $stmt->bindParam(':username', $username);
+  $stmt->execute();
+
+  //Return if wrong Email
+  if ($stmt->rowCount() === 0)
+    return false;
+
+  $row = $stmt->fetch(PDO::FETCH_ASSOC);
+  echo $password;
+  return password_verify($password, $row['Password']);
+}
 
 function generateCode()
 {
