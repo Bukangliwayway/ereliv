@@ -42,20 +42,39 @@ CREATE TABLE Research (
 );
 
 CREATE TABLE Notification (
-    notificationID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    title VARCHAR(255) NOT NULL,
-    content TEXT NOT NULL,
-    dateissued DATE NOT NULL,
-    redirect VARCHAR(255) NOT NULL,
-    status ENUM('Read', 'Unread') NOT NULL DEFAULT 'Unread',
-    facultyRecipientID INT,
-    studentRecipientID INT,
-    facultyIssuerID INT,
-    studentIssuerID INT,
-    FOREIGN KEY (facultyRecipientID) REFERENCES Faculty(facultyID),
-    FOREIGN KEY (studentRecipientID) REFERENCES Student(studentID),
-    FOREIGN KEY (facultyIssuerID) REFERENCES Faculty(facultyID),
-    FOREIGN KEY (studentIssuerID) REFERENCES Student(studentID)
+  notificationID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  title VARCHAR(255) NOT NULL,
+  content TEXT NOT NULL,
+  dateissued DATE NOT NULL DEFAULT CURRENT_DATE(),
+  redirect VARCHAR(255) NOT NULL,
+  status ENUM('Read', 'Unread') NOT NULL DEFAULT 'Unread'
+);
+
+CREATE TABLE AdminNotification (
+  adminID INT NOT NULL,
+  notificationID INT NOT NULL,
+  role ENUM('issuer', 'recipient') NOT NULL,
+  PRIMARY KEY (adminID, notificationID),
+  FOREIGN KEY (adminID) REFERENCES Admin(adminID) ON DELETE CASCADE,
+  FOREIGN KEY (notificationID) REFERENCES Notification(notificationID) ON DELETE CASCADE
+);
+
+CREATE TABLE FacultyNotification (
+  facultyID INT NOT NULL,
+  notificationID INT NOT NULL,
+  role ENUM('issuer', 'recipient') NOT NULL,
+  PRIMARY KEY (facultyID, notificationID),
+  FOREIGN KEY (facultyID) REFERENCES Faculty(facultyID) ON DELETE CASCADE,
+  FOREIGN KEY (notificationID) REFERENCES Notification(notificationID) ON DELETE CASCADE
+);
+
+CREATE TABLE StudentNotification (
+  studentID INT NOT NULL,
+  notificationID INT NOT NULL,
+  role ENUM('issuer', 'recipient') NOT NULL,
+  PRIMARY KEY (studentID, notificationID),
+  FOREIGN KEY (studentID) REFERENCES Student(studentID) ON DELETE CASCADE,
+  FOREIGN KEY (notificationID) REFERENCES Notification(notificationID) ON DELETE CASCADE
 );
 
 CREATE TABLE Author (

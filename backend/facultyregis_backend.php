@@ -19,4 +19,12 @@ $body = "Welcome to the PUPQCRMS Prof. " . $lastname . " <br> Admin of the Syste
 
 sendEmail($conn, $emailadd, $title, $body, "http://localhost/ereliv/admin/?facultyRegistrationContainer=block");
 
+$facultyID = getFacultyID($conn, $emailadd);
+$issuerID = $_SESSION["userID"];
+$content = "Congratulations on successfully creating your account! We are thrilled to welcome you to the PUPQC Paper Management System - E Reliv. This powerful platform will empower you to manage your papers efficiently, collaborate effectively, and streamline your academic processes. We are excited to have you on board and look forward to witnessing your valuable contributions. Should you have any questions or require assistance, please don't hesitate to reach out. Welcome to the PUPQC community!";
+$redirect = "#";
+
+createNotif($conn, $facultyID, $issuerID, "Faculty", "Admin", $title, $content, $redirect);
+
 send_message_and_redirect("Account Successfully Added", "http://localhost/ereliv/admin/?facultyRegistrationContainer=block");
+

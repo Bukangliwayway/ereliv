@@ -113,7 +113,8 @@ function verifyAdmin($conn, $username, $password)
   return password_verify($password, $row['Password']);
 }
 
-function returnAdminID($conn, $username){
+function returnAdminID($conn, $username)
+{
   $stmt = $conn->prepare("SELECT adminID FROM Admin WHERE username = :username");
   $stmt->bindParam(':username', $username);
   $stmt->execute();
@@ -235,7 +236,6 @@ function addSection($conn, $name, $programID)
 
 function linkSectionAndProgram($conn, $name, $programID)
 {
-  echo $programID;
   $sectionID = getSectionID($conn, $name);
   $stmt = $conn->prepare("INSERT INTO Programsections (programID, sectionID) Values (:programID, :sectionID)");
   $stmt->bindParam(':programID', $programID);
@@ -377,7 +377,6 @@ function getLinkedSection($conn, $programID)
 function linkStudentAndAdvisor($conn, $emailadd, $facultyID)
 {
   $studentID = getStudentID($conn, $emailadd);
-  echo $facultyID . " nani " . $studentID;
   $stmt = $conn->prepare("INSERT INTO Adviserteam (facultyID, studentID) Values (:facultyID, :studentID)");
   $stmt->bindParam(':facultyID', $facultyID);
   $stmt->bindParam(':studentID', $studentID);
@@ -387,17 +386,11 @@ function linkStudentAndAdvisor($conn, $emailadd, $facultyID)
     echo $e->getMessage();
     return false;
   }
+
   return true;
 }
 
-function getStudentID($conn, $emailadd)
-{
-  $stmt = $conn->prepare("SELECT studentID FROM Student WHERE emailadd = :emailadd");
-  $stmt->bindParam(':emailadd', $emailadd);
-  $stmt->execute();
-  $result = $stmt->fetch();
-  return $result["studentID"];
-}
+
 
 
 function getStudentAccounts($conn)
@@ -464,5 +457,97 @@ function toggleStudentAccount($conn, $studentID, $status)
     return false;
   }
   return true;
+}
+
+
+function createNotif($conn, $title, $content, $redirect)
+{
+  // Prepare the SQL statement
+  $stmt = $conn->prepare("INSERT INTO Notification (title, content, redirect) VALUES (:title, :content, :redirect)");
+
+  // Bind the parameters to the prepared statement
+  $stmt->bindParam(':title', $title);
+  $stmt->bindParam(':content', $content);
+  $stmt->bindParam(':redirect', $redirect);
+  $stmt->execute();
+  return $conn->lastInsertId();
+}
+function createStudentNotif($conn, $role, $studentID, $notificationID)
+{
+  // Prepare the SQL statement
+  $stmt = $conn->prepare("INSERT INTO StudentNotification (studentID, notificationID, role) VALUES (:studentID, :notificationID, :role)");
+
+  // Bind the parameters to the prepared statement
+  $stmt->bindParam(':studentID', $studentID);
+  $stmt->bindParam(':notificationID', $notificationID);
+  $stmt->bindParam(':role', $role);
+  try {
+    $stmt->execute();
+  } catch (PDOException $e) {
+    echo $e->getMessage();
+    return false;
+  }
+  return true;
+}
+function createFacultyNotif($conn, $role, $facultyID, $notificationID)
+{
+  // Prepare the SQL statement
+  $stmt = $conn->prepare("INSERT INTO FacultyNotification (facultyID, notificationID, role) VALUES (:facultyID, :notificationID, :role)");
+
+  // Bind the parameters to the prepared statement
+  $stmt->bindParam(':facultyID', $facultyID);
+  $stmt->bindParam(':notificationID', $notificationID);
+  $stmt->bindParam(':role', $role);
+  try {
+    $stmt->execute();
+  } catch (PDOException $e) {
+    echo $e->getMessage();
+    return false;
+  }
+  return true;
+}
+function createAdminNotif($conn, $role, $adminID, $notificationID)
+{
+  // Prepare the SQL statement
+  $stmt = $conn->prepare("INSERT INTO AdminNotification (adminID, notificationID, role) VALUES (:adminID, :notificationID, :role)");
+
+  // Bind the parameters to the prepared statement
+  $stmt->bindParam(':adminID', $adminID);
+  $stmt->bindParam(':notificationID', $notificationID);
+  $stmt->bindParam(':role', $role);
+  try {
+    $stmt->execute();
+  } catch (PDOException $e) {
+    echo $e->getMessage();
+    return false;
+  }
+  return true;
+}
+
+function getFacultyID($conn, $emailadd)
+{
+  $stmt = $conn->prepare("SELECT * FROM Faculty WHERE emailadd = :emailadd");
+  $stmt->bindParam(':emailadd', $emailadd);
+  $stmt->execute();
+  $result = $stmt->fetch();
+  return $result["facultyID"];
+}
+
+function getAdminID($conn, $username)
+{
+  $stmt = $conn->prepare("SELECT * FROM Admin WHERE username = :username");
+  $stmt->bindParam(':username', $username);
+  $stmt->execute();
+  $result = $stmt->fetch();
+  return $result["adminID"];
+}
+
+function getStudentID($conn, $emailadd)
+{
+  $stmt = $conn->prepare("SELECT * FROM Student WHERE emailadd = :emailadd");
+  $stmt->bindParam(':emailadd', $emailadd);
+  $stmt->execute();
+  $result = $stmt->fetch();
+  return $result["studentID"];
 }
 ?>

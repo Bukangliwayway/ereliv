@@ -1,3 +1,4 @@
+<?php require_once("../backend/session_check.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,124 +18,45 @@
 </head>
 
 <body>
-  <a href="#notificationIDmodal" class="activatebutton text-capitalize btn btn-primary" data-bs-toggle="modal"
-    data-user="Student">
-    Activate
-  </a>
+  <div class="container p-5">
+    <a href="#" class="redirect text-decoration-none text-reset">
+      <div class="row  mb-3">
+        <div class="col-8  m-auto p-3 border border-smoke rounded">
 
-  <div class="modal fade" id="notificationIDmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="activatemodal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5 text-capitalize">Activate Account</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body ">
-          <div class="container mb-3">
-            <div class="row">
-              <div class="col-sm-4">
-                <h6>Title:</h6>
-              </div>
-              <div class="col-sm-8">
-                <p id="notificationTitle"></p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-4">
-                <h6>Content:</h6>
-              </div>
-              <div class="col-sm-8">
-                <p id="notificationContent"></p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-4">
-                <h6>Sender:</h6>
-              </div>
-              <div class="col-sm-8">
-                <p id="notificationSender"></p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-4">
-                <h6>Date Issued:</h6>
-              </div>
-              <div class="col-sm-8">
-                <p id="notificationDate"></p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-4">
-                <h6>Deadline:</h6>
-              </div>
-              <div class="col-sm-8">
-                <p id="notificationDeadline"></p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-4">
-                <h6>Comments:</h6>
-              </div>
-              <div class="col-sm-8">
-                <p id="notificationComments"></p>
-              </div>
+          <div class="notif-head d-flex justify-content-around align-items-center">
+            <span class="text-center title">
+              <h2>Title</h2>
+            </span>
+            <div class="d-flex gap-5">
+              <span class="text-center sender">
+                <h5>sender</h5>
+              </span>
+              <span class="text-center date">
+                <h5>date</h5>
+              </span>
             </div>
           </div>
-          <div class="container">
-            <div class="row">
-              <div class="col-sm-4">
-                <h6>Title:</h6>
-              </div>
-              <div class="col-sm-8">
-                <p id="notificationTitle"></p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-4">
-                <h6>Content:</h6>
-              </div>
-              <div class="col-sm-8">
-                <p id="notificationContent"></p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-4">
-                <h6>Sender:</h6>
-              </div>
-              <div class="col-sm-8">
-                <p id="notificationSender"></p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-4">
-                <h6>Date Issued:</h6>
-              </div>
-              <div class="col-sm-8">
-                <p id="notificationDate"></p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-4">
-                <h6>Deadline:</h6>
-              </div>
-              <div class="col-sm-8">
-                <p id="notificationDeadline"></p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-4">
-                <h6>Comments:</h6>
-              </div>
-              <div class="col-sm-8">
-                <p id="notificationComments"></p>
-              </div>
-            </div>
-          </div>
+          <p class="truncate content ms-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus
+            laudantium
+            voluptatibus architecto ipsa nulla explicabo atque consequatur vel aliquid non nemo, eligendi culpa
+            laboriosam
+            accusantium suscipit asperiores ducimus harum temporibus labore ratione, quia pariatur sed. Quibusdam alias,
+            nulla maxime nemo laudantium repellendus repudiandae, quas dicta, odit incidunt ex facilis hic!</p>
         </div>
       </div>
-    </div>
+    </a>
   </div>
+
+  <script>
+    $(document).ready(function () {
+      $('.truncate').each(function () {
+        var words = $(this).text().trim().split(' ');
+        if (words.length > 50) {
+          $(this).text(words.slice(0, 50).join(' ') + '...');
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>
