@@ -482,6 +482,23 @@ function getFacultyEmail($conn, $userID)
   $result = $stmt->fetch();
   return $result['emailadd'];
 }
+function getFacultyStatus($conn, $emailadd)
+{
+  $stmt = $conn->prepare("SELECT * FROM Faculty WHERE emailadd = :emailadd");
+  $stmt->bindParam(':emailadd', $emailadd);
+  $stmt->execute();
+  $result = $stmt->fetch();
+  return $result['status'];
+}
+
+function getStudentStatus($conn, $studentnumber)
+{
+  $stmt = $conn->prepare("SELECT * FROM Student WHERE studentnumber = :studentnumber");
+  $stmt->bindParam(':studentnumber', $studentnumber);
+  $stmt->execute();
+  $result = $stmt->fetch();
+  return $result['status'];
+}
 function createNotif($conn, $title, $content, $redirect)
 {
   // Prepare the SQL statement

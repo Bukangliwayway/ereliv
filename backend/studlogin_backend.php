@@ -11,8 +11,9 @@ if (!studentNumberExists($conn, $studentnumber))
 
 if (!verifyStudent($conn, $studentnumber, $section, $password))
   send_message_and_redirect("Wrong Credentials", "/ereliv/studlogin.php");
-
-
+  
+if(getStudentStatus($conn, $studentnumber) != "Active")
+  send_message_and_redirect("Wait for your Account Approval First", "/ereliv/studlogin.php");
 
 // Set the session variable
 $_SESSION['userID'] = getStudentID($conn, getStudentEmail2($conn, $studentnumber));
