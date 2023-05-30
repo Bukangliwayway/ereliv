@@ -466,6 +466,14 @@ function getStudentEmail($conn, $userID)
   $result = $stmt->fetch();
   return $result['emailadd'];
 }
+function getStudentEmail2($conn, $studentnumber)
+{
+  $stmt = $conn->prepare("SELECT * FROM Student WHERE studentnumber = :studentnumber");
+  $stmt->bindParam(':studentnumber', $studentnumber);
+  $stmt->execute();
+  $result = $stmt->fetch();
+  return $result['emailadd'];
+}
 function getFacultyEmail($conn, $userID)
 {
   $stmt = $conn->prepare("SELECT * FROM Faculty WHERE facultyID = :userID");

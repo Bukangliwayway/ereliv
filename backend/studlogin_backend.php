@@ -12,6 +12,12 @@ if (!studentNumberExists($conn, $studentnumber))
 if (!verifyStudent($conn, $studentnumber, $section, $password))
   send_message_and_redirect("Wrong Credentials", "/ereliv/studlogin.php");
 
+
+
+// Set the session variable
+$_SESSION['userID'] = getStudentID($conn, getStudentEmail2($conn, $studentnumber));
+$_SESSION['usertype'] = "student";
+$_SESSION['username'] = getFullNameByID($conn, "Student", $_SESSION['userID']);
 header("Location: /ereliv/users/student/");
 
 ?>
