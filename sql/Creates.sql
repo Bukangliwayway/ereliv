@@ -50,30 +50,21 @@ CREATE TABLE Notification (
   status ENUM('Read', 'Unread') NOT NULL DEFAULT 'Unread'
 );
 
-CREATE TABLE AdminNotification (
-  adminID INT NOT NULL,
+CREATE TABLE NotificationLink (
+  linkID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  issuerAdminID INT,
+  issuerFacultyID INT,
+  issuerStudentID INT,
+  recipientAdminID INT,
+  recipientFacultyID INT,
+  recipientStudentID INT,
   notificationID INT NOT NULL,
-  role ENUM('issuer', 'recipient') NOT NULL,
-  PRIMARY KEY (adminID, notificationID),
-  FOREIGN KEY (adminID) REFERENCES Admin(adminID) ON DELETE CASCADE,
-  FOREIGN KEY (notificationID) REFERENCES Notification(notificationID) ON DELETE CASCADE
-);
-
-CREATE TABLE FacultyNotification (
-  facultyID INT NOT NULL,
-  notificationID INT NOT NULL,
-  role ENUM('issuer', 'recipient') NOT NULL,
-  PRIMARY KEY (facultyID, notificationID),
-  FOREIGN KEY (facultyID) REFERENCES Faculty(facultyID) ON DELETE CASCADE,
-  FOREIGN KEY (notificationID) REFERENCES Notification(notificationID) ON DELETE CASCADE
-);
-
-CREATE TABLE StudentNotification (
-  studentID INT NOT NULL,
-  notificationID INT NOT NULL,
-  role ENUM('issuer', 'recipient') NOT NULL,
-  PRIMARY KEY (studentID, notificationID),
-  FOREIGN KEY (studentID) REFERENCES Student(studentID) ON DELETE CASCADE,
+  FOREIGN KEY (issuerAdminID) REFERENCES Admin(adminID) ON DELETE CASCADE,
+  FOREIGN KEY (issuerFacultyID) REFERENCES Faculty(facultyID) ON DELETE CASCADE,
+  FOREIGN KEY (issuerStudentID) REFERENCES Student(studentID) ON DELETE CASCADE,
+  FOREIGN KEY (recipientAdminID) REFERENCES Admin(adminID) ON DELETE CASCADE,
+  FOREIGN KEY (recipientFacultyID) REFERENCES Faculty(facultyID) ON DELETE CASCADE,
+  FOREIGN KEY (recipientStudentID) REFERENCES Student(studentID) ON DELETE CASCADE,
   FOREIGN KEY (notificationID) REFERENCES Notification(notificationID) ON DELETE CASCADE
 );
 

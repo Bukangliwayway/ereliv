@@ -30,6 +30,7 @@
   $programListContainer = $_GET['programListContainer'] ?? 'none';
   $facultyRegistrationContainer = $_GET['facultyRegistrationContainer'] ?? 'none';
   $viewAccountsContainer = $_GET['viewAccountsContainer'] ?? 'none';
+  $notificationsContainer = $_GET['noti$notificationsContainer'] ?? 'none';
   ?>
   <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark p-5" data-bs-theme="dark">
     <div class="container-fluid">
@@ -54,6 +55,8 @@
           </button>
           <button class="btn btn-outline-success" id="viewAccountsBtn"><i class="bi bi-eye-fill"></i> View Accounts
           </button>
+          <button class="btn btn-outline-success" id="notificationsBtn"><i class="bi bi-bell-fill"></i> Notifications
+          </button>
 
         </div>
       </div>
@@ -70,6 +73,9 @@
       <div id="viewAccountsContainer">
         <?php include 'viewaccounts.php'; ?>
       </div>
+      <div id="notificationsContainer">
+        <?php include 'notifications.php'; ?>
+      </div>
 
     </div>
   </div>
@@ -78,16 +84,19 @@
       var programListContainer = document.getElementById("programListContainer");
       var facultyRegistrationContainer = document.getElementById("facultyRegistrationContainer");
       var viewAccountsContainer = document.getElementById("viewAccountsContainer");
+      var notificationsContainer = document.getElementById("notificationsContainer");
 
       // Initially hide the containers
       programListContainer.style.display = "<?php echo $programListContainer ?>";
       facultyRegistrationContainer.style.display = "<?php echo $facultyRegistrationContainer ?>";
       viewAccountsContainer.style.display = "<?php echo $viewAccountsContainer ?>";
+      notificationsContainer.style.display = "<?php echo $notificationsContainer ?>";
 
       // Get the button elements
       var addProgramsBtn = document.getElementById("addProgramsBtn");
       var addFacultyBtn = document.getElementById("addFacultyBtn");
       var viewAccountsBtn = document.getElementById("viewAccountsBtn");
+      var notificationsBtn = document.getElementById("notificationsBtn");
 
       //   // Button click event for Add Programs
       addProgramsBtn.addEventListener("click", function () {
@@ -97,11 +106,13 @@
         // Hide the faculty registration container and view accounts container
         facultyRegistrationContainer.style.display = "none";
         viewAccountsContainer.style.display = "none";
+        notificationsContainer.style.display = "none";
 
         // Add active class to the clicked button
         addProgramsBtn.classList.add("active");
         addFacultyBtn.classList.remove("active");
         viewAccountsBtn.classList.remove("active");
+        notificationsContainer.classList.remove("active");
       });
 
       // Button click event for Add Faculty
@@ -112,11 +123,13 @@
         // Hide the program list container and view accounts container
         programListContainer.style.display = "none";
         viewAccountsContainer.style.display = "none";
+        notificationsContainer.style.display = "none";
 
         // Add active class to the clicked button
         addFacultyBtn.classList.add("active");
         addProgramsBtn.classList.remove("active");
         viewAccountsBtn.classList.remove("active");
+        notificationsBtn.classList.remove("active");
       });
 
       // Button click event for View Accounts
@@ -127,9 +140,28 @@
         // Hide the program list container and faculty registration container
         programListContainer.style.display = "none";
         facultyRegistrationContainer.style.display = "none";
+        notificationsContainer.style.display = "none";
 
         // Add active class to the clicked button
         viewAccountsBtn.classList.add("active");
+        addProgramsBtn.classList.remove("active");
+        addFacultyBtn.classList.remove("active");
+        notificationsBtn.classList.remove("active");
+      });
+
+      // Button click event for Notifications 
+      notificationsBtn.addEventListener("click", function () {
+        // Show the view accounts container
+        notificationsContainer.style.display = "block";
+        
+        // Hide the program list container and faculty registration container
+        programListContainer.style.display = "none";
+        facultyRegistrationContainer.style.display = "none";
+        viewAccountsContainer.style.display = "none";
+
+        // Add active class to the clicked button
+        notificationsBtn.classList.add("active");
+        viewAccountsBtn.classList.remove("active");
         addProgramsBtn.classList.remove("active");
         addFacultyBtn.classList.remove("active");
       });

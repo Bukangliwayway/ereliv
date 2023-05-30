@@ -1,4 +1,5 @@
 <?php
+require_once("../backend/session_check.php");
 include '../db/db.php';
 include '../db/queries.php';
 
@@ -30,19 +31,16 @@ sendEmail($conn, $emailadd, $title, $body, "http://localhost/ereliv/studregis.ph
 $title = "Request for Account Approval";
 $content = "I am writing to request the approval of my student account on the PUPQC Paper Management System. As a registered user, I have created the account and seek your validation to gain access to the system's valuable resources. Your approval will greatly contribute to my active participation in academic pursuits. Thank you for your kind attention.";
 $redirect = "#";
-
 $notificationID = createNotif($conn, $title, $content, $redirect);
+$issuerID = getStudentID($conn, $emailadd);
+$recipientID = $advisor;
 
-$issuer = getStudentID($conn, $emailadd);
-$recipient = $advisor;
+// Notification for Faculty approval
+createNotificationLink($conn, $recipientID, $issuerID, $notificationID, 'faculty', 'student');
 
-echo $notificationID, $issuer, "nani", $recipient;
-
-//Add Notification to Issuer
-createStudentNotif($conn, 'Issuer', $issuer, $notificationID);
-
-//Add Notification to Recipient
-createFacultyNotif($conn, 'Recipient', $recipient, $notificationID);
+$recipientID = $_SESSION['userID']; //Admin
+// Notification for Admin approval
+createNotificationLink($conn, $recipientID, $issuerID, $notificationID, 'admin', 'student');
 
 send_message_and_redirect("Student Account has been Submitted", "http://localhost/ereliv/studregis.php");
 

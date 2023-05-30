@@ -14,48 +14,76 @@
     crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css" />
   <link rel="stylesheet" href="../styles/main.css" />
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
   <div class="container p-5">
-    <a href="#" class="redirect text-decoration-none text-reset">
-      <div class="row  mb-3">
-        <div class="col-8  m-auto p-3 border border-smoke rounded">
+    <?php
+    $notifications = getAdminNotifications($conn, $_SESSION['userID']);
+    foreach ($notifications as $notification) {
+      $title = $notification['title'];
+      $content = $notification['content'];
+      $dateissued = $notification['dateissued'];
+      $redirect = $notification['redirect'];
+      $issuername = $notification['issuername'];
+      $issuertype = $notification['issuertype'];
 
-          <div class="notif-head d-flex justify-content-around align-items-center">
-            <span class="text-center title">
-              <h2>Title</h2>
-            </span>
-            <div class="d-flex gap-5">
-              <span class="text-center sender">
-                <h5>sender</h5>
-              </span>
-              <span class="text-center date">
-                <h5>date</h5>
-              </span>
+      echo '<a href="' . $redirect . '" class="redirect text-decoration-none text-reset">
+        <div class="row  mb-3">
+          <div class="col-8  m-auto p-3 border border-smoke rounded">
+            <div class="notif-head d-flex justify-content-around align-items-center">
+              <span class="text-center title">' . $title . '</span>
+              <div class="d-flex flex-column">
+                <div class="d-flex gap-5">
+                  <span class="text-center issuername">' . $issuername . '</span>
+                  <span> — </span>
+                  <span class="text-center issuertype">' . $issuertype . '</span>
+                </div>
+                <div class="d-flex justify-content-end">
+                  <span class="text-center dateissued">' . $dateissued . '</span>
+                </div>
+              </div>
             </div>
+            <p class="truncate content ms-3" data-full-text="' . $content . '">' . $content . '</p>
           </div>
-          <p class="truncate content ms-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus
-            laudantium
-            voluptatibus architecto ipsa nulla explicabo atque consequatur vel aliquid non nemo, eligendi culpa
-            laboriosam
-            accusantium suscipit asperiores ducimus harum temporibus labore ratione, quia pariatur sed. Quibusdam alias,
-            nulla maxime nemo laudantium repellendus repudiandae, quas dicta, odit incidunt ex facilis hic!</p>
         </div>
-      </div>
-    </a>
+      </a>';
+    }
+    ?>
   </div>
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     $(document).ready(function () {
+      // Truncate text initially
       $('.truncate').each(function () {
         var words = $(this).text().trim().split(' ');
-        if (words.length > 50) {
-          $(this).text(words.slice(0, 50).join(' ') + '...');
+        if (words.length > 30) {
+          var truncatedText = words.slice(0, 30).join(' ') + '...';
+          $(this).data('truncated-text', truncatedText)
+            .data('full-text', $(this).text())
+            .text(truncatedText)
+            .addClass('truncated');
+        }
+      });
+
+      // Toggle truncation on click
+      $('.redirect').click(function (e) {
+        e.preventDefault();
+        var content = $(this).find('.content');
+
+        if (content.hasClass('truncated')) {
+          // Expand the text
+          content.text(content.data('full-text')).removeClass('truncated');
+        } else {
+          // Truncate the text
+          content.text(content.data('truncated-text')).addClass('truncated');
         }
       });
     });
+
+
+
   </script>
 </body>
 

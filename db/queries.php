@@ -458,8 +458,22 @@ function toggleStudentAccount($conn, $studentID, $status)
   }
   return true;
 }
-
-
+function getStudentEmail($conn, $userID)
+{
+  $stmt = $conn->prepare("SELECT * FROM Student WHERE studentID = :userID");
+  $stmt->bindParam(':userID', $userID);
+  $stmt->execute();
+  $result = $stmt->fetch();
+  return $result['emailadd'];
+}
+function getFacultyEmail($conn, $userID)
+{
+  $stmt = $conn->prepare("SELECT * FROM Faculty WHERE facultyID = :userID");
+  $stmt->bindParam(':userID', $userID);
+  $stmt->execute();
+  $result = $stmt->fetch();
+  return $result['emailadd'];
+}
 function createNotif($conn, $title, $content, $redirect)
 {
   // Prepare the SQL statement
@@ -472,15 +486,53 @@ function createNotif($conn, $title, $content, $redirect)
   $stmt->execute();
   return $conn->lastInsertId();
 }
-function createStudentNotif($conn, $role, $studentID, $notificationID)
-{
-  // Prepare the SQL statement
-  $stmt = $conn->prepare("INSERT INTO StudentNotification (studentID, notificationID, role) VALUES (:studentID, :notificationID, :role)");
 
-  // Bind the parameters to the prepared statement
-  $stmt->bindParam(':studentID', $studentID);
+function createNotificationLink($conn, $recipientID, $issuerID, $notificationID, $recipienttype, $issuertype)
+{
+  $query = "INSERT INTO NotificationLink (issuerAdminID, issuerFacultyID, issuerStudentID, recipientAdminID, recipientFacultyID, recipientStudentID, notificationID)
+            VALUES (:issuerAdminID, :issuerFacultyID, :issuerStudentID, :recipientAdminID, :recipientFacultyID, :recipientStudentID, :notificationID)";
+
+  $stmt = $conn->prepare($query);
+
+  switch ($recipienttype) {
+    case 'admin':
+      $recipientAdminID = $recipientID;
+      break;
+    case 'faculty':
+      $recipientFacultyID = $recipientID;
+      break;
+    case 'student':
+      $recipientStudentID = $recipientID;
+      break;
+    default:
+      // Handle invalid recipient type
+      return false;
+  }
+
+  switch ($issuertype) {
+    case 'admin':
+      $issuerAdminID = $issuerID;
+      break;
+    case 'faculty':
+      $issuerFacultyID = $issuerID;
+      break;
+    case 'student':
+      $issuerStudentID = $issuerID;
+      break;
+    default:
+      // Handle invalid issuer type
+      return false;
+  }
+
+  // Bind parameters
+  $stmt->bindParam(':issuerAdminID', $issuerAdminID);
+  $stmt->bindParam(':issuerFacultyID', $issuerFacultyID);
+  $stmt->bindParam(':issuerStudentID', $issuerStudentID);
+  $stmt->bindParam(':recipientAdminID', $recipientAdminID);
+  $stmt->bindParam(':recipientFacultyID', $recipientFacultyID);
+  $stmt->bindParam(':recipientStudentID', $recipientStudentID);
   $stmt->bindParam(':notificationID', $notificationID);
-  $stmt->bindParam(':role', $role);
+
   try {
     $stmt->execute();
   } catch (PDOException $e) {
@@ -489,40 +541,7 @@ function createStudentNotif($conn, $role, $studentID, $notificationID)
   }
   return true;
 }
-function createFacultyNotif($conn, $role, $facultyID, $notificationID)
-{
-  // Prepare the SQL statement
-  $stmt = $conn->prepare("INSERT INTO FacultyNotification (facultyID, notificationID, role) VALUES (:facultyID, :notificationID, :role)");
 
-  // Bind the parameters to the prepared statement
-  $stmt->bindParam(':facultyID', $facultyID);
-  $stmt->bindParam(':notificationID', $notificationID);
-  $stmt->bindParam(':role', $role);
-  try {
-    $stmt->execute();
-  } catch (PDOException $e) {
-    echo $e->getMessage();
-    return false;
-  }
-  return true;
-}
-function createAdminNotif($conn, $role, $adminID, $notificationID)
-{
-  // Prepare the SQL statement
-  $stmt = $conn->prepare("INSERT INTO AdminNotification (adminID, notificationID, role) VALUES (:adminID, :notificationID, :role)");
-
-  // Bind the parameters to the prepared statement
-  $stmt->bindParam(':adminID', $adminID);
-  $stmt->bindParam(':notificationID', $notificationID);
-  $stmt->bindParam(':role', $role);
-  try {
-    $stmt->execute();
-  } catch (PDOException $e) {
-    echo $e->getMessage();
-    return false;
-  }
-  return true;
-}
 
 function getFacultyID($conn, $emailadd)
 {
@@ -538,7 +557,7 @@ function getAdminID($conn, $username)
   $stmt = $conn->prepare("SELECT * FROM Admin WHERE username = :username");
   $stmt->bindParam(':username', $username);
   $stmt->execute();
-  $result = $stmt->fetch();
+  $result = $stmt->fetch(PDO::FETCH_ASSOC);
   return $result["adminID"];
 }
 
@@ -549,5 +568,86 @@ function getStudentID($conn, $emailadd)
   $stmt->execute();
   $result = $stmt->fetch();
   return $result["studentID"];
+}
+
+function getFacultyNotifications($conn, $recipientFacultyID)
+{
+  $stmt = $conn->prepare("
+    SELECT n.title, n.content, n.dateissued, n.redirect,
+       CONCAT_WS(' ', COALESCE(a.firstname, f.firstname, s.firstname), COALESCE(a.lastname, f.lastname, s.lastname)) AS issuername,
+       CASE WHEN a.adminID IS NOT NULL THEN 'admin'
+            WHEN f.facultyID IS NOT NULL THEN 'faculty'
+            WHEN s.studentID IS NOT NULL THEN 'student'
+            ELSE NULL
+          END AS issuertype
+    FROM NotificationLink nl
+    JOIN Notification n ON nl.notificationID = n.notificationID
+    LEFT JOIN Admin a ON nl.issuerAdminID = a.adminID
+    LEFT JOIN Faculty f ON nl.issuerFacultyID = f.facultyID
+    LEFT JOIN Student s ON nl.issuerStudentID = s.studentID
+    WHERE nl.recipientFacultyID = :recipientFacultyID;
+  ");
+  $stmt->bindParam(':recipientFacultyID', $recipientFacultyID);
+
+  $stmt->execute();
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+function getStudentNotifications($conn, $recipientStudentID)
+{
+  $stmt = $conn->prepare("
+    SELECT n.title, n.content, n.dateissued, n.redirect, n.status,
+       CONCAT_WS(' ', COALESCE(a.firstname, f.firstname, s.firstname), COALESCE(a.lastname, f.lastname, s.lastname)) AS issuername,
+       CASE WHEN a.adminID IS NOT NULL THEN 'admin'
+            WHEN f.facultyID IS NOT NULL THEN 'faculty'
+            WHEN s.studentID IS NOT NULL THEN 'student'
+            ELSE NULL
+          END AS issuertype
+    FROM NotificationLink nl
+    JOIN Notification n ON nl.notificationID = n.notificationID
+    LEFT JOIN Admin a ON nl.issuerAdminID = a.adminID
+    LEFT JOIN Faculty f ON nl.issuerStudentID = f.facultyID
+    LEFT JOIN Student s ON nl.issuerStudentID = s.studentID
+    WHERE nl.recipientStudentID = :recipientStudentID;
+  ");
+  $stmt->bindParam(':recipientStudentID', $recipientStudentID);
+
+  $stmt->execute();
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+function getAdminNotifications($conn, $recipientAdminID)
+{
+  $stmt = $conn->prepare("
+  SELECT n.title, n.content, n.dateissued, n.redirect, n.status,
+  CONCAT_WS(' ', COALESCE(a.firstname, f.firstname, s.firstname), COALESCE(a.lastname, f.lastname, s.lastname)) AS issuername,
+  CASE WHEN a.adminID IS NOT NULL THEN 'admin'
+  WHEN f.facultyID IS NOT NULL THEN 'faculty'
+  WHEN s.studentID IS NOT NULL THEN 'student'
+  ELSE NULL
+  END AS issuertype
+  FROM NotificationLink nl
+  JOIN Notification n ON nl.notificationID = n.notificationID
+  LEFT JOIN Admin a ON nl.issuerAdminID = a.adminID
+  LEFT JOIN Faculty f ON nl.issuerFacultyID = f.facultyID
+  LEFT JOIN Student s ON nl.issuerStudentID = s.studentID
+  WHERE nl.recipientAdminID = :recipientAdminID;
+  ");
+  $stmt->bindParam(':recipientAdminID', $recipientAdminID);
+  try {
+    $stmt->execute();
+  } catch (PDOException $e) {
+    echo "PDOException: " . $e->getMessage();
+  }
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getFullNameByID($conn, $table, $userID)
+{
+  $stmt = $conn->prepare("SELECT firstname, lastname FROM $table WHERE $userID = :userID");
+  $stmt->bindParam(':userID', $userID);
+  $stmt->execute();
+  $result = $stmt->fetch(PDO::FETCH_ASSOC);
+  $firstName = $result['firstname'];
+  $lastName = $result['lastname'];
+  return "$firstName $lastName";
 }
 ?>

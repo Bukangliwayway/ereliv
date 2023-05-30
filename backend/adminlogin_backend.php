@@ -11,10 +11,12 @@ if (!verifyAdmin($conn, $username, $password)) {
   exit(); // Stop further execution of the script
 }
 
+
+
 // Set the session variable
-$_SESSION['userID'] = returnAdminID($conn, $username);
+$_SESSION['userID'] = getAdminID($conn, $username);
 $_SESSION['usertype'] = "admin";
-$_SESSION['username'] = $username;
+$_SESSION['username'] = getFullNameByID($conn, "Admin", $_SESSION['userID']);
 
 header("Location: /ereliv/admin");
 exit(); // Stop further execution of the script
