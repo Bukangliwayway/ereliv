@@ -57,7 +57,10 @@
           </button>
           <button class="btn btn-outline-success" id="notificationsBtn"><i class="bi bi-bell-fill"></i> Notifications
           </button>
-
+          <a href="#signoutmodal" class="btn btn-outline-danger" id="signoutBtn"
+            data-bs-toggle="modal">
+            <i class="bi bi-box-arrow-right"></i> Sign Out
+          </a>
         </div>
       </div>
     </div>
@@ -79,6 +82,28 @@
 
     </div>
   </div>
+
+  <!-- modals -->
+  <div class="modal fade" id="signoutmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="signout" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 text-capitalize text-center">
+            Sign Out?
+          </h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="container modal-body">
+          <form method="POST" action="../backend/session_out.php" class="container d-flex flex-row gap-3">
+            <button type="submit" class="btn btn-danger">Yes</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">No</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       var programListContainer = document.getElementById("programListContainer");
@@ -153,7 +178,7 @@
       notificationsBtn.addEventListener("click", function () {
         // Show the view accounts container
         notificationsContainer.style.display = "block";
-        
+
         // Hide the program list container and faculty registration container
         programListContainer.style.display = "none";
         facultyRegistrationContainer.style.display = "none";
