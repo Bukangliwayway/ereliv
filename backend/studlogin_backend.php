@@ -1,4 +1,5 @@
 <?php
+session_start(); // Start the session
 include '../db/db.php';
 include '../db/queries.php';
 
@@ -19,6 +20,6 @@ if(getStudentStatus($conn, $studentnumber) != "Active")
 $_SESSION['userID'] = getStudentID($conn, getStudentEmail2($conn, $studentnumber));
 $_SESSION['usertype'] = "student";
 $_SESSION['username'] = getFullNameByID($conn, "Student", $_SESSION['userID']);
-header("Location: /ereliv/users/student/");
+header("Location: /ereliv/student/");
 
 ?>

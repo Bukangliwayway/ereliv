@@ -79,7 +79,6 @@ function verifyStudent($conn, $studentnumber, $section, $password)
   $stmt->execute();
   // Fetch the row from the result set
   $row = $stmt->fetch(PDO::FETCH_ASSOC);
-  echo password_verify($password, $row['password']) . ' N saved:' . $row['section'] . " choice:" . $section;
   return $row['section'] === $section && password_verify($password, $row['password']);
 }
 

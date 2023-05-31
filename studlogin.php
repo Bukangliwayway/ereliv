@@ -1,3 +1,5 @@
+<?php require_once("backend/session_active.php"); ?>
+
 <!DOCTYPE html>
 <html lang="en">
 

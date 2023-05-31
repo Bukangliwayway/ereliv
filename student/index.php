@@ -1,3 +1,4 @@
+<?php require_once("../backend/session_student.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,7 +18,6 @@
 
 <body>
   <?php
-  require_once("../backend/session_check.php");
   $folder_path = "../assets/randbg/";
   $files = glob($folder_path . "*");
   $img_src = $files[array_rand($files)];
@@ -43,10 +43,37 @@
             Button</button>
           <button class="btn btn-outline-success" id="addProgramsBtn"><i class="bi bi-plus-lg"></i> Functional
             Button</button>
+          <a href="#signoutmodal" class="btn btn-outline-danger" id="signoutBtn" data-bs-toggle="modal">
+            <i class="bi bi-box-arrow-right"></i> Sign Out
+          </a>
         </div>
       </div>
     </div>
   </nav>
+
+
+
+  <!-- modals -->
+  <div class="modal fade" id="signoutmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="signout" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 text-capitalize text-center">
+            Sign Out?
+          </h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="container modal-body">
+          <form method="POST" action="../backend/session_out.php" class="container d-flex flex-row gap-3">
+            <button type="submit" class="btn btn-danger">Yes</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">No</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
 
 </html>

@@ -1,5 +1,4 @@
 <?php
-require_once("../backend/session_check.php");
 include '../db/db.php';
 include '../db/queries.php';
 
