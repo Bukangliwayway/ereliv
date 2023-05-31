@@ -33,10 +33,10 @@ CREATE TABLE Admin (
 );
 CREATE TABLE Research (
     researchID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    title VARCHAR(255) NOT NULL,
+    title TEXT NOT NULL,
     abstract TEXT NOT NULL,
-    datepublished DATE NOT NULL,
-    keywords VARCHAR(255) NOT NULL,
+    datepublished DATE NOT NULL DEFAULT CURRENT_DATE,
+    keywords TEXT NOT NULL,
     status ENUM('Published', 'Unpublished') NOT NULL DEFAULT 'Unpublished',
     proposer VARCHAR(255) NOT NULL
 );

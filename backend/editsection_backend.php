@@ -8,5 +8,7 @@ $original = filter_input(INPUT_POST, 'original', FILTER_SANITIZE_STRING);
 if (sectionDuplicateCheck($conn, $section))
   send_message_and_redirect($section . " was already in the Program", "http://localhost/ereliv/admin/?programListContainer=block");
 
+updateStudentsSection($conn, $original, $section);
+
 if (editSection($conn, $section, $original))
   send_message_and_redirect($section . " was updated successfully", "http://localhost/ereliv/admin/?programListContainer=block");

@@ -43,6 +43,9 @@
             Button</button>
           <button class="btn btn-outline-success" id="addProgramsBtn"><i class="bi bi-plus-lg"></i> Functional
             Button</button>
+          <a href="#addauthormodal" class="btn btn-outline-primary" data-bs-toggle="modal">
+            <i class="bi bi-plus-lg"></i> Author
+          </a>
           <a href="#signoutmodal" class="btn btn-outline-danger" id="signoutBtn" data-bs-toggle="modal">
             <i class="bi bi-box-arrow-right"></i> Sign Out
           </a>
@@ -65,6 +68,35 @@
           <form method="POST" action="../backend/session_out.php" class="container d-flex flex-row gap-3">
             <button type="submit" class="btn btn-danger">Yes</button>
             <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">No</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <div class="modal fade" id="addauthormodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 text-capitalize text-center">
+            Add Author
+          </h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="container modal-body">
+          <form method="POST" action="../backend/addauthor_backend.php" class="container d-flex flex-row gap-3">
+            <div class="form-floating">
+              <input type="text" id="firstname" name="firstname" class="form-control" placeholder="firstname"
+                required />
+              <label for="firstname" class="form-label">First Name</label>
+            </div>
+            <div class="form-floating">
+              <input type="text" id="lastname" name="lastname" class="form-control" placeholder="lastname" required />
+              <label for="lastname" class="form-label">Last Name</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
           </form>
         </div>
       </div>

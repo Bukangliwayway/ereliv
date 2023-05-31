@@ -248,6 +248,9 @@ function linkSectionAndProgram($conn, $name, $programID)
   return true;
 }
 
+
+
+
 function getSectionID($conn, $name)
 {
   $stmt = $conn->prepare("SELECT sectionID FROM Section WHERE name = :name");
@@ -674,4 +677,110 @@ function getFullNameByID($conn, $table, $userID)
   $lastName = $result['lastname'];
   return "$firstName $lastName";
 }
+
+function createResearch($conn, $title, $keywords, $abstract, $proposer)
+{
+  $status = "Published";
+  $stmt = $conn->prepare("INSERT into Research (title, abstract, keywords, status, proposer) VALUES (:title, :abstract, :keywords, :status, :proposer)");
+  $stmt->bindParam(':title', $title);
+  $stmt->bindParam(':abstract', $abstract);
+  $stmt->bindParam(':keywords', $keywords);
+  $stmt->bindParam(':status', $status);
+  $stmt->bindParam(':proposer', $proposer);
+  try {
+    $stmt->execute();
+  } catch (PDOException $e) {
+    send_message_and_redirect("Error: " . $e->getMessage(), "http://localhost/ereliv/student/");
+  }
+  return $conn->lastInsertId();
+}
+
+function addAuthor($conn, $firstname, $lastname){
+  $stmt = $conn->prepare("INSERT into Author (firstname, lastname) VALUES (:firstname, :lastname)");
+  $stmt->bindParam(':firstname', $firstname);
+  $stmt->bindParam(':lastname', $lastname);
+  $stmt->execute();
+}
+
+
+function linkAuthorAndResearch($conn, $authorID, $researchID)
+{
+  $stmt = $conn->prepare("INSERT INTO Researchauthorlist (authorID, researchID) Values (:authorID, :researchID)");
+  $stmt->bindParam(':authorID', $authorID);
+  $stmt->bindParam(':researchID', $researchID);
+  try {
+    $stmt->execute();
+  } catch (PDOException $e) {
+    echo $e->getMessage();
+    return false;
+  }
+  return true;
+}
+function linkProgramAndResearch($conn, $programID, $researchID)
+{
+  $stmt = $conn->prepare("INSERT INTO Researchprogramlist (programID, researchID) Values (:programID, :researchID)");
+  $stmt->bindParam(':programID', $programID);
+  $stmt->bindParam(':researchID', $researchID);
+  try {
+    $stmt->execute();
+  } catch (PDOException $e) {
+    echo $e->getMessage();
+    return false;
+  }
+  return true;
+}
+function researchEditor($conn, $facultyID, $researchID)
+{
+  $stmt = $conn->prepare("INSERT INTO Researcheditaccess (facultyID, researchID) Values (:facultyID, :researchID)");
+  $stmt->bindParam(':facultyID', $facultyID);
+  $stmt->bindParam(':researchID', $researchID);
+  try {
+    $stmt->execute();
+  } catch (PDOException $e) {
+    echo $e->getMessage();
+    return false;
+  }
+  return true;
+}
+
+function getStudentsBySection($conn, $sectionName)
+{
+  // Prepare the query to retrieve students by section
+  $stmt = $conn->prepare("SELECT * FROM Student WHERE LOWER(section) = LOWER(:section)");
+
+  // Bind the section parameter
+  $stmt->bindParam(':section', $sectionName);
+
+  // Execute the query
+  $stmt->execute();
+
+  // Fetch the results as an associative array
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function updateStudentsSection($conn, $oldSection, $newSection)
+{
+  // Prepare the query to update students' section
+  $stmt = $conn->prepare("UPDATE Student SET section = :newSection WHERE LOWER(section) = LOWER(:oldSection)");
+
+  // Bind the parameters
+  $stmt->bindParam(':newSection', $newSection);
+  $stmt->bindParam(':oldSection', $oldSection);
+
+  // Execute the query
+  $stmt->execute();
+}
+function updateStudentsProgram($conn, $oldProgram, $newProgram)
+{
+  // Prepare the query to update students' Program
+  $stmt = $conn->prepare("UPDATE Student SET program = :newProgram WHERE LOWER(program) = LOWER(:oldProgram)");
+
+  // Bind the parameters
+  $stmt->bindParam(':newProgram', $newProgram);
+  $stmt->bindParam(':oldProgram', $oldProgram);
+
+  // Execute the query
+  $stmt->execute();
+}
+
 ?>

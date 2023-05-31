@@ -8,5 +8,8 @@ $original = filter_input(INPUT_POST, 'original', FILTER_SANITIZE_STRING);
 if (programDuplicateCheck($conn, $program))
   send_message_and_redirect($program . " is already in the System", "http://localhost/ereliv/admin/?programListContainer=block");
 
+updateStudentsProgram($conn, $original, $program);
+
+
 if (editProgram($conn, $program, $original))
   send_message_and_redirect($program . " was updated successfully", "http://localhost/ereliv/admin/?programListContainer=block");
