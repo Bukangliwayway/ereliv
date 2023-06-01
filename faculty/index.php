@@ -18,9 +18,17 @@
 
 <body>
   <?php
+  include '../db/db.php';
+  include '../db/queries.php';
   $folder_path = "../assets/randbg/";
   $files = glob($folder_path . "*");
   $img_src = $files[array_rand($files)];
+
+  // For Setting Display Attr
+  $uploadresearchContainer = $_GET['uploadresearchContainer'] ?? 'none';
+  $notificationsContainer = $_GET['notificationsContainer'] ?? 'none';
+  $searchresearchContainer = $_GET['searchresearchContainer'] ?? 'none';
+
   ?>
   <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark p-5" data-bs-theme="dark">
     <div class="container-fluid">
@@ -39,10 +47,14 @@
           </li>
         </ul>
         <div class="d-flex gap-3">
-          <button class="btn btn-outline-success" id="addFacultyBtn"><i class="bi bi-plus-lg"></i> Function
-            Button</button>
-          <button class="btn btn-outline-success" id="addProgramsBtn"><i class="bi bi-plus-lg"></i> Functional
-            Button</button>
+          <button class="btn btn-outline-success" id="uploadresearchBtn"><i class="bi bi-plus-lg"></i> Research
+          </button>
+          <button class="btn btn-outline-success" id="notificationsBtn"><i class="bi bi-bell-fill"></i> Notifications
+          </button>
+          </button>
+          <button class="btn btn-outline-success" id="searchresearchBtn"> <i class="bi bi-search"></i>
+            Search Research
+          </button>
           <a href="#addauthormodal" class="btn btn-outline-primary" data-bs-toggle="modal">
             <i class="bi bi-plus-lg"></i> Author
           </a>
@@ -53,6 +65,20 @@
       </div>
     </div>
   </nav>
+  <div class="row m-0">
+    <div class="col-md-12 rand-bg p-5">
+      <div id="uploadresearchContainer">
+        <?php include 'uploadresearch.php'; ?>
+      </div>
+      <div id="notificationsContainer">
+        <?php include 'notifications.php'; ?>
+      </div>
+      <div id="searchresearchContainer">
+        <?php include 'searchresearch.php'; ?>
+      </div>
+    </div>
+  </div>
+
   <!-- modals -->
   <div class="modal fade" id="signoutmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="signout" aria-hidden="true">
@@ -74,7 +100,6 @@
     </div>
   </div>
 
-  <!-- Modals -->
   <div class="modal fade" id="addauthormodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -103,6 +128,70 @@
     </div>
   </div>
 
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var uploadresearchContainer = document.getElementById("uploadresearchContainer");
+      var notificationsContainer = document.getElementById("notificationsContainer");
+      var searchresearchContainer = document.getElementById("searchresearchContainer");
+
+      // Initially hide the containers
+      uploadresearchContainer.style.display = "<?php echo $uploadresearchContainer ?>";
+      notificationsContainer.style.display = "<?php echo $notificationsContainer ?>";
+      searchresearchContainer.style.display = "<?php echo $searchresearchContainer ?>";
+
+      // Get the button elements
+      var uploadresearchBtn = document.getElementById("uploadresearchBtn");
+      var notificationsBtn = document.getElementById("notificationsBtn");
+      var searchresearchBtn = document.getElementById("searchresearchBtn");
+
+      //   // Button click event for Add Programs
+      uploadresearchBtn.addEventListener("click", function () {
+        // Show the program list container
+        uploadresearchContainer.style.display = "block";
+
+        // Hide the faculty registration container and view accounts container
+        notificationsContainer.style.display = "none";
+        searchresearchContainer.style.display = "none";
+
+        // Add active class to the clicked button
+        uploadresearchBtn.classList.add("active");
+        notificationsBtn.classList.remove("active");
+        searchresearchBtn.classList.remove("active");
+      });
+
+      // Button click event for Notifications 
+      notificationsBtn.addEventListener("click", function () {
+        // Show the view accounts container
+        notificationsContainer.style.display = "block";
+
+        // Hide the program list container and faculty registration container
+        uploadresearchContainer.style.display = "none";
+        searchresearchContainer.style.display = "none";
+
+        // Add active class to the clicked button
+        notificationsBtn.classList.add("active");
+        uploadresearchBtn.classList.remove("active");
+        searchresearchBtn.classList.remove("active");
+
+      });
+
+      searchresearchBtn.addEventListener("click", function () {
+        // Show the view accounts container
+        searchresearchContainer.style.display = "block";
+
+        // Hide the program list container and faculty registration container
+        uploadresearchContainer.style.display = "none";
+        notificationsContainer.style.display = "none";
+
+        // Add active class to the clicked button
+        searchresearchBtn.classList.add("active");
+        notificationsBtn.classList.remove("active");
+        uploadresearchBtn.classList.remove("active");
+
+      });
+    });
+  </script>
 
 </body>
 

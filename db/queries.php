@@ -695,7 +695,48 @@ function createResearch($conn, $title, $keywords, $abstract, $proposer)
   return $conn->lastInsertId();
 }
 
-function addAuthor($conn, $firstname, $lastname){
+function getAuthorNames($conn, $researchID)
+{
+  $query = "SELECT Author.lastname, CONCAT(LEFT(Author.firstname, 1), '.') AS initials
+              FROM Researchauthorlist
+              INNER JOIN Author ON Researchauthorlist.authorID = Author.authorID
+              WHERE Researchauthorlist.researchID = :researchID";
+
+  $stmt = $conn->prepare($query);
+  $stmt->bindParam(':researchID', $researchID);
+  $stmt->execute();
+
+  $authorNames = [];
+
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $authorNames[] = $row['lastname'] . ', ' . $row['initials'];
+  }
+
+  return $authorNames;
+}
+
+function getProgramNames($conn, $researchID)
+{
+  $query = "SELECT Program.name
+              FROM Researchprogramlist
+              INNER JOIN Program ON Researchprogramlist.programID = Program.programID
+              WHERE Researchprogramlist.researchID = :researchID";
+
+  $stmt = $conn->prepare($query);
+  $stmt->bindParam(':researchID', $researchID);
+  $stmt->execute();
+
+  $programNames = [];
+
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $programNames[] = $row['name'];
+  }
+
+  return $programNames;
+}
+
+function addAuthor($conn, $firstname, $lastname)
+{
   $stmt = $conn->prepare("INSERT into Author (firstname, lastname) VALUES (:firstname, :lastname)");
   $stmt->bindParam(':firstname', $firstname);
   $stmt->bindParam(':lastname', $lastname);
@@ -716,6 +757,7 @@ function linkAuthorAndResearch($conn, $authorID, $researchID)
   }
   return true;
 }
+
 function linkProgramAndResearch($conn, $programID, $researchID)
 {
   $stmt = $conn->prepare("INSERT INTO Researchprogramlist (programID, researchID) Values (:programID, :researchID)");
