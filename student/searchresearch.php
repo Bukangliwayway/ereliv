@@ -1,5 +1,5 @@
 <?php
-require_once("../backend/session_faculty.php");
+require_once("../backend/session_student.php");
 ?>
 
 <!DOCTYPE html>

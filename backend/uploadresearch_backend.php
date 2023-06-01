@@ -30,5 +30,5 @@ foreach ($programIDs as $programID) {
 //Set Editor Access 
 researchEditor($conn, $_SESSION['userID'], $researchID);
 
-send_message_and_redirect('Research has been Uploaded Successfully', "http://localhost/ereliv/faculty/uploadresearch.php");
+send_message_and_redirect('Research has been Uploaded Successfully', "http://localhost/ereliv/faculty/uploadresearchContainer=block");
 ?>

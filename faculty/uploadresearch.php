@@ -14,8 +14,6 @@ require_once("../backend/session_faculty.php");
     integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css" />
 
-  <script src="https://cdn.tiny.cloud/1/o7w7sdre55xscvrprwcvde6nwnv4n2in1tg6taczesi9jmh2/tinymce/6/tinymce.min.js"
-    referrerpolicy="origin"></script>
   <link rel="stylesheet" href="../styles/main.css" />
 
   <!-- bootstrap-multiselect links -->
@@ -103,34 +101,7 @@ require_once("../backend/session_faculty.php");
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    tinymce.init({
-      selector: 'textarea',
-      plugins: "",
-      toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough',
-      height: 250,
-      menubar: false,
-      setup: function (editor) {
-        editor.on('change', function () {
-          document.getElementById('content').value = tinymce.get('content-input').getContent();
-        });
-      }
-    });
-    var selectedOptionsAuthors = [];
-    var dataInputAuthors = document.getElementById('authors');
-    $("#author-select").on("change", function () {
-      selectedOptionsAuthors = $(this).val();
-      dataInputAuthors.value = JSON.stringify(selectedOptionsAuthors);
-    });
-    var selectedOptionsPrograms = [];
-    var dataInputPrograms = document.getElementById('programs');
-    $("#program-select").on("change", function () {
-      selectedOptionsPrograms = $(this).val();
-      dataInputPrograms.value = JSON.stringify(selectedOptionsPrograms);
-    });
 
-
-  </script>
 
 </body>
 

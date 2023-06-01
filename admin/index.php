@@ -15,7 +15,7 @@
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css" />
-  <link rel="stylesheet" href="../styles/main.css" />
+  <link rel="stylesheet" href="main.css" />
 </head>
 
 <body>
@@ -32,54 +32,54 @@
   $viewAccountsContainer = $_GET['viewAccountsContainer'] ?? 'none';
   $notificationsContainer = $_GET['noti$notificationsContainer'] ?? 'none';
   ?>
-  <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark p-5" data-bs-theme="dark">
-    <div class="container-fluid">
-      <a class="navbar-brand mx-5" href="#">Admin Page</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-        </ul>
-        <div class="d-flex gap-3">
-          <button class="btn btn-outline-success" id="addFacultyBtn"><i class="bi bi-plus-lg"></i> Faculty</button>
-          <button class="btn btn-outline-success" id="addProgramsBtn"><i class="bi bi-plus-lg"></i> Programs and
-            Sections
-          </button>
-          <button class="btn btn-outline-success" id="viewAccountsBtn"><i class="bi bi-eye-fill"></i> View Accounts
-          </button>
-          <button class="btn btn-outline-success" id="notificationsBtn"><i class="bi bi-bell-fill"></i> Notifications
-          </button>
-          <a href="#signoutmodal" class="btn btn-outline-danger" id="signoutBtn"
-            data-bs-toggle="modal">
-            <i class="bi bi-box-arrow-right"></i> Sign Out
-          </a>
+
+  <div class=" d-flex flex-row">
+    <nav class="col-3 navbar navbar-expand-lg navbar-dark bg-dark flex-column min-vh-100">
+      <div class="d-flex flex-column align-items-stretch p-3">
+        <a class="navbar-brand mx-auto my-3 text-center"
+          href="http://localhost/ereliv/faculty/?searchresearchContainer=block">
+          <img src="../assets/puplogo.png" alt="logo hehe" class="img-fluid" style="max-width: 80%;" />
+        </a>
+        <h2 class="text-center text-success text-capitalize mb-4"><i class="bi bi-person-fill"></i>
+          <?php echo $_SESSION['username']; ?>
+        </h2>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <div class="d-flex flex-column flex-grow-1" style="height:55vh;">
+            <button class="btn btn-outline-success mb-2" id="addFacultyBtn"><i class="bi bi-plus-lg"></i> Faculty</button>
+            <button class="btn btn-outline-success mb-2" id="addProgramsBtn"><i class="bi bi-plus-lg"></i> Programs and
+              Sections
+            </button>
+            <button class="btn btn-outline-success mb-2" id="viewAccountsBtn"><i class="bi bi-eye-fill"></i> View Accounts
+            </button>
+            <button class="btn btn-outline-success mb-2" id="notificationsBtn"><i class="bi bi-bell-fill"></i> Notifications
+            </button>
+            <a href="#signoutmodal" class="btn btn-outline-danger mb-2 mt-auto" id="signoutBtn" data-bs-toggle="modal">
+              <i class="bi bi-box-arrow-right"></i> Sign Out
+            </a>
+          </div>
         </div>
       </div>
-    </div>
-  </nav>
-  <div class="row m-0">
-    <div class="col-md-12 rand-bg p-5">
-      <div id="programListContainer">
-        <?php include 'programlist.php'; ?>
-      </div>
-      <div id="facultyRegistrationContainer">
-        <?php include 'facultyregis.php'; ?>
-      </div>
-      <div id="viewAccountsContainer">
-        <?php include 'viewaccounts.php'; ?>
-      </div>
-      <div id="notificationsContainer">
-        <?php include 'notifications.php'; ?>
-      </div>
+    </nav>
+    <div class="container">
+      <div class="col-md-12 rand-bg p-5">
+        <div id="programListContainer">
+          <?php include 'programlist.php'; ?>
+        </div>
+        <div id="facultyRegistrationContainer">
+          <?php include 'facultyregis.php'; ?>
+        </div>
+        <div id="viewAccountsContainer">
+          <?php include 'viewaccounts.php'; ?>
+        </div>
+        <div id="notificationsContainer">
+          <?php include 'notifications.php'; ?>
+        </div>
 
+      </div>
     </div>
   </div>
 

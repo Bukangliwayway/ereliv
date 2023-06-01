@@ -13,46 +13,63 @@
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css" />
-  <link rel="stylesheet" href="../styles/main.css" />
+  <link rel="stylesheet" href="main.css" />
+
 </head>
 
 <body>
   <?php
+  include '../db/db.php';
+  include '../db/queries.php';
   $folder_path = "../assets/randbg/";
   $files = glob($folder_path . "*");
   $img_src = $files[array_rand($files)];
+
+  // For Setting Display Attr
+  $notificationsContainer = $_GET['notificationsContainer'] ?? 'none';
+  $searchresearchContainer = $_GET['searchresearchContainer'] ?? 'none';
+
   ?>
-  <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark p-5" data-bs-theme="dark">
-    <div class="container-fluid">
-      <a class="navbar-brand mx-5" href="#">Student Page</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-        </ul>
-        <div class="d-flex gap-3">
-          <button class="btn btn-outline-success" id="addFacultyBtn"><i class="bi bi-plus-lg"></i> Function
-            Button</button>
-          <button class="btn btn-outline-success" id="addProgramsBtn"><i class="bi bi-plus-lg"></i> Functional
-            Button</button>
-          <a href="#signoutmodal" class="btn btn-outline-danger" id="signoutBtn" data-bs-toggle="modal">
-            <i class="bi bi-box-arrow-right"></i> Sign Out
-          </a>
+
+  <div class=" d-flex flex-row">
+    <nav class="col-3 navbar navbar-expand-lg navbar-dark bg-dark flex-column min-vh-100">
+      <div class="d-flex flex-column align-items-stretch p-3">
+        <a class="navbar-brand mx-auto my-3 text-center"
+          href="http://localhost/ereliv/faculty/?searchresearchContainer=block">
+          <img src="../assets/puplogo.png" alt="logo hehe" class="img-fluid" style="max-width: 80%;" />
+        </a>
+        <h2 class="text-center text-success text-capitalize mb-4"><i class="bi bi-person-fill"></i>
+          <?php echo $_SESSION['username']; ?>
+        </h2>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <div class="d-flex flex-column flex-grow-1" style="height:55vh;">
+            <button class="btn btn-outline-success mb-2" id="notificationsBtn"><i class="bi bi-bell-fill"></i>
+              Notifications</button>
+            <button class="btn btn-outline-success mb-2" id="searchresearchBtn"><i class="bi bi-search"></i> Search
+              Research</button>
+            <a href="#signoutmodal" class="btn btn-outline-danger mb-2 push-bottom" id="signoutBtn"
+              data-bs-toggle="modal"><i class="bi bi-box-arrow-right"></i> Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="col-md-12 rand-bg p-5">
+        <div id="notificationsContainer">
+          <?php include 'notifications.php'; ?>
+        </div>
+        <div id="searchresearchContainer">
+          <?php include 'searchresearch.php'; ?>
         </div>
       </div>
     </div>
-  </nav>
 
-
-
+  </div>
   <!-- modals -->
   <div class="modal fade" id="signoutmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="signout" aria-hidden="true">
@@ -74,6 +91,47 @@
     </div>
   </div>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var notificationsContainer = document.getElementById("notificationsContainer");
+      var searchresearchContainer = document.getElementById("searchresearchContainer");
+
+      // Initially hide the containers
+      notificationsContainer.style.display = "<?php echo $notificationsContainer ?>";
+      searchresearchContainer.style.display = "<?php echo $searchresearchContainer ?>";
+
+      // Get the button elements
+      var notificationsBtn = document.getElementById("notificationsBtn");
+      var searchresearchBtn = document.getElementById("searchresearchBtn");
+
+      // Button click event for Notifications 
+      notificationsBtn.addEventListener("click", function () {
+        // Show the view accounts container
+        notificationsContainer.style.display = "block";
+
+        // Hide the program list container and faculty registration container
+        searchresearchContainer.style.display = "none";
+
+        // Add active class to the clicked button
+        notificationsBtn.classList.add("active");
+        searchresearchBtn.classList.remove("active");
+
+      });
+
+      searchresearchBtn.addEventListener("click", function () {
+        // Show the view accounts container
+        searchresearchContainer.style.display = "block";
+
+        // Hide the program list container and faculty registration container
+        notificationsContainer.style.display = "none";
+
+        // Add active class to the clicked button
+        searchresearchBtn.classList.add("active");
+        notificationsBtn.classList.remove("active");
+
+      });
+    });
+  </script>
 </body>
 
 </html>

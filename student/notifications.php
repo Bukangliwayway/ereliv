@@ -1,4 +1,4 @@
-<?php require_once("../backend/session_admin.php"); ?>
+<?php require_once("../backend/session_student.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,7 +19,7 @@
 <body>
   <div class="container p-1">
     <?php
-    $notifications = getAdminNotifications($conn, $_SESSION['userID']);
+    $notifications = getStudentNotifications($conn, $_SESSION['userID']);
     foreach ($notifications as $notification) {
       $title = $notification['title'];
       $content = $notification['content'];
