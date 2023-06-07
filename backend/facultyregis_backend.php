@@ -12,6 +12,7 @@ if (emailAddressCheck($conn, $emailadd, 'Faculty')) {
   send_message_and_redirect("Email is already in use", "http://localhost/ereliv/admin/?facultyRegistrationContainer=block");
 }
 
+
 add_faculty($conn, $firstname, $lastname, $emailadd, $hashed_password, $category);
 
 $title = "PUPQCRMS Faculty Account Created!";

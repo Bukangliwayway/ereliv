@@ -6,8 +6,9 @@ function emailAddressCheck($conn, $emailadd, $type)
   $stmt->bindParam(':emailadd', $emailadd);
   $stmt->execute();
   $result = $stmt->fetch();
-  return ($result);
+  return !empty($result);
 }
+
 
 function addStudent($conn, $studentnumber, $program, $section, $emailadd, $firstname, $lastname, $password, $advisor)
 {

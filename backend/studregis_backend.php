@@ -18,6 +18,7 @@ if (studentNumberExists($conn, $studentnumber))
 if (emailAddressCheck($conn, $emailadd, 'Student'))
   send_message_and_redirect("Email is already in use", "/ereliv/studregis.php");
 
+
 addStudent($conn, $studentnumber, $program, $section, $emailadd, $firstname, $lastname, $hashedPassword, $advisor);
 
 linkStudentAndAdvisor($conn, $emailadd, $advisor);
