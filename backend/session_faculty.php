@@ -1,14 +1,8 @@
 <?php
 session_start(); // Start the session
-// Check if the session is null or empty
+$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 if (empty($_SESSION['userID']) || $_SESSION['usertype'] != "faculty") {
-  // Redirect the user back to the login page 
-  echo "<script>
-        setTimeout(function() {
-            alert('You have no access here!');
-            window.location.replace('/ereliv/');
-        }, 500);
-      </script>";
+  header("HTTP/1.0 404 Not Found");
   exit();
 }
 

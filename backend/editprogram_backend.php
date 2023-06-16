@@ -1,15 +1,25 @@
 <?php
+include_once '../backend/csrfTokenCheck.php';
 include '../db/db.php';
 include '../db/queries.php';
 
 $program = filter_input(INPUT_POST, 'program', FILTER_SANITIZE_STRING);
 $original = filter_input(INPUT_POST, 'original', FILTER_SANITIZE_STRING);
 
-if (programDuplicateCheck($conn, $program))
-  send_message_and_redirect($program . " is already in the System", "http://localhost/ereliv/admin/?programListContainer=block");
+$response = array();
 
-updateStudentsProgram($conn, $original, $program);
+if (programDuplicateCheck($conn, $program)) {
+  $response['status'] = 'error';
+  $response['message'] = $program . " is already in the system";
+} else {
+  if (editProgram($conn, $program, $original)) {
+    $response['status'] = 'success';
+    $response['message'] = $program . " was updated successfully";
+    updateStudentsProgram($conn, $original, $program);
+  } else {
+    $response['status'] = 'error';
+    $response['message'] = "Failed to update $program";
+  }
+}
 
-
-if (editProgram($conn, $program, $original))
-  send_message_and_redirect($program . " was updated successfully", "http://localhost/ereliv/admin/?programListContainer=block");
+echo json_encode($response);

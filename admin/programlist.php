@@ -1,301 +1,515 @@
 <?php require_once("../backend/session_admin.php"); ?>
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PUPQC Research Management Sytem</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous" />
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css" />
+<div class="container d-flex flex-column gap-3 text-center justify-content-center">
+  <h1 class="text-center m-auto text-uppercase my-3 border border-light p-3 rounded">Programs and Sections</h1>
+  <div id="programList"></div>
+</div>
 
-  <link rel="stylesheet" href="../styles/main.css" />
-</head>
-
-<body>
-
-  <div class="container d-flex flex-column gap-3 text-center justify-content-center">
-    <h1 class="text-center m-auto text-uppercase my-3 border border-light p-3 rounded">Programs and Sections</h1>
-    <?php
-    $program = getList($conn, '*', 'Program');
-    foreach ($program as $programData) {
-      $section = getSectionList($conn, $programData['programID']);
-      echo '
-        <div class="row bg-light">
-            <div class="col-6 d-flex flex-column justify-content-center border border-smoke rounded p-2">
-                <div class="row">
-                    <h1 class="text-uppercase">' . $programData['name'] . '</h1>
-                </div>
-            </div>
-            <div class="col-1 d-flex flex-column justify-content-center align-items-stretch gap-2">
-                <div class="row">
-                    <h1>
-                        <a href="#editprogrammodal" class="editprogrambutton icon-link border border-smoke rounded p-2 text-reset" data-bs-toggle="modal" data-string="' . $programData['name'] . '">
-                            <i class="bi bi-pencil-square"></i>
-                        </a>
-                    </h1>
-                </div>
-                <div class="row">
-                    <h1>
-                        <a href="#deleteprogrammodal" class="deleteprogrambutton icon-link border border-smoke rounded p-2 text-reset" data-bs-toggle="modal" data-string="' . $programData['name'] . '">
-                            <i class="bi bi-trash"></i>
-                        </a>
-                    </h1>
-                </div>
-            </div>
-            <div class="col-5 d-flex flex-column justify-content-center align-items-stretch gap-2">
-    ';
-
-      foreach ($section as $row) {
-        echo '
-            <div class="row">
-                <div class="col-8">
-                    <h1 class="text-uppercase border border-smoke rounded p-1 text-truncate">' . $row['name'] . '</h1>
-                </div>
-                <div class="col-4 d-flex flex-row gap-1">
-                    <h1>
-                        <a href="#editsectionmodal" class="editsectionbutton icon-link border border-smoke rounded p-2 text-reset" data-string="' . $row['name'] . '" data-bs-toggle="modal">
-                            <i class="bi bi-pencil-square"></i>
-                        </a>
-                    </h1>
-                    <h1>
-                        <a href="#deletesectionmodal" class="deletesectionbutton icon-link border border-smoke rounded p-2 text-reset" data-string="' . $row['name'] . '" data-bs-toggle="modal">
-                            <i class="bi bi-trash"></i>
-                        </a>
-                    </h1>
-                </div>
-            </div>
-        ';
-      }
-
-      echo '
-            <a href="#addsectionmodal" class="addsectionbutton link-primary link-offset-2 link-underline-opacity-0 text-capitalize text-reset" data-bs-toggle="modal" data-string="' . $programData['programID'] . '">
-                <div class="row border border-smoke rounded">
-                    <h1>Add Section <i class="bi bi-plus-circle fs-2"></i></h1>
-                </div>
-            </a>
-        </div>
-    </div>
-    ';
-    }
-    echo '
-    <a href="#addprogrammodal" class="link-primary link-offset-2 link-underline-opacity-0 text-capitalize text-reset" data-bs-toggle="modal">
-        <div class="row p-3 border border-smoke rounded p-2 bg-light">
-            <div class="col d-flex flex-column justify-content-center align-items-center p-3">
-                <h1>Add Program <i class="bi bi-plus-circle fs-2"></i></h1>
-            </div>
-        </div>
-    </a>
-';
-    ?>
-
-
-  </div>
-
-  <!-- Modals -->
-  <div class="modal fade" id="addsectionmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="addsectionmodal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5 text-capitalize">
-            Add Section
-          </h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="container modal-body">
-          <form method="POST" action="../backend/addsection_backend.php" class="container d-flex flex-row gap-3">
-            <div class="form-floating">
-              <input type="text" id="section" name="section" class="form-control" placeholder="section" required />
-              <label for="section" class="form-label">Section</label>
-            </div>
-            <input type="hidden" name="string" id="getprogramid_target">
-            <button type="submit" class="btn btn-primary">Add</button>
-          </form>
-        </div>
+<!-- Modals -->
+<div class="modal fade" id="addsectionmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="addsectionmodal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 text-capitalize">
+          Add Section
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="container modal-body">
+        <form id="addSectionForm" class="container d-flex flex-row gap-3">
+          <div class="form-floating">
+            <input type="text" id="section" name="section" class="form-control" placeholder="section" required />
+            <label for="section" class="form-label">Section</label>
+          </div>
+          <input type="hidden" name="string" id="getprogramid_target">
+          <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+          <button type="submit" class="btn btn-primary">Add</button>
+        </form>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="modal fade" id="editsectionmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="editsectionmodal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5 text-capitalize">
-            Edit Section
-          </h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="container modal-body">
-          <form method="POST" action="../backend/editsection_backend.php" class="container d-flex flex-row gap-3">
-            <div class="form-floating">
-              <input type="text" id="original_target" name="original" class="form-control" readonly />
-              <label for="section" class="form-label">Previous Name: </label>
-            </div>
-            <div class="form-floating">
-              <input type="text" id="section" name="section" class="form-control" placeholder="section" required />
-              <label for="section" class="form-label">Section</label>
-            </div>
-            <button type="submit" class="btn btn-primary">Update</button>
-          </form>
-        </div>
+<div class="modal fade" id="editsectionmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="editsectionmodal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 text-capitalize">
+          Edit Section
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="container modal-body">
+        <form id="editSectionForm" class="container d-flex flex-row gap-3">
+          <div class="form-floating">
+            <input type="text" id="original_target" name="original" class="form-control" readonly />
+            <label for="section" class="form-label">Previous Name: </label>
+          </div>
+          <div class="form-floating">
+            <input type="text" id="section" name="section" class="form-control" placeholder="section" required />
+            <label for="section" class="form-label">Section</label>
+          </div>
+          <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+          <button type="submit" class="btn btn-primary">Update</button>
+        </form>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="modal fade" id="deletesectionmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="deletesectionmodal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5 text-capitalize">
-            Delete Section
-          </h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="container modal-body">
-          <h5 class="text-capitalize text-center"> You Sure You want to Delete this Section? </h5>
-          <form method="POST" action="../backend/deletesection_backend.php" class="container d-flex flex-row gap-3">
-            <div class="form-floating">
-              <input type="text" id="delete_target" name="section" class="form-control" readonly />
-              <label for="section" class="form-label">To Be Deleted</label>
-            </div>
-            <button type="submit" class="btn btn-primary">Delete</button>
-          </form>
-        </div>
+<div class="modal fade" id="deletesectionmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="deletesectionmodal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 text-capitalize">
+          Delete Section
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="container modal-body">
+        <h5 class="text-capitalize text-center"> You Sure You want to Delete this Section? </h5>
+        <form id="deleteSectionForm" class="container d-flex flex-row gap-3">
+          <div class="form-floating">
+            <input type="text" id="delete_target" name="section" class="form-control" readonly />
+            <label for="section" class="form-label">To Be Deleted</label>
+          </div>
+          <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+          <button type="submit" class="btn btn-primary">Delete</button>
+        </form>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="modal fade" id="addprogrammodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="addprogrammodal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5 text-capitalize">
-            Add Program
-          </h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="container modal-body">
-          <form method="POST" action="../backend/addprogram_backend.php" class="container d-flex flex-row gap-3">
-            <div class="form-floating">
-              <input type="text" name="program" class="form-control" placeholder="program" required />
-              <label for="program" class="form-label">Program Name: </label>
-            </div>
-            <button type="submit" class="btn btn-primary">Add</button>
-          </form>
-        </div>
+
+<div class="modal fade" id="addprogrammodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="addprogrammodal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 text-capitalize">
+          Add Program
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="container modal-body">
+        <form id="addProgramForm" class="container d-flex flex-row gap-3">
+          <div class="form-floating">
+            <input type="text" name="program" class="form-control" placeholder="program" required />
+            <label for="program" class="form-label">Program Name: </label>
+          </div>
+          <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+          <button type="submit" class="btn btn-primary">Add</button>
+        </form>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="modal fade" id="editprogrammodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="editprogrammodal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5 text  -capitalize">
-            Edit Program
-          </h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="container modal-body">
-          <form method="POST" action="../backend/editprogram_backend.php" class="container d-flex flex-row gap-3">
-            <div class="form-floating">
-              <input type="text" id="original_program_target" name="original" class="form-control" readonly />
-              <label for="program" class="form-label">Previous Name: </label>
-            </div>
-            <div class="form-floating">
-              <input type="text" id="program" name="program" class="form-control" placeholder="program" required />
-              <label for="program" class="form-label">Program</label>
-            </div>
-            <button type="submit" class="btn btn-primary">Add</button>
-          </form>
-        </div>
+<div class="modal fade" id="editprogrammodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="editprogrammodal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 text-capitalize">
+          Edit Program
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="container modal-body">
+        <form id="editProgramForm" class="container d-flex flex-row gap-3">
+          <div class="form-floating">
+            <input type="text" id="original_program_target" name="original" class="form-control" readonly />
+            <label for="program" class="form-label">Previous Name: </label>
+          </div>
+          <div class="form-floating">
+            <input type="text" id="program" name="program" class="form-control" placeholder="program" required />
+            <label for="program" class="form-label">Program</label>
+          </div>
+          <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+          <button type="submit" class="btn btn-primary">Add</button>
+        </form>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="modal fade" id="deleteprogrammodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="deleteprogrammodal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5 text-capitalize">
-            delete Program
-          </h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="container modal-body">
-          <form method="POST" action="../backend/deleteprogram_backend.php" class="container d-flex flex-row gap-3">
-            <div class="form-floating">
-              <input type="text" id="delete_program_target" name="program" class="form-control" readonly />
-              <label for="section" class="form-label">To Be Deleted</label>
-            </div>
-            <button type="submit" class="btn btn-primary">Delete</button>
-          </form>
-        </div>
+<div class="modal fade" id="deleteprogrammodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="deleteprogrammodal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 text-capitalize">
+          delete Program
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="container modal-body">
+        <form id="deleteProgramForm" class="container d-flex flex-row gap-3">
+          <div class="form-floating">
+            <input type="text" id="delete_program_target" name="program" class="form-control" readonly />
+            <label for="section" class="form-label">To Be Deleted</label>
+          </div>
+          <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+          <button type="submit" class="btn btn-primary">Delete</button>
+        </form>
       </div>
     </div>
   </div>
-
-</body>
-
-</html>
+</div>
 
 <script>
-  const addSectionButtons = document.querySelectorAll('.addsectionbutton');
-  addSectionButtons.forEach(button => {
-    button.addEventListener('click', function () {
-      const string = button.getAttribute('data-string');
-      document.querySelector('#getprogramid_target').value = string;
+  updateProgramList();
+
+  async function updateProgramList() {
+    try {
+      // Fetch the CSRF token from the server
+      const response = await fetch('../backend/getcsrftoken.php');
+      if (response.ok) {
+        const csrfToken = await response.text();
+
+        // Prepare the request data
+        const formData = new FormData();
+        formData.append('csrf_token', csrfToken);
+
+        // Make the request to update the program list
+        const updateResponse = await fetch('../backend/updateprogramlist.php', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (updateResponse.ok) {
+          // Request succeeded, do something with the response if needed
+          const addSectionContainer = document.getElementById('programList');
+          addSectionContainer.innerHTML = await updateResponse.text();
+
+          // Attach event listeners to the newly added elements
+          attachEventListeners();
+        } else {
+          // Request failed, handle the error
+          console.error('Error updating program list:', updateResponse.status);
+          displayToastr('error', 'An error occurred. Please try again.');
+        }
+      } else {
+        // Unable to fetch CSRF token, handle the error
+        console.error('Error fetching CSRF token:', response.status);
+        displayToastr('error', 'An error occurred. Please try again.');
+      }
+    } catch (error) {
+      // General error occurred, handle it
+      console.error('Error:', error);
+      displayToastr('error', 'An error occurred. Please try again.');
+    }
+  }
+
+  function attachEventListeners() {
+    const addSectionButtons = document.querySelectorAll('.addsectionbutton');
+    addSectionButtons.forEach(button => {
+      button.addEventListener('click', function () {
+        const string = button.getAttribute('data-string');
+        document.querySelector('#getprogramid_target').value = string;
+      });
     });
+
+    const editSectionButtons = document.querySelectorAll('.editsectionbutton');
+    editSectionButtons.forEach(button => {
+      button.addEventListener('click', function () {
+        const string = this.getAttribute('data-string');
+        document.querySelector('#original_target').value = string;
+      });
+    });
+
+    const deleteSectionButtons = document.querySelectorAll('.deletesectionbutton');
+    deleteSectionButtons.forEach(button => {
+      button.addEventListener('click', function () {
+        const string = this.getAttribute('data-string');
+        document.querySelector('#delete_target').value = string;
+      });
+    });
+
+
+    const editProgramButtons = document.querySelectorAll('.editprogrambutton');
+    editProgramButtons.forEach(button => {
+      button.addEventListener('click', function () {
+        const string = this.getAttribute('data-string');
+        document.querySelector('#original_program_target').value = string;
+      });
+    });
+
+    const deleteProgramButtons = document.querySelectorAll('.deleteprogrambutton');
+    deleteProgramButtons.forEach(button => {
+      button.addEventListener('click', function () {
+        const string = this.getAttribute('data-string');
+        document.querySelector('#delete_program_target').value = string;
+        console.log(string);
+      });
+    });
+
+  }
+
+  const addSectionForm = document.getElementById('addSectionForm');
+  addSectionForm.addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent form from submitting normally
+
+    // Perform loading routine before form submission
+    $('#loadingSpinner').removeClass('d-none');
+    $('#loadingSpinner').addClass('d-flex');
+    $('#addSectionForm').css('pointer-events', 'none');
+
+    const formData = new FormData(addSectionForm);
+
+    fetch('../backend/addsection_backend.php', {
+      method: 'POST',
+      body: formData,
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Display a Toastr success message
+        displayToastr(data.status, data.message);
+
+        // Reset the form after successful submission
+        addSectionForm.reset();
+
+        // Reload the program list container
+        updateProgramList();
+      })
+      .catch(error => {
+        // Handle error response here
+        console.log(error);
+        displayToastr('error', 'An error occurred. Please try again.');
+      })
+      .finally(() => {
+        // Revert Loading Routine back to normal
+        $('#loadingSpinner').removeClass('d-flex');
+        $('#loadingSpinner').addClass('d-none');
+        $('#addSectionForm').css('pointer-events', 'auto');
+      });
   });
 
-  const editSectionButtons = document.querySelectorAll('.editsectionbutton');
+  const editSectionForm = document.getElementById('editSectionForm');
+  editSectionForm.addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent form from submitting normally
 
-  editSectionButtons.forEach(button => {
-    button.addEventListener('click', function () {
-      const string = this.getAttribute('data-string');
-      document.querySelector('#original_target').value = string;
-    });
+    // Perform loading routine before form submission
+    $('#loadingSpinner').removeClass('d-none');
+    $('#loadingSpinner').addClass('d-flex');
+    $('#editSectionForm').css('pointer-events', 'none');
+
+    const formData = new FormData(editSectionForm);
+
+    fetch('../backend/editsection_backend.php', {
+      method: 'POST',
+      body: formData,
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Display a Toastr success message
+        displayToastr(data.status, data.message);
+        console.log(data.status);
+        if (data.status == 'success') {
+
+          // Reset the form after successful edit 
+          editSectionForm.reset();
+
+          // Close the active modal section
+          $('#editsectionmodal').modal('hide');
+
+        }
+
+        // Reload the program list container
+        updateProgramList();
+      })
+      .catch(error => {
+        // Handle error response here
+        console.log(error);
+        displayToastr('error', 'An error occurred. Please try again.');
+      })
+      .finally(() => {
+        // Revert Loading Routine back to normal
+        $('#loadingSpinner').removeClass('d-flex');
+        $('#loadingSpinner').addClass('d-none');
+        $('#editSectionForm').css('pointer-events', 'auto');
+      });
   });
 
-  const deleteSectionButtons = document.querySelectorAll('.deletesectionbutton');
+  const deleteSectionForm = document.getElementById('deleteSectionForm');
+  deleteSectionForm.addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent form from submitting normally
 
-  deleteSectionButtons.forEach(button => {
-    button.addEventListener('click', function () {
-      const string = this.getAttribute('data-string');
-      document.querySelector('#delete_target').value = string;
-    });
+    // Perform loading routine before form submission
+    $('#loadingSpinner').removeClass('d-none');
+    $('#loadingSpinner').addClass('d-flex');
+    $('#deleteSectionForm').css('pointer-events', 'none');
+
+    const formData = new FormData(deleteSectionForm);
+
+    fetch('../backend/deletesection_backend.php', {
+      method: 'POST',
+      body: formData,
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Display a Toastr success message
+        displayToastr(data.status, data.message);
+        console.log(data.status);
+        if (data.status === 'success') {
+          // Reset the form after successful deletion 
+          deleteSectionForm.reset();
+
+          // Close the active modal section
+          $('#deletesectionmodal').modal('hide');
+        }
+
+        // Reload the program list container
+        updateProgramList();
+      })
+      .catch(error => {
+        // Handle error response here
+        console.log(error);
+        displayToastr('error', 'An error occurred. Please try again.');
+      })
+      .finally(() => {
+        // Revert Loading Routine back to normal
+        $('#loadingSpinner').removeClass('d-flex');
+        $('#loadingSpinner').addClass('d-none');
+        $('#deleteSectionForm').css('pointer-events', 'auto');
+      });
+  });
+
+  const addProgramForm = document.getElementById('addProgramForm');
+  addProgramForm.addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent form from submitting normally
+
+    // Perform loading routine before form submission
+    $('#loadingSpinner').removeClass('d-none');
+    $('#loadingSpinner').addClass('d-flex');
+
+    $('#addProgramForm').css('pointer-events', 'none');
+
+    const formData = new FormData(addProgramForm);
+
+    fetch('../backend/addprogram_backend.php', {
+      method: 'POST',
+      body: formData,
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Display a Toastr success message
+        displayToastr(data.status, data.message);
+
+        // Reset the form after successful submission
+        addProgramForm.reset();
+
+        // Reload the program list container
+        updateProgramList();
+      })
+      .catch(error => {
+        // Handle error response here
+        console.log(error);
+        displayToastr('error', 'An error occurred. Please try again.');
+      })
+      .finally(() => {
+        // Revert Loading Routine back to normal
+        $('#loadingSpinner').removeClass('d-flex');
+        $('#loadingSpinner').addClass('d-none');
+        $('#addProgramForm').css('pointer-events', 'auto');
+      });
+  });
+
+  const editProgramForm = document.getElementById('editProgramForm');
+  editProgramForm.addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent form from submitting normally
+
+    // Perform loading routine before form submission
+    $('#loadingSpinner').removeClass('d-none');
+    $('#loadingSpinner').addClass('d-flex');
+    $('#editProgramForm').css('pointer-events', 'none');
+
+    const formData = new FormData(editProgramForm);
+
+    fetch('../backend/editprogram_backend.php', {
+      method: 'POST',
+      body: formData,
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Display a Toastr success message
+        displayToastr(data.status, data.message);
+        console.log(data.status);
+        if (data.status === 'success') {
+
+          // Reset the form after successful edit 
+          editProgramForm.reset();
+
+          // Close the active modal section
+          $('#editprogrammodal').modal('hide');
+
+        }
+
+        // Reload the program list container
+        updateProgramList();
+      })
+      .catch(error => {
+        // Handle error response here
+        console.log(error);
+        displayToastr('error', 'An error occurred. Please try again.');
+      })
+      .finally(() => {
+        // Revert Loading Routine back to normal
+        $('#loadingSpinner').removeClass('d-flex');
+        $('#loadingSpinner').addClass('d-none');
+        $('#editProgramForm').css('pointer-events', 'auto');
+      });
   });
 
 
-  const editProgramButtons = document.querySelectorAll('.editprogrambutton');
+  const deleteProgramForm = document.getElementById('deleteProgramForm');
+  deleteProgramForm.addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent form from submitting normally
 
-  editProgramButtons.forEach(button => {
-    button.addEventListener('click', function () {
-      const string = this.getAttribute('data-string');
-      document.querySelector('#original_program_target').value = string;
-    });
+    // Perform loading routine before form submission
+    $('#loadingSpinner').removeClass('d-none');
+    $('#loadingSpinner').addClass('d-flex');
+    $('#deleteProgramForm').css('pointer-events', 'none');
+
+    const formData = new FormData(deleteProgramForm);
+
+    fetch('../backend/deleteprogram_backend.php', {
+      method: 'POST',
+      body: formData,
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Display a Toastr success message
+        displayToastr(data.status, data.message);
+        console.log(data.status);
+        if (data.status === 'success') {
+          // Reset the form after successful deletion 
+          deleteProgramForm.reset();
+
+          // Close the active modal Program
+          $('#deleteprogrammodal').modal('hide');
+        }
+
+        // Reload the program list container
+        updateProgramList();
+      })
+      .catch(error => {
+        // Handle error response here
+        console.log(error);
+        displayToastr('error', 'An error occurred. Please try again.');
+      })
+      .finally(() => {
+        // Revert Loading Routine back to normal
+        $('#loadingSpinner').removeClass('d-flex');
+        $('#loadingSpinner').addClass('d-none');
+        $('#deleteProgramForm').css('pointer-events', 'auto');
+      });
   });
 
-  const deleteProgramButtons = document.querySelectorAll('.deleteprogrambutton');
-
-  deleteProgramButtons.forEach(button => {
-    button.addEventListener('click', function () {
-      const string = this.getAttribute('data-string');
-      document.querySelector('#delete_program_target').value = string;
-      console.log(string);
-    });
-  });
 
 
 </script>

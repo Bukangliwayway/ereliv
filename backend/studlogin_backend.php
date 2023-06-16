@@ -1,5 +1,5 @@
 <?php
-session_start(); // Start the session
+include_once 'csrfTokenCheck.php';
 include '../db/db.php';
 include '../db/queries.php';
 
@@ -7,19 +7,27 @@ $studentnumber = filter_input(INPUT_POST, 'studentnumber', FILTER_SANITIZE_STRIN
 $section = filter_input(INPUT_POST, 'section', FILTER_SANITIZE_STRING);
 $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
 
-if (!studentNumberExists($conn, $studentnumber))
-  send_message_and_redirect("There is no " . $studentnumber . " in the system.", "/ereliv/studlogin.php");
+$response = array();
 
-if (!verifyStudent($conn, $studentnumber, $section, $password))
-  send_message_and_redirect("Wrong Credentials", "/ereliv/studlogin.php");
-  
-if(getStudentStatus($conn, $studentnumber) != "Active")
-  send_message_and_redirect("Wait for your Account Approval First", "/ereliv/studlogin.php");
+if (!studentNumberExists($conn, $studentnumber)) {
+  $response['status'] = 'error';
+  $response['message'] = "There is no " . $studentnumber . " in the system.";
+} else if (!verifyStudent($conn, $studentnumber, $section, $password)) {
+  $response['status'] = 'error';
+  $response['message'] = "Wrong Credentials";
+} else if (getStudentStatus($conn, $studentnumber) != "Active") {
+  $response['status'] = 'error';
+  $response['message'] = "Wait for your Account Approval First";
+} else {
+  // Set the session variable
+  $_SESSION['userID'] = getStudentID($conn, getStudentEmail2($conn, $studentnumber));
+  $_SESSION['usertype'] = "student";
+  $_SESSION['username'] = getFullNameByID($conn, "Student", "studentID", $_SESSION['userID']);
 
-// Set the session variable
-$_SESSION['userID'] = getStudentID($conn, getStudentEmail2($conn, $studentnumber));
-$_SESSION['usertype'] = "student";
-$_SESSION['username'] = getFullNameByID($conn, "Student", $_SESSION['userID']);
-header("Location: /ereliv/student/");
+  $response['status'] = 'success';
+  $response['message'] = "Login successful";
+  $response['redirect'] = "/ereliv/student/";
+}
 
-?>
+echo json_encode($response);
+?>  

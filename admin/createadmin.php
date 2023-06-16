@@ -1,4 +1,6 @@
 <?php
+require_once("../backend/session_admin.php");
+
 $db_host = "localhost";
 $db_user = "erelivadmin";
 $db_pass = "ereliv2023";

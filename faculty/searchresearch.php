@@ -1,121 +1,54 @@
-<?php
-require_once("../backend/session_faculty.php");
-?>
+<?php require_once("../backend/session_faculty.php"); ?>
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PUPQC Research Management Sytem</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css" />
-  <script src="https://cdn.tiny.cloud/1/o7w7sdre55xscvrprwcvde6nwnv4n2in1tg6taczesi9jmh2/tinymce/6/tinymce.min.js"
-    referrerpolicy="origin"></script>
-  <link rel="stylesheet" href="../styles/main.css" />
-</head>
-
-<body class="vh-100">
-  <div class="row mx-auto d-flex flex-column justify-content-center  align-items-center ">
-    <div class="col-lg-12 col-sm-auto d-flex flex-column justify-content-center align-items-stretch gap-3 mx-auto mt-1">
-      <form method="POST" action="../backend/searchresearch_backend.php" class="d-flex justify-content-between gap-3">
-        <div class="form-floating w-100">
-          <input type="text" id="search" name="search" class="form-control form-control-sm" placeholder="search"
-            required />
-          <label for="search" class="form-label">Search</label>
-        </div>
-        <button class="btn btn-primary btn-sm w-25" type="submit">
-          <i class="bi bi-search"></i> Search
-        </button>
-      </form>
-      <?php
-      $researches = getList($conn, "*", "Research");
-      foreach ($researches as $research) {
-        $authors = getAuthorNames($conn, $research['researchID']);
-        $programs = getProgramNames($conn, $research['researchID']);
-        echo '<a href="#displaypage" id="' . $research['researchID'] . '" class="text-decoration-none text-dark research-link" data-bs-toggle="modal">';
-        echo '<div class="row d-flex border border-smoke p-3 rounded">';
-        echo '<div class="col">';
-        echo '<h3 class="text-capitalize research-title">' . strtolower($research['title']) . '</h3>';
-        echo '<div class="col d-flex justify-content-start">';
-        echo '<div class="research-authors fw-bold">';
-        echo '<span class="fw-normal">Authors: </span>';
-
-        foreach ($authors as $author) {
-          echo '<span class="text-capitalize">' . $author . '</span> ';
-        }
-
-        echo '</div>';
-        echo '<span class="ml-auto mr-5 research-publish-date">Date Published: <strong>' . $research['datepublished'] . '</strong></span>';
-        echo '<span class="text-capitalize research-uploader">Uploader : <strong>' . $research['proposer'] . '</strong></span>';
-        echo '</div>';
-        echo '<div class="truncate content ms-3 research-abstract" data-full-text="' . $research['abstract'] . '">' . $research['abstract'] . '</div>';
-        echo '<div class="mt-3 mb-1 research-programs">';
-
-        foreach ($programs as $program) {
-          echo '<span class="btn-sm btn-primary">' . $program . '</span> ';
-        }
-
-        echo '</div>';
-        echo '<span class="fw-bold mt-2">Keywords: </span>';
-        echo '<div class="truncate content ms-3 text-capitalize research-keywords" data-full-text="' . $research['keywords'] . '">';
-        echo '<p>' . $research['keywords'] . '</p>';
-        echo '</div>';
-        echo '</div>';
-        echo '</div>';
-        echo '</a>';
-      }
-      ?>
-
-
-    </div>
+<div class="row mx-auto d-flex flex-column justify-content-center  align-items-center ">
+  <div class="col-lg-12 col-sm-auto d-flex flex-column justify-content-center align-items-stretch gap-3 mx-auto mt-1">
+    <form id="searchForm" class="d-flex justify-content-between gap-3">
+      <div class="form-floating w-100">
+        <input type="text" id="search" name="search" class="form-control form-control-sm" placeholder="search"
+          required />
+        <label for="search" class="form-label">Search</label>
+      </div>
+      <input type="hidden" name="criteria">
+      <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+      <button class="btn btn-primary btn-sm w-25" type="submit">
+        <i class="bi bi-search"></i> Search
+      </button>
+    </form>
+    <div id="researchResults" class="d-flex flex-column gap-3"></div>
   </div>
+</div>
 
-  <!-- modal -->
-  <div class="modal fade" id="displaypage" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" style="min-width: 80vw;">
-      <div class="modal-content" style="min-height: 80vh;">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5 text-capitalize text-center">
-            Overview of Research
-          </h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="container modal-body">
+<!-- modal -->
+<div class="modal fade" id="displaypage" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="min-width: 80vw;">
+    <div class="modal-content" style="min-height: 80vh;">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 text-capitalize text-center">
+          Overview of Research
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="container modal-body p-5">
 
-          <h2 class="text-capitalize text-center mb-4" id="research-title-modal"></h2>
-          <h5 class="mb-2"><strong>Abstract:</strong></h5>
-          <div id="research-abstract-modal"></div>
-          <span id="research-publish-date-modal"></span>
-          <div class="text-reset" id="research-authors-modal"></div>
-          <span class="text-capitalize" id="research-uploader-modal"></span>
-          <h5 class="mt-3"><strong>Keywords:</strong></h5>
-          <p id="research-keywords-modal"></p>
-          <div id="research-programs-modal"></div>
-        </div>
+        <h2 class="text-capitalize text-center mb-4" id="research-title-modal"></h2>
+        <h5 class="mb-2"><strong>Abstract:</strong></h5>
+        <div id="research-abstract-modal"></div>
+        <span id="research-publish-date-modal"></span>
+        <div class="text-reset" id="research-authors-modal"></div>
+        <span class="text-capitalize" id="research-uploader-modal"></span>
+        <h5 class="mt-3"><strong>Keywords:</strong></h5>
+        <p id="research-keywords-modal"></p>
+        <div id="research-programs-modal"></div>
       </div>
     </div>
   </div>
+</div>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-    $(document).ready(function () {
-      $('.truncate').each(function () {
-        var words = $(this).text().trim().split(' ');
-        if (words.length > 20) {
-          var truncatedText = words.slice(0, 20).join(' ') + '...';
-          $(this).data('truncated-text', truncatedText)
-            .data('full-text', $(this).text())
-            .text(truncatedText)
-            .addClass('truncated');
-        }
-      });
-    });
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  // Define the attachEventListeners function
+  function attachEventListeners() {
     // Select all the links with the specified class
     var links = document.querySelectorAll('.research-link');
 
@@ -141,8 +74,76 @@ require_once("../backend/session_faculty.php");
         document.getElementById('research-uploader-modal').innerHTML = researchUploader;
       });
     });
-  </script>
+  }
 
-</body>
+  // Update research list on DOMContentLoaded event
+  window.addEventListener('DOMContentLoaded', function () {
+    // Trigger search on page load
+    updateResearchList();
+  });
 
-</html>
+  // Truncate the content
+  function truncateContent(element) {
+    var words = $(element).text().trim().split(' ');
+    if (words.length > 20) {
+      var truncatedText = words.slice(0, 20).join(' ') + '...';
+      $(element).data('truncated-text', truncatedText)
+        .data('full-text', $(element).text())
+        .text(truncatedText)
+        .addClass('truncated');
+    }
+  }
+
+  // Update research list function
+  async function updateResearchList() {
+    try {
+      const searchForm = document.getElementById('searchForm');
+      const formData = new FormData(searchForm);
+
+      const response = await fetch('../backend/updateresearches.php', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const researchContainer = document.getElementById('researchResults');
+        researchContainer.innerHTML = await response.text();
+        attachEventListeners(); // Call the attachEventListeners function
+
+        $('.research-abstract').each(function () {
+          truncateContent(this);
+        });
+
+        $('.research-keywords').each(function () {
+          truncateContent(this);
+        });
+
+        $('.research-title').each(function () {
+          truncateTitle(this);
+        });
+
+      } else {
+        console.error('Error updating research list:', response.status);
+        displayToastr('error', 'An error occurred. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      displayToastr('error', 'An error occurred. Please try again.');
+    }
+  }
+
+  // Truncate text on document ready
+  $(document).ready(function () {
+    $('.truncate').each(function () {
+      var words = $(this).text().trim().split(' ');
+      if (words.length > 20) {
+        var truncatedText = words.slice(0, 20).join(' ') + '...';
+        $(this).data('truncated-text', truncatedText)
+          .data('full-text', $(this).text())
+          .text(truncatedText)
+          .addClass('truncated');
+      }
+    });
+  });
+
+</script>

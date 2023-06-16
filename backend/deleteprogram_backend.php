@@ -1,12 +1,23 @@
 <?php
+include_once 'csrfTokenCheck.php';
 include '../db/db.php';
 include '../db/queries.php';
 
 $program = filter_input(INPUT_POST, 'program', FILTER_SANITIZE_STRING);
 
+$response = array();
+
 if (!noSectionBeforeProgramDeletion($conn, $program)) {
-  send_message_and_redirect("Delete first the Sections of the Program", "http://localhost/ereliv/admin/?programListContainer=block");
+  $response['status'] = 'error';
+  $response['message'] = "Delete the sections of the program first";
+} else {
+  if (deleteProgram($conn, $program)) {
+    $response['status'] = 'success';
+    $response['message'] = "$program was deleted successfully";
+  } else {
+    $response['status'] = 'error';
+    $response['message'] = "Failed to delete $program";
+  }
 }
 
-if (deleteProgram($conn, $program))
-  send_message_and_redirect($program . " was deleted successfully", "http://localhost/ereliv/admin/?programListContainer=block");
+echo json_encode($response);

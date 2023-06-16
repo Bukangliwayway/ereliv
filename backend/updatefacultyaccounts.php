@@ -1,16 +1,18 @@
 <?php
+include_once 'csrfTokenCheck.php';
 include '../db/db.php';
 include '../db/queries.php';
 
 $output = '';
 $order = $_POST["order"];
-if ($order == 'desc')
+if ($order == 'desc') {
      $order = 'asc';
-else
+} else {
      $order = 'desc';
-
+}
 
 $faculties = getAccountsByOrder($conn, 'Faculty', $_POST["column_name"], $_POST["order"]);
+
 $output .= '  
      <h3 class="text-center">Faculty Accounts</h3>
       <table class="table table-bordered">
@@ -23,25 +25,12 @@ $output .= '
           <th class="text-center">Toggle Status</th>
         </tr>
  ';
+
 foreach ($faculties as $faculty) {
      if ($faculty["status"] == "Active") {
-          $button = '<a
-              href="#deactivatemodal"
-              class="deactivatebutton text-capitalize text-center btn btn-danger"
-              data-bs-toggle="modal"
-              data-string =' . $faculty['facultyID'] . '
-            >
-              Deactivate
-            </a>';
+          $button = '<a href="#deactivatemodal" class="deactivatebutton text-capitalize text-center btn btn-danger" data-bs-toggle="modal" data-string="' . $faculty['facultyID'] . '" data-user ="Faculty">Deactivate</a>';
      } else {
-          $button = '<a
-              href="#activatemodal"
-              class="activatebutton text-capitalize text-center btn btn-primary"
-              data-bs-toggle="modal"
-              data-string =' . $faculty['facultyID'] . '
-            >
-              Activate
-            </a>';
+          $button = '<a href="#activatemodal" class="activatebutton text-capitalize text-center btn btn-primary" data-bs-toggle="modal" data-string="' . $faculty['facultyID'] . '" data-user ="Faculty" >Activate</a>';
      }
      $output .= '  
       <tr>
@@ -61,11 +50,11 @@ foreach ($faculties as $faculty) {
                ' . $faculty["priority"] . '
           </td>
           <td class="text-capitalize text-center">
-               '. $button .'
+               ' . $button . '
           </td>
-     </tr>
-     ';
+     </tr>';
 }
+
 $output .= '</table>';
 echo $output;
 ?>

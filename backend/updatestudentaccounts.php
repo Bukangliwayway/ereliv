@@ -1,16 +1,18 @@
 <?php
+include_once '../backend/csrfTokenCheck.php';
 include '../db/db.php';
 include '../db/queries.php';
 
 $output = '';
-$order = $_POST["order"];
+$order = isset($_POST["order"]) ? $_POST["order"] : '';
+$column = $_POST["column_name"];
+
 if ($order == 'desc')
   $order = 'asc';
 else
   $order = 'desc';
 
-
-$students = getAccountsByOrder($conn, 'Student', $_POST["column_name"], $_POST["order"]);
+$students = getAccountsByOrder($conn, 'Student', $column, $order);
 $output .= '  
      <h3 class="text-center">Student Accounts</h3>
       <table class="table table-bordered">
@@ -26,14 +28,15 @@ $output .= '
           <th class="text-center">Toggle Status</th>
         </tr>
  ';
-foreach ($students as $student) {
 
+foreach ($students as $student) {
   if ($student["status"] == "Active") {
     $button = '<a
               href="#deactivatemodal"
               class="deactivatebutton text-capitalize text-center btn btn-danger"
               data-bs-toggle="modal"
-              data-string =' . $student['studentID'] . '
+              data-string=' . $student['studentID'] . '
+              data-user = "Student"
             >
               Deactivate
             </a>';
@@ -42,11 +45,13 @@ foreach ($students as $student) {
               href="#activatemodal"
               class="activatebutton text-capitalize text-center btn btn-primary"
               data-bs-toggle="modal"
-              data-string =' . $student['studentID'] . '
+              data-string=' . $student['studentID'] . '
+              data-user ="Student"
             >
               Activate
             </a>';
   }
+
   $output .= '  
       <tr>
         <td class="text-capitalize text-center">
@@ -76,11 +81,11 @@ foreach ($students as $student) {
         <td class="text-capitalize text-center">
           ' . $button . '
         </td>
-  ';
-
-}
-$output .= '
       </tr>
+  ';
+}
+
+$output .= '
     </table>';
 echo $output;
 ?>

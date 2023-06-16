@@ -39,7 +39,7 @@ function add_faculty($conn, $firstname, $lastname, $emailadd, $password, $catego
   try {
     $stmt->execute();
   } catch (PDOException $e) {
-    send_message_and_redirect("Error: " . $e->getMessage(), "http://localhost/ereliv/admin/facultyregis.php");
+    return "Faculty Creation Failed: " . $e->getMessage();
   }
 }
 
@@ -109,7 +109,6 @@ function verifyAdmin($conn, $username, $password)
     return false;
 
   $row = $stmt->fetch(PDO::FETCH_ASSOC);
-  echo $password;
   return password_verify($password, $row['Password']);
 }
 
@@ -131,7 +130,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-function sendEmail($conn, $email, $title, $body, $redirect)
+function sendEmail($conn, $email, $title, $body)
 {
   //Load Composer's autoloader
   require '../mail/Exception.php';
@@ -159,7 +158,7 @@ function sendEmail($conn, $email, $title, $body, $redirect)
     $mail->Body = $body;
     $mail->send();
   } catch (Exception $e) {
-    send_message_and_redirect("Message could not be sent. Mailer Error: " . $e->getMessage(), $redirect);
+    return "Message could not be sent. Mailer Error: " . $e->getMessage();
   }
 }
 
@@ -668,9 +667,19 @@ function getAdminNotifications($conn, $recipientAdminID)
   return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function getFullNameByID($conn, $table, $userID)
+function addAuthorExists($conn, $firstname, $lastname)
 {
-  $stmt = $conn->prepare("SELECT firstname, lastname FROM $table WHERE $userID = :userID");
+  $stmt = $conn->prepare("SELECT * FROM Author WHERE LOWER(firstname) = LOWER(:firstname) AND LOWER(lastname) = LOWER(:lastname)");
+  $stmt->bindParam(':firstname', $firstname);
+  $stmt->bindParam(':lastname', $lastname);
+  $stmt->execute();
+  $result = $stmt->fetch();
+  return !empty($result);
+}
+
+function getFullNameByID($conn, $table, $userColumn, $userID)
+{
+  $stmt = $conn->prepare("SELECT firstname, lastname FROM $table WHERE $userColumn = :userID");
   $stmt->bindParam(':userID', $userID);
   $stmt->execute();
   $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -825,5 +834,4 @@ function updateStudentsProgram($conn, $oldProgram, $newProgram)
   // Execute the query
   $stmt->execute();
 }
-
 ?>

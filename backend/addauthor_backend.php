@@ -1,13 +1,34 @@
 <?php
-session_start(); // Start the session
+include_once '../backend/csrfTokenCheck.php';
 include '../db/db.php';
 include '../db/queries.php';
 
 $firstname = filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_STRING);
 $lastname = filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_STRING);
 
-addAuthor($conn, $firstname, $lastname);
+if (addAuthorExists($conn, $firstname, $lastname)) {
+  $response = array(
+    'status' => 'error',
+    'message' => 'Author is already in the System'
+  );
+  echo json_encode($response);
+  exit();
+}
 
-send_message_and_redirect("Author Added Succesfully", "http://localhost/ereliv/faculty/");
+try {
+  addAuthor($conn, $firstname, $lastname);
 
+  $response = array(
+    'status' => 'success',
+    'message' => 'Author added successfully'
+  );
+} catch (Exception $e) {
+  $response = array(
+    'status' => 'error',
+    'message' => 'Failed to add author'
+  );
+}
+
+header('Content-Type: application/json');
+echo json_encode($response);
 ?>

@@ -1,14 +1,32 @@
 <?php
+include_once 'csrfTokenCheck.php';
 include '../db/db.php';
 include '../db/queries.php';
 
 $section = filter_input(INPUT_POST, 'section', FILTER_SANITIZE_STRING);
 $string = filter_input(INPUT_POST, 'string', FILTER_SANITIZE_STRING);
 
-if (sectionDuplicateCheck($conn, $section))
-  send_message_and_redirect($section . " was already in the Program", "http://localhost/ereliv/admin/?programListContainer=block");
+$response = array();
 
-if (addSection($conn, $section, $string))
-  send_message_and_redirect($section . " was added successfully", "http://localhost/ereliv/admin/?programListContainer=block");
+// Duplicate
+if (sectionDuplicateCheck($conn, $section)) {
+  $response['status'] = 'error';
+  $response['message'] = $section . ' was already in the Program';
+  echo json_encode($response);
+  exit();
+}
 
-// send_message_and_redirect($section." was not added, sorry", "http://localhost/ereliv/admin/programlist.php");
+// Success
+if (addSection($conn, $section, $string)) {
+  $response['status'] = 'success';
+  $response['message'] = $section . ' was added successfully';
+  echo json_encode($response);
+  exit();
+}
+
+// Handle other Errors 
+$response['status'] = 'error';
+$response['message'] = $section . ' was not added, sorry';
+echo json_encode($response);
+
+?>

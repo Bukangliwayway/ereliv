@@ -1,10 +1,18 @@
 <?php
+include_once '../backend/csrfTokenCheck.php';
 include '../db/db.php';
 include '../db/queries.php';
 
 $program = filter_input(INPUT_POST, 'program', FILTER_SANITIZE_STRING);
 
-if (addProgram($conn, $program))
-  send_message_and_redirect($program . " was added successfully", "http://localhost/ereliv/admin/?programListContainer=block");
+$response = array();
 
-send_message_and_redirect($program . " was not added, sorry", "http://localhost/ereliv/admin/?programListContainer=block");
+if (addProgram($conn, $program)) {
+  $response['status'] = 'success';
+  $response['message'] = $program . " was added successfully";
+} else {
+  $response['status'] = 'error';
+  $response['message'] = "Failed to add $program";
+}
+
+echo json_encode($response);

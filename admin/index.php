@@ -1,6 +1,4 @@
 <?php require_once("../backend/session_admin.php"); ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,35 +7,33 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PUPQC Research Management Sytem</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous" />
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css" />
-  <link rel="stylesheet" href="main.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
 </head>
 
 <body>
   <?php
   include '../db/db.php';
   include '../db/queries.php';
-  $folder_path = "../assets/randbg/";
-  $files = glob($folder_path . "*");
-  $img_src = $files[array_rand($files)];
-
-  // For Setting Display Attr
-  $programListContainer = $_GET['programListContainer'] ?? 'none';
-  $facultyRegistrationContainer = $_GET['facultyRegistrationContainer'] ?? 'none';
-  $viewAccountsContainer = $_GET['viewAccountsContainer'] ?? 'none';
-  $notificationsContainer = $_GET['noti$notificationsContainer'] ?? 'none';
   ?>
+  <div id="loadingSpinner" class="position-fixed top-0 start-0 d-none justify-content-center align-items-baseline pt-5"
+    style="width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.2); z-index: 9999;">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
 
   <div class=" d-flex flex-row">
     <nav class="col-3 navbar navbar-expand-lg navbar-dark bg-dark flex-column min-vh-100">
       <div class="d-flex flex-column align-items-stretch p-3">
-        <a class="navbar-brand mx-auto my-3 text-center"
-          href="http://localhost/ereliv/faculty/?searchresearchContainer=block">
+        <a class="navbar-brand mx-auto my-3 text-center" href="http://localhost/ereliv/admin">
           <img src="../assets/puplogo.png" alt="logo hehe" class="img-fluid" style="max-width: 80%;" />
         </a>
         <h2 class="text-center text-success text-capitalize mb-4"><i class="bi bi-person-fill"></i>
@@ -47,15 +43,24 @@
           aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <div class="d-flex flex-column flex-grow-1" style="height:55vh;">
-            <button class="btn btn-outline-success mb-2" id="addFacultyBtn"><i class="bi bi-plus-lg"></i> Faculty</button>
-            <button class="btn btn-outline-success mb-2" id="addProgramsBtn"><i class="bi bi-plus-lg"></i> Programs and
-              Sections
+            <button class="btn btn-outline-success mb-2 toggle-btn" id="addProgramsBtn"
+              data-container="programListContainer">
+              <i class="bi bi-plus-lg"></i> Programs and Sections
             </button>
-            <button class="btn btn-outline-success mb-2" id="viewAccountsBtn"><i class="bi bi-eye-fill"></i> View Accounts
+            <button class="btn btn-outline-success mb-2 toggle-btn" id="addFacultyBtn"
+              data-container="facultyRegistrationContainer">
+              <i class="bi bi-plus-lg"></i> Faculty
             </button>
-            <button class="btn btn-outline-success mb-2" id="notificationsBtn"><i class="bi bi-bell-fill"></i> Notifications
+            <button class="btn btn-outline-success mb-2 toggle-btn" id="viewAccountsBtn"
+              data-container="viewAccountsContainer">
+              <i class="bi bi-eye-fill"></i> View Accounts
+            </button>
+            <button class="btn btn-outline-success mb-2 toggle-btn" id="notificationsBtn"
+              data-container="notificationsContainer">
+              <i class="bi bi-bell-fill"></i> Notifications
             </button>
             <a href="#signoutmodal" class="btn btn-outline-danger mb-2 mt-auto" id="signoutBtn" data-bs-toggle="modal">
               <i class="bi bi-box-arrow-right"></i> Sign Out
@@ -64,21 +69,18 @@
         </div>
       </div>
     </nav>
-    <div class="container">
-      <div class="col-md-12 rand-bg p-5">
-        <div id="programListContainer">
-          <?php include 'programlist.php'; ?>
-        </div>
-        <div id="facultyRegistrationContainer">
-          <?php include 'facultyregis.php'; ?>
-        </div>
-        <div id="viewAccountsContainer">
-          <?php include 'viewaccounts.php'; ?>
-        </div>
-        <div id="notificationsContainer">
-          <?php include 'notifications.php'; ?>
-        </div>
-
+    <div class="container p-5">
+      <div id="programListContainer" class="d-none toggle-visibility">
+        <?php include 'programlist.php'; ?>
+      </div>
+      <div id="facultyRegistrationContainer" class="d-none toggle-visibility">
+        <?php include 'facultyregis.php'; ?>
+      </div>
+      <div id="viewAccountsContainer" class="d-none toggle-visibility">
+        <?php include 'viewaccounts.php'; ?>
+      </div>
+      <div id="notificationsContainer" class="d-none toggle-visibility">
+        <?php include 'notifications.php'; ?>
       </div>
     </div>
   </div>
@@ -96,6 +98,7 @@
         </div>
         <div class="container modal-body">
           <form method="POST" action="../backend/session_out.php" class="container d-flex flex-row gap-3">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <button type="submit" class="btn btn-danger">Yes</button>
             <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">No</button>
           </form>
@@ -105,17 +108,19 @@
   </div>
 
   <script>
+    const displayToastr = (type, message) => {
+      toastr[type](message);
+    };
+
     document.addEventListener("DOMContentLoaded", function () {
       var programListContainer = document.getElementById("programListContainer");
-      var facultyRegistrationContainer = document.getElementById("facultyRegistrationContainer");
+      var facultyRegistrationContainer = document.getElementById(
+        "facultyRegistrationContainer"
+      );
       var viewAccountsContainer = document.getElementById("viewAccountsContainer");
-      var notificationsContainer = document.getElementById("notificationsContainer");
-
-      // Initially hide the containers
-      programListContainer.style.display = "<?php echo $programListContainer ?>";
-      facultyRegistrationContainer.style.display = "<?php echo $facultyRegistrationContainer ?>";
-      viewAccountsContainer.style.display = "<?php echo $viewAccountsContainer ?>";
-      notificationsContainer.style.display = "<?php echo $notificationsContainer ?>";
+      var notificationsContainer = document.getElementById(
+        "notificationsContainer"
+      );
 
       // Get the button elements
       var addProgramsBtn = document.getElementById("addProgramsBtn");
@@ -123,75 +128,43 @@
       var viewAccountsBtn = document.getElementById("viewAccountsBtn");
       var notificationsBtn = document.getElementById("notificationsBtn");
 
-      //   // Button click event for Add Programs
-      addProgramsBtn.addEventListener("click", function () {
-        // Show the program list container
-        programListContainer.style.display = "block";
+      // Get the buttons and div containers
+      const buttons = document.querySelectorAll(".toggle-btn");
+      const containers = document.querySelectorAll(".toggle-visibility");
 
-        // Hide the faculty registration container and view accounts container
-        facultyRegistrationContainer.style.display = "none";
-        viewAccountsContainer.style.display = "none";
-        notificationsContainer.style.display = "none";
+      // Function to toggle visibility of div containers
+      const toggleView = (containerToShow) => {
+        // Hide all div containers
+        containers.forEach((container) => {
+          container.classList.add("d-none");
+        });
 
-        // Add active class to the clicked button
-        addProgramsBtn.classList.add("active");
-        addFacultyBtn.classList.remove("active");
-        viewAccountsBtn.classList.remove("active");
-        notificationsContainer.classList.remove("active");
-      });
+        // Show the selected container
+        containerToShow.classList.remove("d-none");
+      };
 
-      // Button click event for Add Faculty
-      addFacultyBtn.addEventListener("click", function () {
-        // Show the faculty registration container
-        facultyRegistrationContainer.style.display = "block";
+      // Add click event listener to the button container
+      document.addEventListener("click", (event) => {
+        const target = event.target;
 
-        // Hide the program list container and view accounts container
-        programListContainer.style.display = "none";
-        viewAccountsContainer.style.display = "none";
-        notificationsContainer.style.display = "none";
+        // Check if the clicked element is a button
+        if (target.classList.contains("toggle-btn")) {
+          const containerId = target.dataset.container;
+          const containerToShow = document.getElementById(containerId);
 
-        // Add active class to the clicked button
-        addFacultyBtn.classList.add("active");
-        addProgramsBtn.classList.remove("active");
-        viewAccountsBtn.classList.remove("active");
-        notificationsBtn.classList.remove("active");
-      });
+          // Toggle the visibility of div containers
+          toggleView(containerToShow);
 
-      // Button click event for View Accounts
-      viewAccountsBtn.addEventListener("click", function () {
-        // Show the view accounts container
-        viewAccountsContainer.style.display = "block";
-
-        // Hide the program list container and faculty registration container
-        programListContainer.style.display = "none";
-        facultyRegistrationContainer.style.display = "none";
-        notificationsContainer.style.display = "none";
-
-        // Add active class to the clicked button
-        viewAccountsBtn.classList.add("active");
-        addProgramsBtn.classList.remove("active");
-        addFacultyBtn.classList.remove("active");
-        notificationsBtn.classList.remove("active");
-      });
-
-      // Button click event for Notifications 
-      notificationsBtn.addEventListener("click", function () {
-        // Show the view accounts container
-        notificationsContainer.style.display = "block";
-
-        // Hide the program list container and faculty registration container
-        programListContainer.style.display = "none";
-        facultyRegistrationContainer.style.display = "none";
-        viewAccountsContainer.style.display = "none";
-
-        // Add active class to the clicked button
-        notificationsBtn.classList.add("active");
-        viewAccountsBtn.classList.remove("active");
-        addProgramsBtn.classList.remove("active");
-        addFacultyBtn.classList.remove("active");
+          // Toggle the active class on buttons
+          buttons.forEach((button) => {
+            button.classList.toggle("active", button === target);
+          });
+        }
       });
     });
+
   </script>
+
 
 </body>
 

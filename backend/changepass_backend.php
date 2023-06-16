@@ -1,4 +1,5 @@
 <?php
+include_once 'csrfTokenCheck.php';
 include '../db/db.php';
 include '../db/queries.php';
 
@@ -10,11 +11,22 @@ $emailadd = filter_input(INPUT_POST, 'emailadd', FILTER_SANITIZE_EMAIL);
 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
 if (!emailAddressCheck($conn, $emailadd, $type)) {
-  send_message_and_redirect($emailadd . ' is not on the system', $redirect);
+  $response['status'] = 'error';
+  $response['message'] = $emailadd . ' is not on the system';
+  echo json_encode($response);
+  exit;
 }
 
-if (!checkCode($conn, $type, $code, $emailadd))
-  send_message_and_redirect("Invalid Reset Request", $redirect);
+if (!checkCode($conn, $type, $code, $emailadd)) {
+  $response['status'] = 'error';
+  $response['message'] = 'Invalid Reset Request';
+  echo json_encode($response);
+  exit;
+}
 
 updatePassword($conn, $hashed_password, $type, $emailadd, $redirect);
-send_message_and_redirect('Your Password has been Changed', "http://localhost/ereliv/");
+
+$response['status'] = 'success';
+$response['message'] = 'Your Password has been Changed';
+echo json_encode($response);
+?>
