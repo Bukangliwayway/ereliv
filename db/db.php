@@ -2,8 +2,8 @@
 
 // Define database connection parameters
 $db_host = "localhost";
-$db_user = "erelivadmin";
-$db_pass = "ereliv2023";
+$db_user = "root";
+$db_pass = "";
 $db_name = "ereliv";
 
 try {

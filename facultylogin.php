@@ -89,7 +89,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/ereliv/backend/randbg_generate.php';
         <div class="container modal-body">
           <form method="POST" action="backend/forgotpass_backend.php" class="container d-flex flex-row gap-3">
             <div class="form-floating">
-              <input type="email" id="emailadd" name="emailadd" class="form-control" placeholder="emailadd" required />
+              <input type="email" name="emailadd" class="form-control" placeholder="emailadd" required />
               <label for="email" class="form-label">Email Address</label>
             </div>
             <input type="hidden" name="type" value="Faculty" />
