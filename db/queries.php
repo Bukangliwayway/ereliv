@@ -12,10 +12,10 @@ function emailAddressCheck($conn, $emailadd, $type)
 
 function addStudent($conn, $studentnumber, $program, $section, $emailadd, $firstname, $lastname, $password, $advisor)
 {
-  $stmt = $conn->prepare("INSERT into Student (studentnumber, program, section, emailadd, firstname, lastname, password, advisor) VALUES (:studentnumber, :program, :section, :emailadd, :firstname, :lastname, :password, :advisor)");
+  $stmt = $conn->prepare("INSERT into Student (studentnumber, program, sectionID, emailadd, firstname, lastname, password, advisor) VALUES (:studentnumber, :program, :sectionID, :emailadd, :firstname, :lastname, :password, :advisor)");
   $stmt->bindParam(':studentnumber', $studentnumber);
   $stmt->bindParam(':program', $program);
-  $stmt->bindParam(':section', $section);
+  $stmt->bindParam(':sectionID', $section);
   $stmt->bindParam(':emailadd', $emailadd);
   $stmt->bindParam(':firstname', $firstname);
   $stmt->bindParam(':lastname', $lastname);
@@ -24,8 +24,9 @@ function addStudent($conn, $studentnumber, $program, $section, $emailadd, $first
   try {
     $stmt->execute();
   } catch (PDOException $e) {
-    send_message_and_redirect("Error: " . $e->getMessage(), "http://localhost/ereliv/studregis.php");
+    return $e->getMessage();
   }
+
 }
 
 function add_faculty($conn, $firstname, $lastname, $emailadd, $password, $category)
@@ -75,12 +76,12 @@ function studentNumberExists($conn, $studentnumber)
 function verifyStudent($conn, $studentnumber, $section, $password)
 {
   // Prepare the SQL statement to search for a matching student number
-  $stmt = $conn->prepare("SELECT section, password FROM Student WHERE studentnumber = :studentnumber");
+  $stmt = $conn->prepare("SELECT sectionID, password FROM Student WHERE studentnumber = :studentnumber");
   $stmt->bindParam(':studentnumber', $studentnumber);
   $stmt->execute();
   // Fetch the row from the result set
   $row = $stmt->fetch(PDO::FETCH_ASSOC);
-  return $row['section'] === $section && password_verify($password, $row['password']);
+  return $row['sectionID'] == $section && password_verify($password, $row['password']);
 }
 
 function verifyFaculty($conn, $emailadd, $password)
@@ -208,10 +209,11 @@ function getList($conn, $column, $table)
 
 function getSectionList($conn, $programID)
 {
-  $stmt = $conn->prepare("SELECT s.name
-                          FROM Programsections ps
-                          JOIN Section s ON ps.sectionID = s.SectionID
-                          WHERE ps.programID = :programID");
+  $stmt = $conn->prepare("SELECT s.sectionID, s.name
+                            FROM Programsections ps
+                            JOIN Section s ON ps.sectionID = s.sectionID
+                            WHERE ps.programID = :programID
+                        ");
   $stmt->bindParam(':programID', $programID);
   $stmt->execute();
   $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -285,10 +287,10 @@ function editSection($conn, $name, $original)
   return true;
 }
 
-function deleteSection($conn, $name)
+function deleteSection($conn, $sectionID)
 {
-  $stmt = $conn->prepare("DELETE FROM Section WHERE name = :name");
-  $stmt->bindParam(':name', $name);
+  $stmt = $conn->prepare("DELETE FROM Section WHERE sectionID = :sectionID");
+  $stmt->bindParam(':sectionID', $sectionID);
   try {
     $stmt->execute();
   } catch (PDOException $e) {
@@ -794,13 +796,13 @@ function researchEditor($conn, $facultyID, $researchID)
   return true;
 }
 
-function getStudentsBySection($conn, $sectionName)
+function getStudentsBySection($conn, $sectionID)
 {
   // Prepare the query to retrieve students by section
-  $stmt = $conn->prepare("SELECT * FROM Student WHERE LOWER(section) = LOWER(:section)");
+  $stmt = $conn->prepare("SELECT * FROM Student WHERE sectionID = :section");
 
   // Bind the section parameter
-  $stmt->bindParam(':section', $sectionName);
+  $stmt->bindParam(':section', $sectionID);
 
   // Execute the query
   $stmt->execute();
@@ -809,18 +811,6 @@ function getStudentsBySection($conn, $sectionName)
   return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function updateStudentsSection($conn, $oldSection, $newSection)
-{
-  // Prepare the query to update students' section
-  $stmt = $conn->prepare("UPDATE Student SET section = :newSection WHERE LOWER(section) = LOWER(:oldSection)");
-
-  // Bind the parameters
-  $stmt->bindParam(':newSection', $newSection);
-  $stmt->bindParam(':oldSection', $oldSection);
-
-  // Execute the query
-  $stmt->execute();
-}
 function updateStudentsProgram($conn, $oldProgram, $newProgram)
 {
   // Prepare the query to update students' Program

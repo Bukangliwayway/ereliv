@@ -19,7 +19,6 @@ if (editSection($conn, $section, $original)) {
   $response['status'] = 'success';
   $response['message'] = $section . ' was updated successfully';
   // Update the Section of Students Enrolled in it
-  updateStudentsSection($conn, $original, $section);
   echo json_encode($response);
 } else {
   $response['status'] = 'error';

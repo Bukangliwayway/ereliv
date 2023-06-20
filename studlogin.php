@@ -56,7 +56,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/ereliv/backend/randbg_generate.php';
             <?php
             $section = getList($conn, '*', 'Section');
             foreach ($section as $sectionData) {
-              echo '<option value="' . $sectionData['name'] . '">' . $sectionData['name'] . '</option>';
+              echo '<option value="' . $sectionData['sectionID'] . '">' . $sectionData['name'] . '</option>';
             }
             ;
             ?>

@@ -73,7 +73,8 @@
         <h5 class="text-capitalize text-center"> You Sure You want to Delete this Section? </h5>
         <form id="deleteSectionForm" class="container d-flex flex-row gap-3">
           <div class="form-floating">
-            <input type="text" id="delete_target" name="section" class="form-control" readonly />
+            <input type="hidden" id="delete_target" name="sectionID" />
+            <input type="text" id="delete_target_name" name="section" class="form-control" readonly />
             <label for="section" class="form-label">To Be Deleted</label>
           </div>
           <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
@@ -225,8 +226,10 @@
     const deleteSectionButtons = document.querySelectorAll('.deletesectionbutton');
     deleteSectionButtons.forEach(button => {
       button.addEventListener('click', function () {
-        const string = this.getAttribute('data-string');
-        document.querySelector('#delete_target').value = string;
+        const name = this.getAttribute('data-string');
+        const id = this.getAttribute('data-id');
+        document.querySelector('#delete_target').value = id;
+        document.querySelector('#delete_target_name').value = name;
       });
     });
 

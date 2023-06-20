@@ -4,14 +4,14 @@ include '../db/db.php';
 include '../db/queries.php';
 
 $studentnumber = filter_input(INPUT_POST, 'studentnumber', FILTER_SANITIZE_STRING);
-$section = filter_input(INPUT_POST, 'section', FILTER_SANITIZE_STRING);
+$section = filter_input(INPUT_POST, 'section', FILTER_SANITIZE_NUMBER_INT);
 $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
 
 $response = array();
 
 if (!studentNumberExists($conn, $studentnumber)) {
   $response['status'] = 'error';
-  $response['message'] = "There is no " . $studentnumber . " in the system.";
+  $response['message'] = "Invalid Input";
 } else if (!verifyStudent($conn, $studentnumber, $section, $password)) {
   $response['status'] = 'error';
   $response['message'] = "Wrong Credentials";

@@ -4,7 +4,7 @@ include '../db/db.php';
 include '../db/queries.php';
 
 $studentnumber = filter_input(INPUT_POST, 'studentnumber', FILTER_SANITIZE_STRING);
-$section = filter_input(INPUT_POST, 'section', FILTER_SANITIZE_STRING);
+$section = filter_input(INPUT_POST, 'section', FILTER_SANITIZE_NUMBER_INT);
 $program = filter_input(INPUT_POST, 'program', FILTER_SANITIZE_STRING);
 $emailadd = filter_input(INPUT_POST, 'emailadd', FILTER_SANITIZE_EMAIL);
 $firstname = filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_STRING);
@@ -27,7 +27,14 @@ if (emailAddressCheck($conn, $emailadd, 'Student')) {
   exit;
 }
 
-addStudent($conn, $studentnumber, $program, $section, $emailadd, $firstname, $lastname, $hashedPassword, $advisor);
+$result = addStudent($conn, $studentnumber, $program, $section, $emailadd, $firstname, $lastname, $hashedPassword, $advisor);
+
+if ($result) {
+  $response['status'] = 'error';
+  $response['message'] = $result;
+  echo json_encode($response);
+  exit;
+}
 
 linkStudentAndAdvisor($conn, $emailadd, $advisor);
 

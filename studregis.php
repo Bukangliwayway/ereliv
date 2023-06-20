@@ -186,11 +186,12 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/ereliv/backend/randbg_generate.php';
             // Add the remaining options
             options.forEach((option) => {
               const optionElement = $('<option>', {
-                value: option,
-                text: option
+                value: option['sectionID'],
+                text: option['name']
               });
               $('#section').append(optionElement);
             });
+
           } else {
             console.error('Error fetching section options:', sectionsResponse.status);
             toastr.error('An error occurred while fetching section options. Please try again.');

@@ -13,7 +13,10 @@ if (isset($_POST['programID'])) {
 	// Generate options array for sections
 	$options = [];
 	foreach ($sections as $section) {
-		$options[] = $section['name'];
+		$options[] = [
+			'sectionID' => $section['sectionID'],
+			'name' => $section['name']
+		];
 	}
 
 	// Prepare JSON response
