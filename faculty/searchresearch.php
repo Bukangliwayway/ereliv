@@ -119,7 +119,7 @@
         });
 
         $('.research-title').each(function () {
-          truncateTitle(this);
+          truncateContent(this);
         });
 
       } else {

@@ -164,7 +164,6 @@
     };
     $(document).ready(function () {
 
-
       // Submit form using AJAX
       $('#addAuthorForm').submit(function (event) {
         event.preventDefault(); // Prevent form from submitting normally

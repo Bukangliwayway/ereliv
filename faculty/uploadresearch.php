@@ -2,7 +2,7 @@
 
 <div class="row m-0 mx-auto d-flex flex-column justify-content-center  align-items-center ">
   <div
-    class="col-lg-12 col-sm-auto d-flex flex-column justify-content-center align-items-stretch text-center gap-3 mx-auto border border-smoke mt-1">
+    class="col-lg-12 col-sm-auto d-flex flex-column justify-content-center align-items-stretch text-center gap-3 mx-auto border border-smoke mt-1 py-5">
     <h1 class="fs-2 fw-bold text-uppercase">
       upload research
     </h1>
