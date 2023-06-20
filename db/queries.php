@@ -501,15 +501,14 @@ function getStudentStatus($conn, $studentnumber)
   $result = $stmt->fetch();
   return $result['status'];
 }
-function createNotif($conn, $title, $content, $redirect)
+function createNotif($conn, $title, $content)
 {
   // Prepare the SQL statement
-  $stmt = $conn->prepare("INSERT INTO Notification (title, content, redirect) VALUES (:title, :content, :redirect)");
+  $stmt = $conn->prepare("INSERT INTO Notification (title, content) VALUES (:title, :content)");
 
   // Bind the parameters to the prepared statement
   $stmt->bindParam(':title', $title);
   $stmt->bindParam(':content', $content);
-  $stmt->bindParam(':redirect', $redirect);
   $stmt->execute();
   return $conn->lastInsertId();
 }
@@ -600,13 +599,13 @@ function getStudentID($conn, $emailadd)
 function getFacultyNotifications($conn, $recipientFacultyID)
 {
   $stmt = $conn->prepare("
-    SELECT n.title, n.content, n.dateissued, n.redirect,
-       CONCAT_WS(' ', COALESCE(a.firstname, f.firstname, s.firstname), COALESCE(a.lastname, f.lastname, s.lastname)) AS issuername,
-       CASE WHEN a.adminID IS NOT NULL THEN 'admin'
-            WHEN f.facultyID IS NOT NULL THEN 'faculty'
-            WHEN s.studentID IS NOT NULL THEN 'student'
-            ELSE NULL
-          END AS issuertype
+    SELECT n.notificationID, n.title, n.content, n.dateissued,
+          CONCAT_WS(' ', COALESCE(a.firstname, f.firstname, s.firstname), COALESCE(a.lastname, f.lastname, s.lastname)) AS issuername,
+          CASE WHEN a.adminID IS NOT NULL THEN 'admin'
+                WHEN f.facultyID IS NOT NULL THEN 'faculty'
+                WHEN s.studentID IS NOT NULL THEN 'student'
+                ELSE NULL
+              END AS issuertype
     FROM NotificationLink nl
     JOIN Notification n ON nl.notificationID = n.notificationID
     LEFT JOIN Admin a ON nl.issuerAdminID = a.adminID

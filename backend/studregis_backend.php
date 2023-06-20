@@ -38,8 +38,8 @@ sendEmail($conn, $emailadd, $title, $body);
 
 $title = "Request for Account Approval";
 $content = "I am writing to request the approval of my student account on the PUPQC Paper Management System. As a registered user, I have created the account and seek your validation to gain access to the system's valuable resources. Your approval will greatly contribute to my active participation in academic pursuits. Thank you for your kind attention.";
-$redirect = "#";
-$notificationID = createNotif($conn, $title, $content, $redirect);
+
+$notificationID = createNotif($conn, $title, $content);
 $issuerID = getStudentID($conn, $emailadd);
 $recipientID = $advisor;
 
