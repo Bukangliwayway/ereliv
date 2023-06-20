@@ -623,7 +623,7 @@ function getFacultyNotifications($conn, $recipientFacultyID)
 function getStudentNotifications($conn, $recipientStudentID)
 {
   $stmt = $conn->prepare("
-    SELECT n.title, n.content, n.dateissued, n.redirect, n.status,
+    SELECT n.title, n.content, n.dateissued, n.status,
        CONCAT_WS(' ', COALESCE(a.firstname, f.firstname, s.firstname), COALESCE(a.lastname, f.lastname, s.lastname)) AS issuername,
        CASE WHEN a.adminID IS NOT NULL THEN 'admin'
             WHEN f.facultyID IS NOT NULL THEN 'faculty'
@@ -645,7 +645,7 @@ function getStudentNotifications($conn, $recipientStudentID)
 function getAdminNotifications($conn, $recipientAdminID)
 {
   $stmt = $conn->prepare("
-  SELECT n.title, n.content, n.dateissued, n.redirect, n.status,
+  SELECT n.title, n.content, n.dateissued, n.status,
   CONCAT_WS(' ', COALESCE(a.firstname, f.firstname, s.firstname), COALESCE(a.lastname, f.lastname, s.lastname)) AS issuername,
   CASE WHEN a.adminID IS NOT NULL THEN 'admin'
   WHEN f.facultyID IS NOT NULL THEN 'faculty'

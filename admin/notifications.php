@@ -6,11 +6,10 @@
     $title = $notification['title'];
     $content = $notification['content'];
     $dateissued = $notification['dateissued'];
-    $redirect = $notification['redirect'];
     $issuername = $notification['issuername'];
     $issuertype = $notification['issuertype'];
 
-    echo '<a href="' . $redirect . '" class="redirect text-decoration-none text-reset">
+    echo '<a class="redirect text-decoration-none text-reset">
         <div class="row  mb-3">
           <div class="col-8  m-auto p-3 border border-smoke rounded">
             <div class="notif-head d-flex justify-content-around align-items-center">

@@ -1,11 +1,12 @@
 <?php require_once("../backend/session_admin.php"); ?>
 
 
-<div class="row col-8 m-auto">
-  <div class="table-responsive" id="studentList">
+<div class="row col-8 m-auto gap-3">
+  <div class="table-responsive overflow-auto" style="max-height:50vh" id="studentList">
+    <h3 class="text-center">Student Accounts</h3>
     <!-- Table will be dynamically loaded here -->
   </div>
-  <div class="table-responsive" id="facultyList">
+  <div class="table-responsive overflow-auto" style="max-height:50vh" id="facultyList">
     <!-- Table will be dynamically loaded here -->
   </div>
 </div>
