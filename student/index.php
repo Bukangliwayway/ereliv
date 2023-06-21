@@ -77,7 +77,7 @@
             <button class="btn btn-outline-success mb-2 toggle-btn" id="searchresearchBtn"
               data-container="searchresearchContainer">
               <i class="bi bi-search"></i>
-              Search Research
+              Research
             </button>
 
             <a href="#addauthormodal" class="btn btn-outline-primary mb-2 mt-auto " data-bs-toggle="modal">

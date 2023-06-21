@@ -13,13 +13,13 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-    <!-- tinycloud -->
-    <script src="https://cdn.tiny.cloud/1/o7w7sdre55xscvrprwcvde6nwnv4n2in1tg6taczesi9jmh2/tinymce/6/tinymce.min.js"
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+  <!-- tinycloud -->
+  <script src="https://cdn.tiny.cloud/1/o7w7sdre55xscvrprwcvde6nwnv4n2in1tg6taczesi9jmh2/tinymce/6/tinymce.min.js"
     referrerpolicy="origin"></script>
-    
+
   <!-- bootstrap-multiselect links -->
   <link rel="stylesheet" href="bootstrap-multiselect/docs/css/bootstrap-4.5.2.min.css" type="text/css" />
   <link rel="stylesheet" href="bootstrap-multiselect/docs/css/prettify.min.css" type="text/css" />
@@ -77,7 +77,13 @@
             <button class="btn btn-outline-success mb-2 toggle-btn" id="searchresearchBtn"
               data-container="searchresearchContainer">
               <i class="bi bi-search"></i>
-              Search Research
+              Research
+            </button>
+
+            <button class="btn btn-outline-success mb-2 toggle-btn" id="modifycategoriesBtn"
+              data-container="modifycategoriesContainer">
+              <i class="bi bi-pencil"></i>
+              Categories
             </button>
 
             <a href="#addauthormodal" class="btn btn-outline-primary mb-2 mt-auto " data-bs-toggle="modal">
@@ -102,6 +108,9 @@
       </div>
       <div id="searchresearchContainer" class="d-none toggle-visibility">
         <?php include 'searchresearch.php'; ?>
+      </div>
+      <div id="modifycategoriesContainer" class="d-none toggle-visibility">
+        <?php include 'modifycategories.php'; ?>
       </div>
     </div>
 
@@ -241,11 +250,13 @@
       var uploadresearchContainer = document.querySelector("#uploadresearchContainer");
       var notificationsContainer = document.querySelector("#notificationsContainer");
       var searchresearchContainer = document.querySelector("#searchresearchContainer");
+      var modifycategoriesContainer = document.querySelector("#modifycategoriesContainer");
 
       // Get the button elements
       var uploadresearchBtn = document.getElementById("uploadresearchBtn");
       var notificationsBtn = document.getElementById("notificationsBtn");
       var searchresearchBtn = document.getElementById("searchresearchBtn");
+      var modifycategoriesBtn = document.getElementById("modifycategoriesBtn");
 
       // Get the buttons and div containers
       const buttons = document.querySelectorAll(".toggle-btn");

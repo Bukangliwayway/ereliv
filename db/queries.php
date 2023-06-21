@@ -677,6 +677,14 @@ function addAuthorExists($conn, $firstname, $lastname)
   $result = $stmt->fetch();
   return !empty($result);
 }
+function addInterestExists($conn, $name)
+{
+  $stmt = $conn->prepare("SELECT * FROM Interest WHERE LOWER(name) = LOWER(:name)");
+  $stmt->bindParam(':name', $name);
+  $stmt->execute();
+  $result = $stmt->fetch();
+  return !empty($result);
+}
 
 function getFullNameByID($conn, $table, $userColumn, $userID)
 {
@@ -744,6 +752,13 @@ function getProgramNames($conn, $researchID)
   }
 
   return $programNames;
+}
+
+function addInterest($conn, $name)
+{
+  $stmt = $conn->prepare("INSERT into Interest (name) VALUES (:name)");
+  $stmt->bindParam(':name', $name);
+  $stmt->execute();
 }
 
 function addAuthor($conn, $firstname, $lastname)
@@ -822,5 +837,18 @@ function updateStudentsProgram($conn, $oldProgram, $newProgram)
 
   // Execute the query
   $stmt->execute();
+}
+
+function getCategoriesAuthor($conn, $search)
+{
+  $stmt = $conn->prepare("SELECT * FROM Author ORDER by firstname ASC");
+  $stmt->execute();
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+function getCategoriesInterest($conn, $search)
+{
+  $stmt = $conn->prepare("SELECT * FROM Interest ORDER by name ASC");
+  $stmt->execute();
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>

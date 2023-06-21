@@ -1,9 +1,8 @@
 <?php require_once("../backend/session_admin.php"); ?>
 
 
-<div class="row col-8 m-auto gap-3">
+<div class="row m-auto gap-3">
   <div class="table-responsive overflow-auto" style="max-height:50vh" id="studentList">
-    <h3 class="text-center">Student Accounts</h3>
     <!-- Table will be dynamically loaded here -->
   </div>
   <div class="table-responsive overflow-auto" style="max-height:50vh" id="facultyList">
@@ -183,6 +182,7 @@
         });
       });
     }
+    
     const activateModalForm = document.getElementById('activateModalForm');
     activateModalForm.addEventListener('submit', function (event) {
       event.preventDefault(); // Prevent form from submitting normally
