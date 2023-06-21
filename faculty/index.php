@@ -99,17 +99,17 @@
       </div>
     </nav>
 
-    <div class="container p-5">
-      <div id="uploadresearchContainer" class="d-none toggle-visibility">
+    <div class="container-fluid p-0">
+      <div id="uploadresearchContainer" class="d-none toggle-visibility h-100">
         <?php include 'uploadresearch.php'; ?>
       </div>
-      <div id="notificationsContainer" class="d-none toggle-visibility">
+      <div id="notificationsContainer" class="d-none toggle-visibility h-100">
         <?php include 'notifications.php'; ?>
       </div>
-      <div id="searchresearchContainer" class="d-none toggle-visibility">
+      <div id="searchresearchContainer" class="d-none toggle-visibility h-100">
         <?php include 'searchresearch.php'; ?>
       </div>
-      <div id="modifycategoriesContainer" class="d-none toggle-visibility">
+      <div id="modifycategoriesContainer" class="d-none toggle-visibility h-100">
         <?php include 'modifycategories.php'; ?>
       </div>
     </div>
@@ -173,50 +173,51 @@
     };
     $(document).ready(function () {
 
-      // Submit form using AJAX
-      $('#addAuthorForm').submit(function (event) {
-        event.preventDefault(); // Prevent form from submitting normally
+      // // Submit form using AJAX
+      // $('#addAuthorForm').submit(function (event) {
+      //   event.preventDefault(); // Prevent form from submitting normally
 
-        // Serialize form data
-        var formData = $(this).serialize();
+      //   // Serialize form data
+      //   var formData = $(this).serialize();
 
-        $.ajax({
-          url: '../backend/addauthor_backend.php',
-          method: 'POST',
-          data: formData,
-          dataType: 'json',
-          beforeSend: function () {
-            // Show loading animation or do any pre-request tasks
-            $('#loadingSpinner').removeClass('d-none');
-            $('#loadingSpinner').addClass('d-flex');
-            $('#addAuthorForm').css({ 'pointer-events': 'none' });
-          },
-          success: function (data) {
-            // Hide loading animation
-            $('#loadingSpinner').removeClass('d-flex');
-            $('#loadingSpinner').addClass('d-none');
-            $('#addAuthorForm').css('pointer-events', 'auto');
+      //   $.ajax({
+      //     url: '../backend/addauthor_backend.php',
+      //     method: 'POST',
+      //     data: formData,
+      //     dataType: 'json',
+      //     beforeSend: function () {
+      //       // Show loading animation or do any pre-request tasks
+      //       $('#loadingSpinner').removeClass('d-none');
+      //       $('#loadingSpinner').addClass('d-flex');
+      //       $('#addAuthorForm').css({ 'pointer-events': 'none' });
+      //     },
+      //     success: function (data) {
+      //       // Hide loading animation
+      //       $('#loadingSpinner').removeClass('d-flex');
+      //       $('#loadingSpinner').addClass('d-none');
+      //       $('#addAuthorForm').css('pointer-events', 'auto');
 
-            displayToastr(data.status, data.message);
-            $('#addAuthorForm')[0].reset();
-          },
-          error: function () {
-            // Hide loading animation
-            $('#loadingSpinner').removeClass('d-flex');
-            $('#loadingSpinner').addClass('d-none');
-            $('#addAuthorForm').css('pointer-events', 'auto');
+      //       displayToastr(data.status, data.message);
+      //       $('#addAuthorForm')[0].reset();
+      //     },
+      //     error: function () {
+      //       // Hide loading animation
+      //       $('#loadingSpinner').removeClass('d-flex');
+      //       $('#loadingSpinner').addClass('d-none');
+      //       $('#addAuthorForm').css('pointer-events', 'auto');
 
-            // Handle error response here
-            displayToastr('error', 'An error occurred. Please try again.');
-          },
-          complete: function () {
-            // Hide loading animation or do any post-request tasks
-            $('#loadingSpinner').removeClass('d-flex');
-            $('#loadingSpinner').addClass('d-none');
-            $('#addAuthorForm').css('pointer-events', 'auto');
-          }
-        });
-      });
+      //       // Handle error response here
+      //       displayToastr('error', 'An error occurred. Please try again.');
+      //     },
+      //     complete: function () {
+      //       // Hide loading animation or do any post-request tasks
+      //       $('#loadingSpinner').removeClass('d-flex');
+      //       $('#loadingSpinner').addClass('d-none');
+      //       $('#addAuthorForm').css('pointer-events', 'auto');
+            
+      //     }
+      //   });
+      // });
 
       tinymce.init({
         selector: 'textarea',

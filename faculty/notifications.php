@@ -1,6 +1,6 @@
 <?php require_once("../backend/session_faculty.php"); ?>
 
-<div class="container p-1">
+<div class="container p-5">
   <?php
   $notifications = getFacultyNotifications($conn, $_SESSION['userID']);
   foreach ($notifications as $notification) {

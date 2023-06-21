@@ -761,6 +761,30 @@ function addInterest($conn, $name)
   $stmt->execute();
 }
 
+function editInterest($conn, $name, $interestID)
+{
+  $stmt = $conn->prepare("UPDATE Interest SET name = :name WHERE interestID = :interestID");
+  $stmt->bindParam(':name', $name);
+  $stmt->bindParam(':interestID', $interestID);
+  $stmt->execute();
+}
+function deleteInterest($conn, $interestID)
+{
+  $stmt = $conn->prepare("DELETE FROM Interest WHERE interestID = :interestID");
+  $stmt->bindParam(':interestID', $interestID);
+  $stmt->execute();
+}
+
+function searchInterest($conn, $searchQuery)
+{
+  // Prepare the SQL query to fetch the related authors
+  $stmt = $conn->prepare("SELECT * FROM Interest WHERE name LIKE :searchQuery");
+  $stmt->bindValue(':searchQuery', '%' . $searchQuery . '%');
+  $stmt->execute();
+
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 function addAuthor($conn, $firstname, $lastname)
 {
   $stmt = $conn->prepare("INSERT into Author (firstname, lastname) VALUES (:firstname, :lastname)");
@@ -768,6 +792,35 @@ function addAuthor($conn, $firstname, $lastname)
   $stmt->bindParam(':lastname', $lastname);
   $stmt->execute();
 }
+
+function deleteAuthor($conn, $authorID)
+{
+  $stmt = $conn->prepare("DELETE FROM Author WHERE authorID = :authorID");
+  $stmt->bindParam(':authorID', $authorID);
+  $stmt->execute();
+}
+
+function editAuthor($conn, $firstname, $lastname, $authorID)
+{
+  $stmt = $conn->prepare("UPDATE Author SET firstname = :firstname, lastname = :lastname WHERE authorID = :authorID");
+  $stmt->bindParam(':lastname', $lastname);
+  $stmt->bindParam(':firstname', $firstname);
+  $stmt->bindParam(':authorID', $authorID);
+  $stmt->execute();
+}
+
+function searchAuthor($conn, $searchQuery)
+{
+  // Prepare the SQL query to fetch the related authors
+  $stmt = $conn->prepare("SELECT * FROM Author WHERE firstname LIKE :searchQuery OR lastname LIKE :searchQuery");
+  $stmt->bindValue(':searchQuery', '%' . $searchQuery . '%');
+  $stmt->execute();
+
+  // Fetch the results
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+}
+
 
 
 function linkAuthorAndResearch($conn, $authorID, $researchID)

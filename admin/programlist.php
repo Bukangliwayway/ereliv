@@ -247,7 +247,6 @@
       button.addEventListener('click', function () {
         const string = this.getAttribute('data-string');
         document.querySelector('#delete_program_target').value = string;
-        console.log(string);
       });
     });
 

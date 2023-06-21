@@ -1,6 +1,6 @@
 <?php require_once("../backend/session_faculty.php"); ?>
 
-<div class="row mx-auto d-flex flex-column justify-content-center  align-items-center ">
+<div class="row mx-auto d-flex flex-column justify-content-center  align-items-center p-5">
   <div class="col-lg-12 col-sm-auto d-flex flex-column justify-content-center align-items-stretch gap-3 mx-auto mt-1">
     <form id="searchForm" class="d-flex justify-content-between gap-3">
       <div class="form-floating w-100">

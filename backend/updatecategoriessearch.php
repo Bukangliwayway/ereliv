@@ -10,7 +10,7 @@ $table = $_POST["table"];
 $output .= '<div class="d-inline-flex flex-wrap gap-3 p-5 align-items-center" style="max-height: 70vh;">';
 
 if ($table == 'Author') {
-  $categories = getCategoriesAuthor($conn, $search);
+  $categories = searchAuthor($conn, $search);
   foreach ($categories as $author) {
 
     $output .= '  
@@ -39,7 +39,7 @@ if ($table == 'Author') {
 }
 
 if ($table == 'Interest') {
-  $categories = getCategoriesInterest($conn, $search);
+  $categories = searchInterest($conn, $search);
   foreach ($categories as $interest) {
     $output .= ' 
             <div class="d-flex align-items-stretch gap-1 p-1 smoke-border rounded "
