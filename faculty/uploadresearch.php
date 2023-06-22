@@ -7,9 +7,27 @@
       upload research
     </h1>
     <form id="uploadResearchForm" class="d-flex flex-column gap-1 px-3">
+
       <div class="form-floating mb-3">
         <input type="text" id="title" name="title" class="form-control" placeholder="title" required />
         <label for="title" class="form-label">Research Title</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <textarea id="content-input" name="content-input" placeholder="Research Abstract"></textarea>
+      </div>
+
+      <div class="input-group mb-3">
+        <div class="form-floating">
+          <input type="text" id="date" name="date" class="form-control bg-white" id="datepicker-output" data-provide="datepicker"
+            data-date-format="yyyy-mm-dd" data-date-autoclose="true" readonly>
+          <label for="datepicker-output">Publish Date</label>
+        </div>
+        <span class="input-group-append">
+          <span class="input-group-text bg-white">
+            <i class="bi bi-calendar-date" id="datepicker-icon"></i>
+          </span>
+        </span>
       </div>
 
       <div class="example author-select">
@@ -54,15 +72,35 @@
           ?>
         </select>
       </div>
-      <div class="form-floating mb-3">
-        <textarea id="content-input" name="content-input" placeholder="Research Content"></textarea>
+      <div class="example interest-select">
+        <script type="text/javascript">
+          require(["bootstrap-multiselect"], function (purchase) {
+            $("#interest-select").multiselect({
+              includeSelectAllOption: true,
+              buttonWidth: 250,
+              enableFiltering: true,
+            });
+          });
+        </script>
+        <select id="interest-select" multiple="multiple">
+          <?php
+          $interest = getList($conn, '*', 'Interest');
+          foreach ($interest as $interestData) {
+            echo '<option value="' . $interestData['interestID'] . '">' . ucfirst(strtolower($interestData['name'])) . '</option>';
+          }
+          ;
+          ?>
+        </select>
       </div>
+
       <div class="form-floating mb-3">
         <input type="keywords" id="keywords" name="keywords" class="form-control" placeholder="keywords" required />
         <label for="keywords" class="form-label">Keywords (Separate Each by Commas)</label>
       </div>
+
       <input type="hidden" name="content" id="content">
       <input type="hidden" name="authors" id="authors">
+      <input type="hidden" name="interests" id="interests">
       <input type="hidden" name="programs" id="programs">
       <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
       <button type="submit" class="btn btn-primary">Upload Research</button>
@@ -70,8 +108,17 @@
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
   $(document).ready(function () {
+
+
+    // Make datepicker icon clickable
+    $('#datepicker').on('changeDate', function (e) {
+      var selectedDate = e.format();
+      console.log(selectedDate); // Output the selected date value
+    });
+
     $('#uploadResearchForm').submit(function (event) {
       event.preventDefault(); // Prevent form from submitting normally
 

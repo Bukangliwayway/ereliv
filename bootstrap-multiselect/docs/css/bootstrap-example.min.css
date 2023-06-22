@@ -19,6 +19,28 @@
   text-transform: uppercase;
   letter-spacing: 1px;
 }
+.interest-select:after {
+  content: "Select Interests";
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #bbb;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.research-title-select:after {
+  content: "Select Interests";
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #bbb;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
 .program-select:after {
   content: "Select Programs";
   position: absolute;

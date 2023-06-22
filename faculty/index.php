@@ -7,29 +7,40 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PUPQC Research Management Sytem</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css" />
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
   <!-- tinycloud -->
   <script src="https://cdn.tiny.cloud/1/o7w7sdre55xscvrprwcvde6nwnv4n2in1tg6taczesi9jmh2/tinymce/6/tinymce.min.js"
     referrerpolicy="origin"></script>
 
+  <!-- datepicker -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js">
+  </script>
+
   <!-- bootstrap-multiselect links -->
-  <link rel="stylesheet" href="bootstrap-multiselect/docs/css/bootstrap-4.5.2.min.css" type="text/css" />
-  <link rel="stylesheet" href="bootstrap-multiselect/docs/css/prettify.min.css" type="text/css" />
-  <link rel="stylesheet" href="bootstrap-multiselect/dist/css/bootstrap-multiselect.css" type="text/css" />
-  <link rel="stylesheet" href="bootstrap-multiselect/docs/css/bootstrap-example.min.css" type="text/css" />
-  <script data-main="bootstrap-multiselect/dist/js/" src="bootstrap-multiselect/docs/js/prettify.min.js"></script>
-  <script data-main="bootstrap-multiselect/dist/js/" src="bootstrap-multiselect/docs/js/jquery-2.2.4.min.js"></script>
-  <script type="text/javascript" src="bootstrap-multiselect/docs/js/bootstrap.bundle-4.5.2.min.js"></script>
-  <script data-main="bootstrap-multiselect/dist/js/" src="bootstrap-multiselect/docs/js/require-2.3.5.min.js"></script>
-  <!-- bootstrap-multiselect links -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../bootstrap-multiselect/docs/css/bootstrap-4.5.2.min.css" type="text/css" />
+  <link rel="stylesheet" href="../bootstrap-multiselect/docs/css/prettify.min.css" type="text/css" />
+  <link rel="stylesheet" href="../bootstrap-multiselect/dist/css/bootstrap-multiselect.css" type="text/css" />
+  <link rel="stylesheet" href="../bootstrap-multiselect/docs/css/bootstrap-example.min.css" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script data-main="../bootstrap-multiselect/dist/js/" src="bootstrap-multiselect/docs/js/prettify.min.js">
+  </script>
+  <script data-main="../bootstrap-multiselect/dist/js/" src="bootstrap-multiselect/docs/js/jquery-2.2.4.min.js">
+  </script>
+  <script data-main="../bootstrap-multiselect/dist/js/" src="../bootstrap-multiselect/docs/js/require-2.3.5.min.js">
+  </script>
+
+  <!-- bootstrap-5 and Icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+  <!-- toastr -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
 
 </head>
@@ -214,7 +225,7 @@
       //       $('#loadingSpinner').removeClass('d-flex');
       //       $('#loadingSpinner').addClass('d-none');
       //       $('#addAuthorForm').css('pointer-events', 'auto');
-            
+
       //     }
       //   });
       // });
@@ -245,6 +256,12 @@
       $("#program-select").on("change", function () {
         selectedOptionsPrograms = $(this).val();
         dataInputPrograms.value = JSON.stringify(selectedOptionsPrograms);
+      });
+
+      var dataInputInterests = document.getElementById('interests');
+      $("#interest-select").on("change", function () {
+        selectedOptionsInterests = $(this).val();
+        dataInputInterests.value = JSON.stringify(selectedOptionsInterests);
       });
 
       // Get the Containers

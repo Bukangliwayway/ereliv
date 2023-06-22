@@ -8,14 +8,17 @@ $response = array();
 
 try {
   $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
-  $keywords = filter_input(INPUT_POST, 'keywords', FILTER_SANITIZE_STRING);
   $abstract = $_POST['content'];
-  $proposer = $_SESSION['username'];
+  $date = $_POST['date'];
   $authors = $_POST['authors'];
   $programs = $_POST['programs'];
+  $interests = $_POST['interests'];
+  $keywords = filter_input(INPUT_POST, 'keywords', FILTER_SANITIZE_STRING);
+  $proposer = $_SESSION['username'];
 
   $programIDs = json_decode($programs, true);
   $authorIDs = json_decode($authors, true);
+  $interestIDs = json_decode($interests, true);
 
   // Create the Research
   $researchID = createResearch($conn, $title, $keywords, $abstract, $proposer);

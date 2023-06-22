@@ -44,7 +44,7 @@
       <div class="container modal-body">
         <form id="addInterestForm" class="container d-flex flex-row gap-3">
           <div class="form-floating">
-            <input type="text" id="name" name="name" class="form-control" placeholder="Interest Name" required />
+            <input type="text" id="name" name="name" class="form-control" required />
             <label for="name" class="form-label">Interest Name</label>
           </div>
           <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
@@ -68,12 +68,8 @@
       <div class="container modal-body">
         <form id="editInterestForm" class="container d-flex flex-row gap-3">
           <div class="form-floating">
-            <input type="text" id="editInterestName" class="form-control" readonly />
-            <label for="program" class="form-label">Previous Name: </label>
-          </div>
-          <div class="form-floating">
-            <input type="text" name="name" class="form-control" placeholder="Interest Name" required />
-            <label for="name" id="newInterestName" class="form-label">Interest Name</label>
+            <input type="text" id="editInterestName" name="name" class="form-control" required />
+            <label for="name" class="form-label">Interest Name</label>
           </div>
           <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
           <input id="editInterestID" type="hidden" name="interestID">
@@ -97,7 +93,7 @@
       <div class="container modal-body">
         <form id="deleteInterestForm" class="container d-flex flex-row gap-3">
           <div class="form-floating">
-            <input type="text" id="deleteInterestName" name="name" class="form-control" readonly />
+            <input type="text" id="deleteInterestName" name="name" class="form-control bg-white" readonly />
             <label for="name" class="form-label">To Be Deleted</label>
           </div>
           <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
@@ -123,21 +119,11 @@
         <form id="editAuthorForm" class="container d-flex flex-column gap-3">
           <div class="d-flex gap-3">
             <div class="form-floating">
-              <input type="text" id="editAuthorFirstName" class="form-control" readonly />
-              <label for="editAuthorFirstName" class="form-label">First Name: </label>
-            </div>
-            <div class="form-floating">
-              <input type="text" id="editAuthorLastName" class="form-control" readonly />
-              <label for="editAuthorLastName" class="form-label">Last Name: </label>
-            </div>
-          </div>
-          <div class="d-flex gap-3">
-            <div class="form-floating">
-              <input type="text" name="firstname" class="form-control" placeholder="First Name" required />
+              <input type="text" id="editAuthorFirstName" name="firstname" class="form-control" required />
               <label for="firstname" class="form-label">First Name</label>
             </div>
             <div class="form-floating">
-              <input type="text" name="lastname" class="form-control" placeholder="Last Name" required />
+              <input type="text" id="editAuthorLastName" name="lastname" class="form-control" required />
               <label for="lastname" class="form-label">Last Name</label>
             </div>
           </div>
@@ -164,11 +150,11 @@
         <form id="deleteAuthorForm" class="container d-flex flex-row gap-3">
           <div class="d-flex gap-3">
             <div class="form-floating">
-              <input type="text" id="deleteAuthorFirstName" name="firstname" class="form-control" readonly />
+              <input type="text" id="deleteAuthorFirstName" name="firstname" class="form-control bg-white" readonly />
               <label for="section" class="form-label">First Name:</label>
             </div>
             <div class="form-floating">
-              <input type="text" id="deleteAuthorLastName" name="lastname" class="form-control" readonly />
+              <input type="text" id="deleteAuthorLastName" name="lastname" class="form-control bg-white" readonly />
               <label for="section" class="form-label">Last Name:</label>
             </div>
           </div>
