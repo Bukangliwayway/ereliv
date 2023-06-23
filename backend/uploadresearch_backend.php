@@ -9,19 +9,24 @@ $response = array();
 try {
   $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
   $abstract = $_POST['content'];
-  $date = $_POST['date'];
+  $datepublished = $_POST['date'];
   $authors = $_POST['authors'];
   $programs = $_POST['programs'];
   $interests = $_POST['interests'];
   $keywords = filter_input(INPUT_POST, 'keywords', FILTER_SANITIZE_STRING);
+  $status = 'Published';
   $proposer = $_SESSION['username'];
+  $facultyProposerID = $_SESSION['userID'];
+  $advisorID = $_SESSION['userID'];
+
+  $type = $_POST['type'];
 
   $programIDs = json_decode($programs, true);
   $authorIDs = json_decode($authors, true);
   $interestIDs = json_decode($interests, true);
 
   // Create the Research
-  $researchID = createResearch($conn, $title, $keywords, $abstract, $proposer);
+  $researchID = createResearchFaculty($conn, $title, $abstract, $datepublished, $keywords, $status, $proposer, $facultyProposerID, $advisorID);
 
   // Link the Authors
   foreach ($authorIDs as $authorID) {
@@ -33,8 +38,17 @@ try {
     linkProgramAndResearch($conn, $programID, $researchID);
   }
 
-  // Set Editor Access
-  researchEditor($conn, $_SESSION['userID'], $researchID);
+  //Link the Interests
+  foreach ($interestIDs as $interestID) {
+    linkInterestAndResearch($conn, $interestID, $researchID);
+  }
+
+  // Create Active Paper
+  $type == 'faculty' ? $column = 'facultyCreatorID' : $column = 'studentCreatorID';
+  
+  $activePaper = createActivePaper($conn, $column, $facultyProposerID, $researchID);
+
+  createEditHistory($conn, $activePaper, $researchID, $facultyProposerID);
 
   // Set success response
   $response['status'] = 'success';

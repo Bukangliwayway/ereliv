@@ -4,7 +4,7 @@
   <div
     class="col-lg-12 col-sm-auto d-flex flex-column justify-content-center align-items-stretch text-center gap-3 mx-auto border border-smoke mt-1 py-5">
     <h1 class="fs-2 fw-bold text-uppercase">
-      upload research
+      Publish research
     </h1>
     <form id="uploadResearchForm" class="d-flex flex-column gap-1 px-3">
 
@@ -19,8 +19,10 @@
 
       <div class="input-group mb-3">
         <div class="form-floating">
-          <input type="text" id="date" name="date" class="form-control bg-white" id="datepicker-output" data-provide="datepicker"
-            data-date-format="yyyy-mm-dd" data-date-autoclose="true" readonly>
+          <input type="text" id="date" name="date" class="form-control bg-white" id="datepicker-output"
+            data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-autoclose="true"
+            value="<?php echo date('Y-m-d'); ?>" pattern="\d{4}-\d{2}-\d{2}"
+            title="Please enter a valid date in the format YYYY-MM-DD" required>
           <label for="datepicker-output">Publish Date</label>
         </div>
         <span class="input-group-append">
@@ -31,67 +33,20 @@
       </div>
 
       <div class="example author-select">
-        <script type="text/javascript">
-          require(["bootstrap-multiselect"], function (purchase) {
-            $("#author-select").multiselect({
-              includeSelectAllOption: true,
-              buttonWidth: 250,
-              enableFiltering: true,
-            });
-          });
-        </script>
-        <select id="author-select" multiple="multiple">
-          <?php
-          $author = getList($conn, '*', 'Author');
-          foreach ($author as $authorData) {
-            $fullName = ucfirst($authorData['lastname']) . ", " . ucfirst($authorData['firstname']);
-            echo '<option value="' . $authorData['authorID'] . '">' . $fullName . '</option>';
-          }
-          ;
-          ?>
-        </select>
+
+        <select id="author-select" multiple="multiple"></select>
       </div>
 
       <div class="example program-select">
-        <script type="text/javascript">
-          require(["bootstrap-multiselect"], function (purchase) {
-            $("#program-select").multiselect({
-              includeSelectAllOption: true,
-              buttonWidth: 250,
-              enableFiltering: true,
-            });
-          });
-        </script>
-        <select id="program-select" multiple="multiple">
-          <?php
-          $program = getList($conn, '*', 'Program');
-          foreach ($program as $programData) {
-            echo '<option value="' . $programData['programID'] . '">' . strtoupper($programData['name']) . '</option>';
-          }
-          ;
-          ?>
-        </select>
+
+        <select id="program-select" multiple="multiple"></select>
       </div>
+
       <div class="example interest-select">
-        <script type="text/javascript">
-          require(["bootstrap-multiselect"], function (purchase) {
-            $("#interest-select").multiselect({
-              includeSelectAllOption: true,
-              buttonWidth: 250,
-              enableFiltering: true,
-            });
-          });
-        </script>
-        <select id="interest-select" multiple="multiple">
-          <?php
-          $interest = getList($conn, '*', 'Interest');
-          foreach ($interest as $interestData) {
-            echo '<option value="' . $interestData['interestID'] . '">' . ucfirst(strtolower($interestData['name'])) . '</option>';
-          }
-          ;
-          ?>
-        </select>
+
+        <select id="interest-select" multiple="multiple"> </select>
       </div>
+
 
       <div class="form-floating mb-3">
         <input type="keywords" id="keywords" name="keywords" class="form-control" placeholder="keywords" required />
@@ -100,61 +55,22 @@
 
       <input type="hidden" name="content" id="content">
       <input type="hidden" name="authors" id="authors">
-      <input type="hidden" name="interests" id="interests">
+      <input type="hidden" name="interests" id="interests" value="faculty">
       <input type="hidden" name="programs" id="programs">
+      <input type="hidden" name="type" id="type">
       <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
       <button type="submit" class="btn btn-primary">Upload Research</button>
     </form>
   </div>
+  <div id="fixed-addcat" class="position-fixed bottom-0 start-0 d-flex justify-content-end gap-2 p-3">
+    <a href="#addauthormodal" class="btn btn-primary" data-bs-toggle="modal">
+      <i class="bi bi-plus-lg"></i>
+      Author
+    </a>
+    <a href="#addinterestmodal" class="btn btn-danger" data-bs-toggle="modal">
+      <i class="bi bi-plus-lg"></i>
+      Interest
+    </a>
+  </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-<script>
-  $(document).ready(function () {
-
-
-    // Make datepicker icon clickable
-    $('#datepicker').on('changeDate', function (e) {
-      var selectedDate = e.format();
-      console.log(selectedDate); // Output the selected date value
-    });
-
-    $('#uploadResearchForm').submit(function (event) {
-      event.preventDefault(); // Prevent form from submitting normally
-
-      // Serialize form data
-      var formData = $(this).serialize();
-
-      // Perform AJAX request
-      $.ajax({
-        url: '../backend/uploadresearch_backend.php',
-        method: 'POST',
-        data: formData,
-        dataType: 'json',
-        beforeSend: function () {
-          // Show loading animation or do any pre-request tasks
-          // showLoadingAnimation();
-        },
-        success: function (response) {
-          // Handle the response and display Toastr notification
-          displayToastr(response.status, response.message);
-
-          if (response.status === 'success') {
-            // Reset the form after successful upload
-            $('#uploadResearchForm')[0].reset();
-          }
-        },
-        error: function () {
-          // Handle error response here
-          displayToastr('error', 'An error occurred. Please try again.');
-        },
-        complete: function () {
-          // Hide loading animation or do any post-request tasks
-          // hideLoadingAnimation();
-        }
-      });
-    });
-
-  });
-
-</script>

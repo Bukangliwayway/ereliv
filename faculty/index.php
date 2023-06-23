@@ -29,12 +29,14 @@
   <link rel="stylesheet" href="../bootstrap-multiselect/dist/css/bootstrap-multiselect.css" type="text/css" />
   <link rel="stylesheet" href="../bootstrap-multiselect/docs/css/bootstrap-example.min.css" type="text/css" />
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script data-main="../bootstrap-multiselect/dist/js/" src="bootstrap-multiselect/docs/js/prettify.min.js">
+  <script data-main="../bootstrap-multiselect/dist/js/" src="../bootstrap-multiselect/docs/js/prettify.min.js">
   </script>
-  <script data-main="../bootstrap-multiselect/dist/js/" src="bootstrap-multiselect/docs/js/jquery-2.2.4.min.js">
+  <script data-main="../bootstrap-multiselect/dist/js/" src="../bootstrap-multiselect/docs/js/jquery-2.2.4.min.js">
   </script>
   <script data-main="../bootstrap-multiselect/dist/js/" src="../bootstrap-multiselect/docs/js/require-2.3.5.min.js">
   </script>
+  <script data-main="../bootstrap-multiselect/dist/js/" src="
+    ../bootstrap-multiselect/dist/js/bootstrap-multiselect.min.js"></script>
 
   <!-- bootstrap-5 and Icon -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
@@ -42,6 +44,8 @@
 
   <!-- toastr -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+  <script src="main.js"></script>
+
 
 </head>
 
@@ -75,8 +79,8 @@
           <div class="d-flex flex-column flex-grow-1" style="height:55vh;">
             <button class="btn btn-outline-success mb-2 toggle-btn" id="uploadresearchBtn"
               data-container="uploadresearchContainer">
-              <i class="bi bi-plus-lg"></i>
-              Research
+              <i class="bi bi-upload"></i>
+              Publish
             </button>
 
             <button class="btn btn-outline-success mb-2 toggle-btn" id="notificationsBtn"
@@ -177,140 +181,30 @@
     </div>
   </div>
 
+  <div class="modal fade" id="addinterestmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 text-capitalize text-center">
+            Add Interest
+          </h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="container modal-body">
+          <form id="addInterestForm" class="container d-flex flex-row gap-3">
+            <div class="form-floating">
+              <input type="text" id="name" name="name" class="form-control" required />
+              <label for="name" class="form-label">Interest Name</label>
+            </div>
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <script>
-    const displayToastr = (type, message) => {
-      toastr[type](message);
-    };
-    $(document).ready(function () {
-
-      // // Submit form using AJAX
-      // $('#addAuthorForm').submit(function (event) {
-      //   event.preventDefault(); // Prevent form from submitting normally
-
-      //   // Serialize form data
-      //   var formData = $(this).serialize();
-
-      //   $.ajax({
-      //     url: '../backend/addauthor_backend.php',
-      //     method: 'POST',
-      //     data: formData,
-      //     dataType: 'json',
-      //     beforeSend: function () {
-      //       // Show loading animation or do any pre-request tasks
-      //       $('#loadingSpinner').removeClass('d-none');
-      //       $('#loadingSpinner').addClass('d-flex');
-      //       $('#addAuthorForm').css({ 'pointer-events': 'none' });
-      //     },
-      //     success: function (data) {
-      //       // Hide loading animation
-      //       $('#loadingSpinner').removeClass('d-flex');
-      //       $('#loadingSpinner').addClass('d-none');
-      //       $('#addAuthorForm').css('pointer-events', 'auto');
-
-      //       displayToastr(data.status, data.message);
-      //       $('#addAuthorForm')[0].reset();
-      //     },
-      //     error: function () {
-      //       // Hide loading animation
-      //       $('#loadingSpinner').removeClass('d-flex');
-      //       $('#loadingSpinner').addClass('d-none');
-      //       $('#addAuthorForm').css('pointer-events', 'auto');
-
-      //       // Handle error response here
-      //       displayToastr('error', 'An error occurred. Please try again.');
-      //     },
-      //     complete: function () {
-      //       // Hide loading animation or do any post-request tasks
-      //       $('#loadingSpinner').removeClass('d-flex');
-      //       $('#loadingSpinner').addClass('d-none');
-      //       $('#addAuthorForm').css('pointer-events', 'auto');
-
-      //     }
-      //   });
-      // });
-
-      tinymce.init({
-        selector: 'textarea',
-        plugins: "",
-        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough',
-        height: 250,
-        menubar: false,
-        setup: function (editor) {
-          editor.on('change', function () {
-            document.getElementById('content').value = tinymce.get('content-input').getContent();
-          });
-        }
-      });
-
-      var selectedOptionsAuthors = [];
-      var selectedOptionsPrograms = [];
-
-      var dataInputAuthors = document.getElementById('authors');
-      $("#author-select").on("change", function () {
-        selectedOptionsAuthors = $(this).val();
-        dataInputAuthors.value = JSON.stringify(selectedOptionsAuthors);
-      });
-
-      var dataInputPrograms = document.getElementById('programs');
-      $("#program-select").on("change", function () {
-        selectedOptionsPrograms = $(this).val();
-        dataInputPrograms.value = JSON.stringify(selectedOptionsPrograms);
-      });
-
-      var dataInputInterests = document.getElementById('interests');
-      $("#interest-select").on("change", function () {
-        selectedOptionsInterests = $(this).val();
-        dataInputInterests.value = JSON.stringify(selectedOptionsInterests);
-      });
-
-      // Get the Containers
-      var uploadresearchContainer = document.querySelector("#uploadresearchContainer");
-      var notificationsContainer = document.querySelector("#notificationsContainer");
-      var searchresearchContainer = document.querySelector("#searchresearchContainer");
-      var modifycategoriesContainer = document.querySelector("#modifycategoriesContainer");
-
-      // Get the button elements
-      var uploadresearchBtn = document.getElementById("uploadresearchBtn");
-      var notificationsBtn = document.getElementById("notificationsBtn");
-      var searchresearchBtn = document.getElementById("searchresearchBtn");
-      var modifycategoriesBtn = document.getElementById("modifycategoriesBtn");
-
-      // Get the buttons and div containers
-      const buttons = document.querySelectorAll(".toggle-btn");
-      const containers = document.querySelectorAll(".toggle-visibility");
-
-      // Function to toggle visibility of div containers
-      const toggleView = (containerToShow) => {
-        // Hide all div containers
-        containers.forEach((container) => {
-          container.classList.add("d-none");
-        });
-
-        // Show the selected container
-        containerToShow.classList.remove("d-none");
-      };
-
-      // Add click event listener to the button container
-      document.addEventListener("click", (event) => {
-        const target = event.target;
-
-        // Check if the clicked element is a button
-        if (target.classList.contains("toggle-btn")) {
-          const containerId = target.dataset.container;
-          const containerToShow = document.getElementById(containerId);
-
-          // Toggle the visibility of div containers
-          toggleView(containerToShow);
-
-          // Toggle the active class on buttons
-          buttons.forEach((button) => {
-            button.classList.toggle("active", button === target);
-          });
-        }
-      });
-    });
-  </script>
 </body>
 
 </html>

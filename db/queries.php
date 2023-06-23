@@ -692,20 +692,22 @@ function getFullNameByID($conn, $table, $userColumn, $userID)
   $stmt->bindParam(':userID', $userID);
   $stmt->execute();
   $result = $stmt->fetch(PDO::FETCH_ASSOC);
-  $firstName = $result['firstname'];
-  $lastName = $result['lastname'];
-  return "$firstName $lastName";
+  return ucwords(strtolower($result['firstname'])) . ' ' . ucwords(strtolower($result['lastname']));
+
 }
 
-function createResearch($conn, $title, $keywords, $abstract, $proposer)
+function createResearchFaculty($conn, $title, $abstract, $datepublished, $keywords, $status, $proposer, $facultyProposerID, $advisorID)
 {
   $status = "Published";
-  $stmt = $conn->prepare("INSERT into Research (title, abstract, keywords, status, proposer) VALUES (:title, :abstract, :keywords, :status, :proposer)");
+  $stmt = $conn->prepare("INSERT into Research (title, abstract, datepublished, keywords, status, proposer, facultyProposerID, advisorID) VALUES (:title, :abstract, :datepublished, :keywords, :status, :proposer, :facultyProposerID, :advisorID)");
   $stmt->bindParam(':title', $title);
   $stmt->bindParam(':abstract', $abstract);
+  $stmt->bindParam(':datepublished', $datepublished);
   $stmt->bindParam(':keywords', $keywords);
   $stmt->bindParam(':status', $status);
   $stmt->bindParam(':proposer', $proposer);
+  $stmt->bindParam(':facultyProposedID', $facultyProposerID);
+  $stmt->bindParam(':advisorID', $advisorID);
   try {
     $stmt->execute();
   } catch (PDOException $e) {
@@ -825,7 +827,7 @@ function searchAuthor($conn, $searchQuery)
 
 function linkAuthorAndResearch($conn, $authorID, $researchID)
 {
-  $stmt = $conn->prepare("INSERT INTO Researchauthorlist (authorID, researchID) Values (:authorID, :researchID)");
+  $stmt = $conn->prepare("INSERT INTO ResearchAuthorList (authorID, researchID) Values (:authorID, :researchID)");
   $stmt->bindParam(':authorID', $authorID);
   $stmt->bindParam(':researchID', $researchID);
   try {
@@ -839,7 +841,7 @@ function linkAuthorAndResearch($conn, $authorID, $researchID)
 
 function linkProgramAndResearch($conn, $programID, $researchID)
 {
-  $stmt = $conn->prepare("INSERT INTO Researchprogramlist (programID, researchID) Values (:programID, :researchID)");
+  $stmt = $conn->prepare("INSERT INTO ResearchProgramList (programID, researchID) Values (:programID, :researchID)");
   $stmt->bindParam(':programID', $programID);
   $stmt->bindParam(':researchID', $researchID);
   try {
@@ -850,10 +852,10 @@ function linkProgramAndResearch($conn, $programID, $researchID)
   }
   return true;
 }
-function researchEditor($conn, $facultyID, $researchID)
+function linkInterestAndResearch($conn, $interestID, $researchID)
 {
-  $stmt = $conn->prepare("INSERT INTO Researcheditaccess (facultyID, researchID) Values (:facultyID, :researchID)");
-  $stmt->bindParam(':facultyID', $facultyID);
+  $stmt = $conn->prepare("INSERT INTO ResearchInterestList (interestID, researchID) Values (:interestID, :researchID)");
+  $stmt->bindParam(':interestID', $interestID);
   $stmt->bindParam(':researchID', $researchID);
   try {
     $stmt->execute();
@@ -862,6 +864,34 @@ function researchEditor($conn, $facultyID, $researchID)
     return false;
   }
   return true;
+}
+
+function createEditHistory($conn, $activePaperID, $researchPaper, $approver)
+{
+  $stmt = $conn->prepare("INSERT INTO EditHistory (activePaperID, researchPaper, approver) Values (:activePaperID, :researchPaper, approver)");
+  $stmt->bindParam(':activePaperID', $activePaperID);
+  $stmt->bindParam(':researchPaper', $researchPaper);
+  $stmt->bindParam(':approver', $approver);
+  try {
+    $stmt->execute();
+  } catch (PDOException $e) {
+    echo $e->getMessage();
+    return false;
+  }
+  return true;
+}
+function createActivePaper($conn, $column, $facultyCreatorID, $researchPaper)
+{
+  $stmt = $conn->prepare("INSERT INTO ActivePaper ($column, researchPaper) Values (:facultyCreatorID, :researchPaper)");
+  $stmt->bindParam(':facultyCreatorID', $facultyCreatorID);
+  $stmt->bindParam(':researchPaper', $researchPaper);
+  try {
+    $stmt->execute();
+  } catch (PDOException $e) {
+    echo $e->getMessage();
+    return false;
+  }
+  return $conn->lastInsertId();
 }
 
 function getStudentsBySection($conn, $sectionID)
