@@ -1,8 +1,11 @@
 const displayToastr = (type, message) => {
   toastr[type](message);
 };
+
 $(document).ready(function () {
   // UPLOADRESEARCH.PHP
+  reloadMultiselects();
+
   var selectedOptionsAuthors = [];
   var selectedOptionsPrograms = [];
 
@@ -64,8 +67,6 @@ $(document).ready(function () {
       },
     });
   });
-
-  reloadMultiselects();
 
   function reloadMultiselects() {
     require(["bootstrap-multiselect"], function () {
@@ -187,9 +188,7 @@ $(document).ready(function () {
           $.each(response, function (index, programData) {
             var option = $("<option>", {
               value: programData.programID,
-              text:
-                programData.name.charAt(0).toUpperCase() +
-                programData.name.slice(1).toLowerCase(),
+              text: programData.name.toUpperCase(),
             });
             programSelect.append(option);
           });
@@ -616,7 +615,7 @@ $(document).ready(function () {
         $("#loadingSpinner").removeClass("d-flex");
         $("#loadingSpinner").addClass("d-none");
         $("#addInterestForm").css("pointer-events", "auto");
-        
+
         //Reload the Interest List
         $("#interest-cat").trigger("click");
       },

@@ -29,7 +29,7 @@ $_SESSION['username'] = getFullNameByID($conn, "Faculty", "facultyID" ,$_SESSION
 
 $response['status'] = 'success';
 $response['message'] = 'Login successful';
-$response['redirect'] = 'http://localhost/ereliv/faculty';  
+$response['redirect'] = '/ereliv/faculty';  
 echo json_encode($response);
 exit(); // Stop further execution of the script
 ?>
