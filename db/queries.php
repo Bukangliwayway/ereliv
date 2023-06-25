@@ -698,7 +698,7 @@ function getFullNameByID($conn, $table, $userColumn, $userID)
 
 function createResearchFaculty($conn, $title, $abstract, $datepublished, $keywords, $status, $proposer, $facultyProposerID, $advisorID)
 {
-  $status = "Published";
+  $status = "Active";
   $stmt = $conn->prepare("INSERT into Research (title, abstract, datepublished, keywords, status, proposer, facultyProposerID, advisorID) VALUES (:title, :abstract, :datepublished, :keywords, :status, :proposer, :facultyProposerID, :advisorID)");
   $stmt->bindParam(':title', $title);
   $stmt->bindParam(':abstract', $abstract);
@@ -706,7 +706,7 @@ function createResearchFaculty($conn, $title, $abstract, $datepublished, $keywor
   $stmt->bindParam(':keywords', $keywords);
   $stmt->bindParam(':status', $status);
   $stmt->bindParam(':proposer', $proposer);
-  $stmt->bindParam(':facultyProposedID', $facultyProposerID);
+  $stmt->bindParam(':facultyProposerID', $facultyProposerID);
   $stmt->bindParam(':advisorID', $advisorID);
   try {
     $stmt->execute();
@@ -866,29 +866,29 @@ function linkInterestAndResearch($conn, $interestID, $researchID)
   return true;
 }
 
-function createEditHistory($conn, $activePaperID, $researchPaper, $approver)
+function createEditHistory($conn, $activePaperID, $paperUpdate, $approver)
 {
-  $stmt = $conn->prepare("INSERT INTO EditHistory (activePaperID, researchPaper, approver) Values (:activePaperID, :researchPaper, approver)");
+  $stmt = $conn->prepare("INSERT INTO EditHistory (activePaperID, paperUpdate, approver) Values (:activePaperID, :paperUpdate, :approver)");
   $stmt->bindParam(':activePaperID', $activePaperID);
-  $stmt->bindParam(':researchPaper', $researchPaper);
+  $stmt->bindParam(':paperUpdate', $paperUpdate);
   $stmt->bindParam(':approver', $approver);
   try {
     $stmt->execute();
   } catch (PDOException $e) {
-    echo $e->getMessage();
+    send_message_and_redirect("Error: " . $e->getMessage().' '.$activePaperID.' '.$paperUpdate.' '.$approver, "http://localhost/ereliv/student/");
     return false;
   }
   return true;
 }
-function createActivePaper($conn, $column, $facultyCreatorID, $researchPaper)
+function createActivePaper($conn, $facultyCreatorID, $researchPaper)
 {
-  $stmt = $conn->prepare("INSERT INTO ActivePaper ($column, researchPaper) Values (:facultyCreatorID, :researchPaper)");
+  $stmt = $conn->prepare("INSERT INTO ActivePaper (facultyCreatorID, researchPaper) Values (:facultyCreatorID, :researchPaper)");
   $stmt->bindParam(':facultyCreatorID', $facultyCreatorID);
   $stmt->bindParam(':researchPaper', $researchPaper);
   try {
     $stmt->execute();
   } catch (PDOException $e) {
-    echo $e->getMessage();
+    send_message_and_redirect("Error: " . $e->getMessage(), "http://localhost/ereliv/student/");
     return false;
   }
   return $conn->lastInsertId();

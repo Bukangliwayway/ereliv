@@ -42,12 +42,10 @@ try {
   foreach ($interestIDs as $interestID) {
     linkInterestAndResearch($conn, $interestID, $researchID);
   }
-
-  // Create Active Paper
-  $type == 'faculty' ? $column = 'facultyCreatorID' : $column = 'studentCreatorID';
   
-  $activePaper = createActivePaper($conn, $column, $facultyProposerID, $researchID);
+  $activePaper = createActivePaper($conn, $facultyProposerID, $researchID);
 
+  // Start Edit History
   createEditHistory($conn, $activePaper, $researchID, $facultyProposerID);
 
   // Set success response

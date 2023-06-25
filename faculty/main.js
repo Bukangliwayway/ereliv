@@ -33,23 +33,23 @@ $(document).ready(function () {
   });
 
   $("#uploadResearchForm").submit(function (event) {
-    event.preventDefault(); // Prevent form from submitting normally
+    event.preventDefault(); // Prevent the default form submission
+
+    //Loading Routine
+    $("#loadingSpinner").removeClass("d-none");
+    $("#loadingSpinner").addClass("d-flex");
+    $("#facultyForm").css({ "pointer-events": "none" });
 
     // Serialize form data
     var formData = $(this).serialize();
 
     // Perform AJAX request
     $.ajax({
+      type: "POST",
       url: "../backend/uploadresearch_backend.php",
-      method: "POST",
       data: formData,
-      dataType: "json",
-      beforeSend: function () {
-        // Show loading animation or do any pre-request tasks
-        // showLoadingAnimation();
-      },
       success: function (response) {
-        // Handle the response and display Toastr notification
+        console.log(response);
         displayToastr(response.status, response.message);
 
         if (response.status === "success") {
@@ -62,8 +62,10 @@ $(document).ready(function () {
         displayToastr("error", "An error occurred. Please try again.");
       },
       complete: function () {
-        // Hide loading animation or do any post-request tasks
-        // hideLoadingAnimation();
+        // Revert Loading Routine back to normal
+        $("#loadingSpinner").removeClass("d-flex");
+        $("#loadingSpinner").addClass("d-none");
+        $("#facultyForm").css("pointer-events", "auto");
       },
     });
   });

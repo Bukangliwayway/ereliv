@@ -7,7 +7,6 @@
       Publish research
     </h1>
     <form id="uploadResearchForm" class="d-flex flex-column gap-1 px-3">
-
       <div class="form-floating mb-3">
         <input type="text" id="title" name="title" class="form-control" placeholder="title" required />
         <label for="title" class="form-label">Research Title</label>
@@ -55,10 +54,11 @@
 
       <input type="hidden" name="content" id="content">
       <input type="hidden" name="authors" id="authors">
-      <input type="hidden" name="interests" id="interests" value="faculty">
+      <input type="hidden" name="interests" id="interests">
       <input type="hidden" name="programs" id="programs">
-      <input type="hidden" name="type" id="type">
+      <input type="hidden" name="type" id="type" value="faculty">
       <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+      
       <button type="submit" class="btn btn-primary">Upload Research</button>
     </form>
   </div>
