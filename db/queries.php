@@ -207,6 +207,31 @@ function getList($conn, $column, $table)
   return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function getFacultyWorks($conn, $facultyCreatorID)
+{
+  $stmt = $conn->prepare("SELECT
+                            r.researchID,
+                            r.title,
+                            r.abstract,
+                            DATE_FORMAT(r.datepublished, '%d %M %Y') AS datepublished,
+                            r.keywords,
+                            r.status,
+                            r.proposer,
+                            r.studentProposerID,
+                            r.facultyProposerID,
+                            r.advisorID
+                          FROM
+                            ActivePaper ap
+                              JOIN Research r ON ap.researchPaper = r.researchID
+                          WHERE
+                            ap.status = 'active'
+                            AND ap.facultyCreatorID = :facultyCreatorID
+                        ");
+  $stmt->bindParam(':facultyCreatorID', $facultyCreatorID);
+  $stmt->execute();
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 function getSectionList($conn, $programID)
 {
   $stmt = $conn->prepare("SELECT s.sectionID, s.name
@@ -716,44 +741,45 @@ function createResearchFaculty($conn, $title, $abstract, $datepublished, $keywor
   return $conn->lastInsertId();
 }
 
-function getAuthorNames($conn, $researchID)
+function getAuthors($conn, $researchID)
 {
-  $query = "SELECT Author.lastname, CONCAT(LEFT(Author.firstname, 1), '.') AS initials
-              FROM Researchauthorlist
-              INNER JOIN Author ON Researchauthorlist.authorID = Author.authorID
-              WHERE Researchauthorlist.researchID = :researchID";
+  $query = "SELECT Author.*
+              FROM ResearchAuthorList
+              INNER JOIN Author ON ResearchAuthorList.authorID = Author.authorID
+              WHERE ResearchAuthorList.researchID = :researchID";
 
   $stmt = $conn->prepare($query);
   $stmt->bindParam(':researchID', $researchID);
   $stmt->execute();
 
-  $authorNames = [];
-
-  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $authorNames[] = $row['lastname'] . ', ' . $row['initials'];
-  }
-
-  return $authorNames;
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function getProgramNames($conn, $researchID)
+function getPrograms($conn, $researchID)
 {
-  $query = "SELECT Program.name
-              FROM Researchprogramlist
-              INNER JOIN Program ON Researchprogramlist.programID = Program.programID
-              WHERE Researchprogramlist.researchID = :researchID";
+  $query = "SELECT Program.*
+              FROM ResearchProgramList
+              INNER JOIN Program ON ResearchProgramList.programID = Program.programID
+              WHERE ResearchProgramList.researchID = :researchID";
 
   $stmt = $conn->prepare($query);
   $stmt->bindParam(':researchID', $researchID);
   $stmt->execute();
 
-  $programNames = [];
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
-  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $programNames[] = $row['name'];
-  }
+function getInterests($conn, $researchID)
+{
+  $query = "SELECT Interest.*
+              FROM ResearchInterestList
+              INNER JOIN Interest ON ResearchInterestList.InterestID = Interest.InterestID
+              WHERE ResearchInterestList.researchID = :researchID";
+  $stmt = $conn->prepare($query);
+  $stmt->bindParam(':researchID', $researchID);
+  $stmt->execute();
 
-  return $programNames;
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function addInterest($conn, $name)
@@ -875,7 +901,7 @@ function createEditHistory($conn, $activePaperID, $paperUpdate, $approver)
   try {
     $stmt->execute();
   } catch (PDOException $e) {
-    send_message_and_redirect("Error: " . $e->getMessage().' '.$activePaperID.' '.$paperUpdate.' '.$approver, "http://localhost/ereliv/student/");
+    send_message_and_redirect("Error: " . $e->getMessage() . ' ' . $activePaperID . ' ' . $paperUpdate . ' ' . $approver, "http://localhost/ereliv/student/");
     return false;
   }
   return true;

@@ -290,26 +290,6 @@ $(document).ready(function () {
 
   // INDEX.PHP
 
-  // Get the Containers
-  var uploadresearchContainer = document.querySelector(
-    "#uploadresearchContainer"
-  );
-  var notificationsContainer = document.querySelector(
-    "#notificationsContainer"
-  );
-  var searchresearchContainer = document.querySelector(
-    "#searchresearchContainer"
-  );
-  var modifycategoriesContainer = document.querySelector(
-    "#modifycategoriesContainer"
-  );
-
-  // Get the button elements
-  var uploadresearchBtn = document.getElementById("uploadresearchBtn");
-  var notificationsBtn = document.getElementById("notificationsBtn");
-  var searchresearchBtn = document.getElementById("searchresearchBtn");
-  var modifycategoriesBtn = document.getElementById("modifycategoriesBtn");
-
   // Get the buttons and div containers
   const buttons = document.querySelectorAll(".toggle-btn");
   const containers = document.querySelectorAll(".toggle-visibility");

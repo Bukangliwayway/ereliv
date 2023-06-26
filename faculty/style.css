@@ -1,0 +1,23 @@
+/* for  fixed-top-end */
+.fixed-upper-end {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(0%, 0%);
+}
+
+.fixed-lower-end {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  transform: translate(0%, 0%);
+}
+
+.research-title {
+  font-size: 1.1rem;
+  width: 60ch;
+}
+
+.research-author {
+  font-size: 0.9rem;
+}

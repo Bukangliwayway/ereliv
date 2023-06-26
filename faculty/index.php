@@ -45,7 +45,7 @@
   <!-- toastr -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
   <script src="main.js"></script>
-
+  <link rel="stylesheet" href="style.css">
 
 </head>
 
@@ -89,6 +89,11 @@
               Notifications
             </button>
 
+            <button class="btn btn-outline-success mb-2 toggle-btn" id="myworksBtn" data-container="myworksContainer">
+              <i class="bi bi-clipboard-data"></i>
+              My Works
+            </button>
+
             <button class="btn btn-outline-success mb-2 toggle-btn" id="searchresearchBtn"
               data-container="searchresearchContainer">
               <i class="bi bi-search"></i>
@@ -120,6 +125,9 @@
       </div>
       <div id="notificationsContainer" class="d-none toggle-visibility h-100">
         <?php include 'notifications.php'; ?>
+      </div>
+      <div id="myworksContainer" class="d-none toggle-visibility h-100">
+        <?php include 'myworks.php'; ?>
       </div>
       <div id="searchresearchContainer" class="d-none toggle-visibility h-100">
         <?php include 'searchresearch.php'; ?>

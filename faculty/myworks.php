@@ -1,20 +1,14 @@
 <?php require_once("../backend/session_faculty.php"); ?>
 
 <div class="row mx-auto d-flex flex-column justify-content-center  align-items-center p-5">
-  <div class="col-lg-12 col-sm-auto d-flex flex-column justify-content-center align-items-stretch gap-1 mx-auto mt-1">
-    <form id="searchForm" class="d-flex justify-content-between gap-1">
-      <div class="form-floating w-100">
-        <input type="text" id="search" name="search" class="form-control form-control-sm" placeholder="search"
-          required />
-        <label for="search" class="form-label">Search</label>
-      </div>
-      <input type="hidden" name="criteria">
-      <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-      <button class="btn btn-primary btn-sm w-25" type="submit">
-        <i class="bi bi-search"></i> Search
-      </button>
-    </form>
-    <div id="researchResults" class="d-flex flex-column gap-3"></div>
+  <div
+    class="d-flex flex-row gap-3 sticky-top col-lg-12 col-sm-auto d-flex flex-column justify-content-center align-items-stretch gap-3 mx-auto mt-1">
+    <div class="input-group">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
+      <input type="text" id="search" name="search" class="form-control form-control-sm align-middle"
+        placeholder="Search" required style="padding: 1.17rem 0.75rem;">
+    </div>
+    <div id="myWorksResult" class="d-flex flex-column gap-3"></div>
   </div>
 </div>
 
@@ -44,7 +38,7 @@
     </div>
   </div>
 </div>
-<!-- 
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   // Define the attachEventListeners function
@@ -82,68 +76,47 @@
     updateResearchList();
   });
 
-  // Truncate the content
-  function truncateContent(element) {
-    var words = $(element).text().trim().split(' ');
-    if (words.length > 20) {
-      var truncatedText = words.slice(0, 20).join(' ') + '...';
-      $(element).data('truncated-text', truncatedText)
-        .data('full-text', $(element).text())
-        .text(truncatedText)
-        .addClass('truncated');
-    }
-  }
 
   // Update research list function
   async function updateResearchList() {
     try {
-      const searchForm = document.getElementById('searchForm');
-      const formData = new FormData(searchForm);
-
-      const response = await fetch('../backend/updateresearches.php', {
-        method: 'POST',
-        body: formData,
-      });
-
+      // Fetch the CSRF token from the server
+      const response = await fetch("../backend/getcsrftoken.php");
       if (response.ok) {
-        const researchContainer = document.getElementById('researchResults');
-        researchContainer.innerHTML = await response.text();
-        attachEventListeners(); // Call the attachEventListeners function
+        const csrfToken = await response.text();
 
-        $('.research-abstract').each(function () {
-          truncateContent(this);
+        // Prepare the request data
+        const requestData = {
+          facultyID: '<?php echo $_SESSION['userID']; ?>',
+          csrf_token: csrfToken,
+        };
+
+        // Make the request to load faculty accounts
+        const ajaxRequest = $.ajax({
+          url: "../backend/updateresearchesfaculty.php",
+          type: "POST",
+          data: requestData,
         });
 
-        $('.research-keywords').each(function () {
-          truncateContent(this);
+        ajaxRequest.done(function (response) {
+          // Update the table content
+          $("#myWorksResult").html(response);
+          attachEventListeners();
         });
 
-        $('.research-title').each(function () {
-          truncateContent(this);
+        ajaxRequest.fail(function (xhr, status, error) {
+          console.log(error);
         });
-
       } else {
-        console.error('Error updating research list:', response.status);
-        displayToastr('error', 'An error occurred. Please try again.');
+        // Unable to fetch CSRF token, handle the error
+        console.error("Error fetching CSRF token:", response.status);
+        displayToastr("error", "An error occurred. Please try again.");
       }
     } catch (error) {
-      console.error('Error:', error);
-      displayToastr('error', 'An error occurred. Please try again.');
+      // General error occurred, handle it
+      console.error("Error:", error);
+      displayToastr("error", "An error occurred. Please try again.");
     }
   }
 
-  // Truncate text on document ready
-  $(document).ready(function () {
-    $('.truncate').each(function () {
-      var words = $(this).text().trim().split(' ');
-      if (words.length > 20) {
-        var truncatedText = words.slice(0, 20).join(' ') + '...';
-        $(this).data('truncated-text', truncatedText)
-          .data('full-text', $(this).text())
-          .text(truncatedText)
-          .addClass('truncated');
-      }
-    });
-  });
-
-</script> -->
+</script>
