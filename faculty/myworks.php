@@ -5,7 +5,7 @@
     class="d-flex flex-row gap-3 sticky-top col-lg-12 col-sm-auto d-flex flex-column justify-content-center align-items-stretch gap-3 mx-auto mt-1">
     <div class="input-group">
       <span class="input-group-text"><i class="bi bi-search"></i></span>
-      <input type="text" id="search" name="search" class="form-control form-control-sm align-middle"
+      <input type="text" id="search-myworks" name="search" class="form-control form-control-sm align-middle"
         placeholder="Search" required style="padding: 1.17rem 0.75rem;">
     </div>
     <div id="myWorksResult" class="d-flex flex-column gap-3"></div>
@@ -73,12 +73,12 @@
   // Update research list on DOMContentLoaded event
   window.addEventListener('DOMContentLoaded', function () {
     // Trigger search on page load
-    updateResearchList();
+    updateMyWorksList();
   });
 
 
   // Update research list function
-  async function updateResearchList() {
+  async function updateMyWorksList() {
     try {
       // Fetch the CSRF token from the server
       const response = await fetch("../backend/getcsrftoken.php");
@@ -87,13 +87,14 @@
 
         // Prepare the request data
         const requestData = {
-          facultyID: '<?php echo $_SESSION['userID']; ?>',
+          userID: '<?php echo $_SESSION['userID']; ?>',
+          type: "faculty",
           csrf_token: csrfToken,
         };
 
         // Make the request to load faculty accounts
         const ajaxRequest = $.ajax({
-          url: "../backend/updateresearchesfaculty.php",
+          url: "../backend/updatemyworks.php",
           type: "POST",
           data: requestData,
         });
@@ -118,5 +119,56 @@
       displayToastr("error", "An error occurred. Please try again.");
     }
   }
+
+
+  async function updateMyWorksListSearch(search) {
+    try {
+      // Fetch the CSRF token from the server
+      const response = await fetch("../backend/getcsrftoken.php");
+      if (response.ok) {
+        const csrfToken = await response.text();
+
+        // Prepare the request data
+        const requestData = {
+          userID: '<?php echo $_SESSION['userID']; ?>',
+          type: "faculty",
+          search: search,
+          csrf_token: csrfToken,
+        };
+
+        // Make the request to load faculty accounts
+        const ajaxRequest = $.ajax({
+          url: "../backend/updatemyworks.php",
+          type: "POST",
+          data: requestData,
+        });
+
+        ajaxRequest.done(function (response) {
+          // Update the table content
+          $("#myWorksResult").html(response);
+          attachEventListeners();
+        });
+
+        ajaxRequest.fail(function (xhr, status, error) {
+          console.log(error);
+        });
+      } else {
+        // Unable to fetch CSRF token, handle the error
+        console.error("Error fetching CSRF token:", response.status);
+        displayToastr("error", "An error occurred. Please try again.");
+      }
+    } catch (error) {
+      // General error occurred, handle it
+      console.error("Error:", error);
+      displayToastr("error", "An error occurred. Please try again.");
+    }
+  }
+
+  $(document).on("input", "#search-myworks", function (e) {
+    // Get the search query
+    const search = $(this).val();
+    e.preventDefault();
+    updateMyWorksListSearch(search);
+  });
 
 </script>

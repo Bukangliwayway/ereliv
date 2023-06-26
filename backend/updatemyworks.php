@@ -3,10 +3,21 @@ include_once 'csrfTokenCheck.php';
 include '../db/db.php';
 include '../db/queries.php';
 
-$facultyID = $_POST['facultyID'];
+$userID = $_POST['userID'];
+if (!empty($_POST['search']))
+  $search = $_POST['search'];
 
-$researches = getFacultyWorks($conn, $facultyID);
-
+switch ($_POST['type']) {
+  case 'faculty':
+    $researches = empty($search) ? getFacultyWorks($conn, $userID) : searchFacultyWorks($conn, $userID, $search);
+    break;
+  case 'student':
+    $researches = empty($search) ? getStudentWorks($conn, $userID) : searchStudentWorks($conn, $userID, $search);
+    break;
+  default:
+    $researches = array(); // or handle the case accordingly
+    break;
+}
 if (!empty($researches)) {
   $output = ''; // Initialize an empty string
   $output .= '<div class="row">';

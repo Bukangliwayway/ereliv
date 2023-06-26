@@ -232,6 +232,110 @@ function getFacultyWorks($conn, $facultyCreatorID)
   return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function getStudentWorks($conn, $studentCreatorID)
+{
+  $stmt = $conn->prepare("SELECT
+                            r.researchID,
+                            r.title,
+                            r.abstract,
+                            DATE_FORMAT(r.datepublished, '%d %M %Y') AS datepublished,
+                            r.keywords,
+                            r.status,
+                            r.proposer,
+                            r.studentProposerID,
+                            r.facultyProposerID,
+                            r.advisorID
+                          FROM
+                            ActivePaper ap
+                              JOIN Research r ON ap.researchPaper = r.researchID
+                          WHERE
+                            ap.status = 'active'
+                            AND ap.studentCreatorID = :studentCreatorID
+                        ");
+  $stmt->bindParam(':studentCreatorID', $studentCreatorID);
+  $stmt->execute();
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+function searchFacultyWorks($conn, $facultyCreatorID, $search)
+{
+  $stmt = $conn->prepare("SELECT
+                              r.researchID,
+                              r.title,
+                              r.abstract,
+                              DATE_FORMAT(r.datepublished, '%d %M %Y') AS datepublished,
+                              r.keywords,
+                              r.status,
+                              r.proposer,
+                              r.studentProposerID,
+                              r.facultyProposerID,
+                              r.advisorID,
+                              (
+                                  (CASE WHEN r.title LIKE CONCAT('%', :search, '%') THEN 1 ELSE 0 END) +
+                                  (CASE WHEN r.abstract LIKE CONCAT('%', :search, '%') THEN 1 ELSE 0 END) +
+                                  (CASE WHEN r.keywords LIKE CONCAT('%', :search, '%') THEN 1 ELSE 0 END) +
+                                  (CASE WHEN r.proposer LIKE CONCAT('%', :search, '%') THEN 1 ELSE 0 END)
+                              ) AS hitCount
+                          FROM
+                              ActivePaper ap
+                              JOIN Research r ON ap.researchPaper = r.researchID
+                          WHERE
+                              ap.status = 'active'
+                              AND ap.facultyCreatorID = :facultyCreatorID
+                              AND (
+                                  r.title LIKE CONCAT('%', :search, '%')
+                                  OR r.abstract LIKE CONCAT('%', :search, '%')
+                                  OR r.keywords LIKE CONCAT('%', :search, '%')
+                                  OR r.proposer LIKE CONCAT('%', :search, '%')
+                              )
+                          ORDER BY hitCount DESC;
+");
+
+  $stmt->bindParam(':facultyCreatorID', $facultyCreatorID);
+  $stmt->bindParam(':search', $search);
+  $stmt->execute();
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+function searchStudentWorks($conn, $studentCreatorID, $search)
+{
+  $stmt = $conn->prepare("SELECT
+                              r.researchID,
+                              r.title,
+                              r.abstract,
+                              DATE_FORMAT(r.datepublished, '%d %M %Y') AS datepublished,
+                              r.keywords,
+                              r.status,
+                              r.proposer,
+                              r.studentProposerID,
+                              r.facultyProposerID,
+                              r.advisorID,
+                              (
+                                  (CASE WHEN r.title LIKE CONCAT('%', :search, '%') THEN 1 ELSE 0 END) +
+                                  (CASE WHEN r.abstract LIKE CONCAT('%', :search, '%') THEN 1 ELSE 0 END) +
+                                  (CASE WHEN r.keywords LIKE CONCAT('%', :search, '%') THEN 1 ELSE 0 END) +
+                                  (CASE WHEN r.proposer LIKE CONCAT('%', :search, '%') THEN 1 ELSE 0 END)
+                              ) AS hitCount
+                          FROM
+                              ActivePaper ap
+                              JOIN Research r ON ap.researchPaper = r.researchID
+                          WHERE
+                              ap.status = 'active'
+                              AND ap.studentCreatorID = :studentCreatorID
+                              AND (
+                                  r.title LIKE CONCAT('%', :search, '%')
+                                  OR r.abstract LIKE CONCAT('%', :search, '%')
+                                  OR r.keywords LIKE CONCAT('%', :search, '%')
+                                  OR r.proposer LIKE CONCAT('%', :search, '%')
+                              )
+                          ORDER BY hitCount DESC;
+");
+
+  $stmt->bindParam(':studentCreatorID', $studentCreatorID);
+  $stmt->bindParam(':search', $search);
+  $stmt->execute();
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
 function getSectionList($conn, $programID)
 {
   $stmt = $conn->prepare("SELECT s.sectionID, s.name
@@ -274,8 +378,6 @@ function linkSectionAndProgram($conn, $name, $programID)
   }
   return true;
 }
-
-
 
 
 function getSectionID($conn, $name)
