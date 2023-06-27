@@ -53,6 +53,8 @@
   <?php
   include '../db/db.php';
   include '../db/queries.php';
+  include 'modals.php'; 
+
   ?>
   <div id="loadingSpinner" class="position-fixed top-0 start-0 d-none justify-content-center align-items-baseline pt-5"
     style="width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.2); z-index: 9999;">
@@ -138,80 +140,7 @@
     </div>
 
   </div>
-  <!-- modals -->
-  <div class="modal fade" id="signoutmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="signout" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5 text-capitalize text-center">
-            Sign Out?
-          </h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="container modal-body">
-          <form method="POST" action="../backend/session_out.php" class="container d-flex flex-row gap-3">
-            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-            <button type="submit" class="btn btn-danger">Yes</button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">No</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="addauthormodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5 text-capitalize text-center">
-            Add Author
-          </h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="container modal-body">
-          <form id="addAuthorForm" class="container d-flex flex-row gap-3">
-            <div class="form-floating">
-              <input type="text" id="firstname" name="firstname" class="form-control" placeholder="firstname"
-                required />
-              <label for="firstname" class="form-label">First Name</label>
-            </div>
-            <div class="form-floating">
-              <input type="text" id="lastname" name="lastname" class="form-control" placeholder="lastname" required />
-              <label for="lastname" class="form-label">Last Name</label>
-            </div>
-            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="addinterestmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5 text-capitalize text-center">
-            Add Interest
-          </h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="container modal-body">
-          <form id="addInterestForm" class="container d-flex flex-row gap-3">
-            <div class="form-floating">
-              <input type="text" id="name" name="name" class="form-control" required />
-              <label for="name" class="form-label">Interest Name</label>
-            </div>
-            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+ 
 
 </body>
 

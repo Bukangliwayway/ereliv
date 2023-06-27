@@ -28,33 +28,28 @@ if (!empty($researches)) {
     $interests = getInterests($conn, $research['researchID']);
 
     // Generate HTML for the research item
-    $output .= '<div class="research-item-container border border-smoke rounded my-1">';
-    $output .= '<div class="p-3" style="position:relative;">';
+    $output .= '<div class="research-link border border-smoke rounded my-1">';
+    $output .= '<div class="p-3 d-flex flex-column gap-2" style="position:relative;">';
 
     // Button Pages 
     $output .= '<div class="research-buttons d-flex justify-content-end fixed-upper-end gap-1 mt-3 mr-3">';
-    $output .= '<a href="#editpage" class="btn btn-sm btn-primary edit-button text-decoration-none">Edit Paper</a>';
-    $output .= '<a href="#deletepage" class="btn btn-sm btn-danger delete-button text-decoration-none">Delete Paper</a>';
-    $output .= '</div>';
-
-    // Interest Badges
-    $output .= '<div class="research-interests fixed-lower-end mb-3 mr-3 d-flex gap-1">';
-    foreach ($interests as $interest) {
-      $output .= '<a href="#" class="badge bg-primary text-decoration-none text-white" id="' . $interest['interestID'] . '">' . $interest['name'] . '</a>';
-    }
+    $output .= '<a href="#editpapermodal" class="btn btn-sm btn-primary edit-button text-decoration-none" data-researchID="' . $research['researchID'] . '" data-bs-toggle="modal">Edit Paper</a>';
+    $output .= '<a href="#deletepapermodal" class="btn btn-sm btn-danger delete-button text-decoration-none" data-researchID="' . $research['researchID'] . '" data-bs-toggle="modal">Delete Paper</a>';
     $output .= '</div>';
 
     // Research Title
-    $output .= '<a href="#displaypage" id="' . $research['researchID'] . '" class="d-flex text-dark research-link" data-bs-toggle="modal">';
+    $output .= '<a href="#displaypapermodal" class="d-flex text-dark research-title text-decoration-none" data-bs-toggle="modal">';
     $output .= '<span class="research-title">' . $research['title'] . '</span>';
     $output .= '</a>';
 
     // Research Programs and Date
-    $output .= '<div class="italize">';
+    $output .= '<div class="d-flex flex-row align-items-center">';
+    $output .= '<div class="italize research-programs">';
     foreach ($programs as $program) {
-      $output .= '<a class="btn btn-sm btn-outline-primary program-button text-decoration-none" id="' . $program['programID'] . '">' . $program['name'] . '</a>';
+      $output .= '<a class="btn btn-sm btn-outline-primary program-button text-decoration-none" data-programID="' . $program['programID'] . '">' . $program['name'] . '</a>';
     }
-    $output .= '<span class="ml-1">' . $research['datepublished'] . '</span>';
+    $output .= '</div>';
+    $output .= '<span class="ml-1 research-publish-date">' . $research['datepublished'] . '</span>';
     $output .= '</div>';
 
     // AUTHORS
@@ -75,9 +70,24 @@ if (!empty($researches)) {
         $output .= ', ';
       }
     }
+
+    $output .= '</div>';
+
+    // Interest Badges
+    $output .= '<div class="research-interest fixed-lower-end mb-3 mr-3 d-flex gap-1">';
+    foreach ($interests as $interest) {
+      $output .= '<a href="#" class="badge bg-primary text-decoration-none text-white" data-interestID="' . $interest['interestID'] . '">' . $interest['name'] . '</a>';
+    }
+
     $output .= '</div>';
 
     $output .= '</div>'; // Close p-3 div
+
+    $output .= '<input type="hidden" class="research-abstract" data-full-text="' . htmlspecialchars($research['abstract'], ENT_QUOTES) . '">';
+    $output .= '<input type="hidden" class="research-keywords" data-full-text="' . $research['keywords'] . '">';
+    $output .= '<input type="hidden" class="research-uploader" data-full-text="' . $research['proposer'] . '">';
+    $output .= '<input type="hidden" class="research-id" data-full-text="' . $research['researchID'] . '">';
+
     $output .= '</div>'; // Close research-item-container div
   }
   $output .= '</div>'; // Close row

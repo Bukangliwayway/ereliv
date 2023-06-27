@@ -1016,10 +1016,21 @@ function createActivePaper($conn, $facultyCreatorID, $researchPaper)
   try {
     $stmt->execute();
   } catch (PDOException $e) {
-    send_message_and_redirect("Error: " . $e->getMessage(), "http://localhost/ereliv/student/");
     return false;
   }
   return $conn->lastInsertId();
+}
+
+function deleteActivePaper($conn, $researchPaper)
+{
+  $stmt = $conn->prepare("UPDATE ActivePaper SET status = 'inactive' WHERE researchPaper = :researchPaper;");
+  $stmt->bindParam(':researchPaper', $researchPaper);
+  try {
+    $stmt->execute();
+  } catch (PDOException $e) {
+    return false;
+  }
+  return true;
 }
 
 function getStudentsBySection($conn, $sectionID)

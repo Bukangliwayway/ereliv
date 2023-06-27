@@ -1,4 +1,4 @@
-<?php require_once("../backend/session_faculty.php"); ?>
+<!-- <?php require_once("../backend/session_faculty.php"); ?>
 
 <div class="row mx-auto d-flex flex-column justify-content-center  align-items-center p-5">
   <div class="col-lg-12 col-sm-auto d-flex flex-column justify-content-center align-items-stretch gap-1 mx-auto mt-1">
@@ -18,33 +18,7 @@
   </div>
 </div>
 
-<!-- modal -->
-<div class="modal fade" id="displaypage" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" style="min-width: 80vw;">
-    <div class="modal-content" style="min-height: 80vh;">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5 text-capitalize text-center">
-          Overview of Research
-        </h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="container modal-body p-5">
 
-        <h2 class="text-capitalize text-center mb-4" id="research-title-modal"></h2>
-        <h5 class="mb-2"><strong>Abstract:</strong></h5>
-        <div id="research-abstract-modal"></div>
-        <span id="research-publish-date-modal"></span>
-        <div class="text-reset" id="research-authors-modal"></div>
-        <span class="text-capitalize" id="research-uploader-modal"></span>
-        <h5 class="mt-3"><strong>Keywords:</strong></h5>
-        <p id="research-keywords-modal"></p>
-        <div id="research-programs-modal"></div>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   // Define the attachEventListeners function
@@ -146,4 +120,4 @@
     });
   });
 
-</script> -->
+</script>  -->

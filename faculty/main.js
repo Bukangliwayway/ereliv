@@ -3,6 +3,7 @@ const displayToastr = (type, message) => {
 };
 
 $(document).ready(function () {
+  //Autoloads
   // UPLOADRESEARCH.PHP
   reloadMultiselects();
 
@@ -796,6 +797,55 @@ $(document).ready(function () {
         $("#deleteAuthorForm").css("pointer-events", "auto");
         //Reload the Author List
         loadCategories("Author");
+      },
+    });
+  });
+
+  $("#deletePaperForm").submit(function (event) {
+    event.preventDefault(); // Prevent form from submitting normally
+
+    // Serialize form data
+    var formData = $(this).serialize();
+
+    $.ajax({
+      url: "../backend/deletepaper_backend.php",
+      method: "POST",
+      data: formData,
+      dataType: "json",
+      beforeSend: function () {
+        // Show loading animation or do any pre-request tasks
+        $("#loadingSpinner").removeClass("d-none");
+        $("#loadingSpinner").addClass("d-flex");
+        $("#deletePaperForm").css("pointer-events", "auto");
+      },
+      success: function (data) {
+        // Hide loading animation
+        $("#loadingSpinner").removeClass("d-flex");
+        $("#loadingSpinner").addClass("d-none");
+        $("#deletePaperForm").css("pointer-events", "auto");
+
+        // Close the active modal section
+        $("#deletepapermodal").modal("hide");
+
+        displayToastr(data.status, data.message);
+        $("#deletePaperForm")[0].reset();
+      },
+      error: function () {
+        // Hide loading animation
+        $("#loadingSpinner").removeClass("d-flex");
+        $("#loadingSpinner").addClass("d-none");
+        $("#deletePaperForm").css("pointer-events", "auto");
+
+        // Handle error response here
+        displayToastr("error", "An error occurred. Please try again.");
+      },
+      complete: function () {
+        // Hide loading animation or do any post-request tasks
+        $("#loadingSpinner").removeClass("d-flex");
+        $("#loadingSpinner").addClass("d-none");
+        $("#deletePaperForm").css("pointer-events", "auto");
+        //Reload the MyWorks
+        updateMyWorksList();
       },
     });
   });
