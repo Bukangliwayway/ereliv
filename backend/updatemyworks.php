@@ -33,18 +33,18 @@ if (!empty($researches)) {
 
     // Button Pages 
     $output .= '<div class="research-buttons d-flex justify-content-end fixed-upper-end gap-1 mt-3 mr-3">';
-    $output .= '<a href="#editpapermodal" class="btn btn-sm btn-primary edit-button text-decoration-none" data-researchID="' . $research['researchID'] . '" data-bs-toggle="modal">Edit Paper</a>';
+    $output .= '<a class="editpaperswitch btn btn-sm btn-primary edit-button text-decoration-none" data-researchID="' . $research['researchID'] . '">Edit Paper</a>';
     $output .= '<a href="#deletepapermodal" class="btn btn-sm btn-danger delete-button text-decoration-none" data-researchID="' . $research['researchID'] . '" data-bs-toggle="modal">Delete Paper</a>';
     $output .= '</div>';
 
     // Research Title
-    $output .= '<a href="#displaypapermodal" class="d-flex text-dark research-title text-decoration-none" data-bs-toggle="modal">';
+    $output .= '<a href="#displaypapermodal" class="d-flex text-dark research-title research-point text-decoration-none" data-bs-toggle="modal">';
     $output .= '<span class="research-title">' . $research['title'] . '</span>';
     $output .= '</a>';
 
     // Research Programs and Date
     $output .= '<div class="d-flex flex-row align-items-center">';
-    $output .= '<div class="italize research-programs">';
+    $output .= '<div class="italize research-programs d-flex gap-1">';
     foreach ($programs as $program) {
       $output .= '<a class="btn btn-sm btn-outline-primary program-button text-decoration-none" data-programID="' . $program['programID'] . '">' . $program['name'] . '</a>';
     }
@@ -65,7 +65,7 @@ if (!empty($researches)) {
     $output .= '<div class="research-authors">';
     $authorCount = count($authorNames);
     foreach ($authorNames as $index => $author) {
-      $output .= '<a href="#" class="text-decoration-none text-dark" data-authorID="' . $author['authorID'] . '" class="research-author">' . $author['name'] . '</a>';
+      $output .= '<a href="#" class="text-decoration-none text-dark research-point" data-authorID="' . $author['authorID'] . '" class="research-author"> <i class="bi bi-person-fill"></i> ' . $author['name'] . '</a>';
       if ($index < $authorCount - 1) {
         $output .= ', ';
       }
@@ -87,6 +87,21 @@ if (!empty($researches)) {
     $output .= '<input type="hidden" class="research-keywords" data-full-text="' . $research['keywords'] . '">';
     $output .= '<input type="hidden" class="research-uploader" data-full-text="' . $research['proposer'] . '">';
     $output .= '<input type="hidden" class="research-id" data-full-text="' . $research['researchID'] . '">';
+
+    $authorIDs = array_map(function ($author) {
+      return $author["authorID"];
+    }, $authors);
+    $output .= '<input type="hidden" class="research-raw-authors" value="' . htmlentities(json_encode($authorIDs)) . '">';
+
+    $programIDs = array_map(function ($program) {
+      return $program["programID"];
+    }, $programs);
+    $output .= '<input type="hidden" class="research-raw-programs" value="' . htmlentities(json_encode($programIDs)) . '">';
+
+    $interestIDs = array_map(function ($interest) {
+      return $interest["interestID"];
+    }, $interests);
+    $output .= '<input type="hidden" class="research-raw-interests" value="' . htmlentities(json_encode($interestIDs)) . '">';
 
     $output .= '</div>'; // Close research-item-container div
   }

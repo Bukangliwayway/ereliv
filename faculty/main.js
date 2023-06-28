@@ -7,13 +7,14 @@ $(document).ready(function () {
   // UPLOADRESEARCH.PHP
   reloadMultiselects();
 
+  // // Datepicker initialization
+  // $("#date").datepicker({
+  //   format: "yyyy-mm-dd",
+  //   autoclose: true,
+  // });
+
   var selectedOptionsAuthors = [];
   var selectedOptionsPrograms = [];
-
-  // Make datepicker icon clickable
-  $("#datepicker").on("changeDate", function (e) {
-    var selectedDate = e.format();
-  });
 
   var dataInputAuthors = document.getElementById("authors");
   $("#author-select").on("change", function () {
@@ -323,6 +324,10 @@ $(document).ready(function () {
         button.classList.toggle("active", button === target);
       });
     }
+  });
+
+  document.querySelector("#uploadresearchBtn").addEventListener('click', function(event) {
+     if (event.isTrusted) $("#uploadResearchForm")[0].reset();
   });
 
   //MODIFY CATEGORIES

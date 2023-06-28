@@ -5,7 +5,6 @@ include '../db/queries.php';
 
 // Initialize the response array
 $response = array();
-
 try {
   $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
   $abstract = $_POST['content'];
@@ -42,21 +41,23 @@ try {
   foreach ($interestIDs as $interestID) {
     linkInterestAndResearch($conn, $interestID, $researchID);
   }
-  
-  $activePaper = createActivePaper($conn, $facultyProposerID, $researchID);
 
-  // Start Edit History
-  createEditHistory($conn, $activePaper, $researchID, $facultyProposerID);
+  if (empty($_POST['researchID'])) {
+    $activePaper = createActivePaper($conn, $facultyProposerID, $researchID);
+    $response['message'] = 'Research has been Uploaded Successfully';
+  } else {
+    $researchID = $_POST['researchID'];
+    $activePaper = updateActivePaper($conn, $facultyProposerID, $researchID);
+    $response['message'] = 'Research has been Updated Successfully';
+  }
 
-  // Set success response
   $response['status'] = 'success';
-  $response['message'] = 'Research has been uploaded successfully';
+  createEditHistory($conn, $activePaper, $researchID, $facultyProposerID);
 } catch (Exception $e) {
   // Set error response
   $response['status'] = 'error';
   $response['message'] = 'An error occurred. Please try again.';
 }
-
 // Return the response as JSON
 header('Content-Type: application/json');
 echo json_encode($response);

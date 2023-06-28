@@ -198,9 +198,9 @@
         <div class=" d-flex justify-content-end gap-1 fixed-upper-end mt-3 mr-3 d-flex gap-1"
           id="display-interests-modal"></div>
           <h4 class="text-center" id="display-title-modal"></h4>
-          <div class="text-reset d-flex justify-content-center gap-1 mb-2" id="display-authors-modal"></div>
+          <div class="text-reset d-flex flex-wrap justify-content-center gap-1 mb-2" id="display-authors-modal"></div>
           <div class="d-flex justify-content-center align-items-center gap-2">
-            <div id="display-programs-modal"></div>
+            <div id="display-programs-modal" class="d-flex gap-1"></div>
             <span>|</span>
             <span id="display-publish-date-modal"></span>
             <span>|</span>
@@ -227,13 +227,9 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="container modal-body">
-        <form id="deletePaperForm" class="container d-flex flex-row gap-3">
-          <div class="d-flex gap-3">
-            <div class="form-floating">
-              <input type="text" id="delete-title-modal" name="title" class="form-control bg-white" readonly>
-              <label for="section" class="form-label">Research Title:</label>
-            </div>
-          </div>
+        <form id="deletePaperForm" class="container d-flex flex-column gap-3">
+            <span>Research Title:</span>
+            <h4 id="delete-title-modal"></h4>
           <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
           <input id="delete-id-modal" type="hidden" name="researchID">
           <button type="submit" class="btn btn-danger">Delete</button>

@@ -8,17 +8,18 @@
     </h1>
     <form id="uploadResearchForm" class="d-flex flex-column gap-1 px-3">
       <div class="form-floating mb-3">
-        <input type="text" id="title" name="title" class="form-control" placeholder="title" required />
-        <label for="title" class="form-label">Research Title</label>
+        <input type="text" name="title" class="form-control upload-title" placeholder="title" required />
+        <label for="title" class="form-label upload-title-label">Research Title</label>
       </div>
 
       <div class="form-floating mb-3">
-        <textarea id="content-input" name="content-input" placeholder="Research Abstract"></textarea>
+        <textarea id="content-input" class="upload-abstract" name="content-input"
+          placeholder="Research Abstract"></textarea>
       </div>
 
       <div class="input-group mb-3">
         <div class="form-floating">
-          <input type="text" id="date" name="date" class="form-control bg-white" id="datepicker-output"
+          <input type="text" id="date" name="date" class="upload-date form-control bg-white" id="datepicker-output"
             data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-autoclose="true"
             value="<?php echo date('Y-m-d'); ?>" pattern="\d{4}-\d{2}-\d{2}"
             title="Please enter a valid date in the format YYYY-MM-DD" required>
@@ -32,33 +33,31 @@
       </div>
 
       <div class="example author-select">
-
-        <select id="author-select" multiple="multiple"></select>
+        <select id="author-select" class="upload-author" multiple="multiple"></select>
       </div>
 
       <div class="example program-select">
-
-        <select id="program-select" multiple="multiple"></select>
+        <select id="program-select" class="upload-program" multiple="multiple"></select>
       </div>
 
       <div class="example interest-select">
-
-        <select id="interest-select" multiple="multiple"> </select>
+        <select id="interest-select" class="upload-interest" multiple="multiple"> </select>
       </div>
 
-
       <div class="form-floating mb-3">
-        <input type="keywords" id="keywords" name="keywords" class="form-control" placeholder="keywords" required />
-        <label for="keywords" class="form-label">Keywords (Separate Each by Commas)</label>
+        <input type="keywords" id="keywords" name="keywords" class="form-control upload-keywords" placeholder="keywords"
+          required />
+        <label for="keywords" class="form-label upload-keywords-label">Keywords (Separate Each by Commas)</label>
       </div>
 
       <input type="hidden" name="content" id="content">
       <input type="hidden" name="authors" id="authors">
       <input type="hidden" name="interests" id="interests">
       <input type="hidden" name="programs" id="programs">
+      <input type="hidden" name="researchID" id="researchID">
       <input type="hidden" name="type" id="type" value="faculty">
       <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-      
+
       <button type="submit" class="btn btn-primary">Upload Research</button>
     </form>
   </div>

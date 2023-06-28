@@ -1021,6 +1021,32 @@ function createActivePaper($conn, $facultyCreatorID, $researchPaper)
   return $conn->lastInsertId();
 }
 
+function updateActivePaper($conn, $facultyCreatorID, $researchPaper)
+{
+  $stmt = $conn->prepare("UPDATE ActivePaper SET researchPaper = :researchPaper WHERE facultyCreatorID = :facultyCreatorID");
+  $stmt->bindParam(':researchPaper', $researchPaper);
+  $stmt->bindParam(':facultyCreatorID', $facultyCreatorID);
+
+  try {
+    $stmt->execute();
+  } catch (PDOException $e) {
+    return false;
+  }
+
+  $selectStmt = $conn->prepare("SELECT activePaperID FROM ActivePaper WHERE researchPaper = :researchPaper");
+  $selectStmt->bindParam(':researchPaper', $researchPaper);
+
+  try {
+    $selectStmt->execute();
+    $result = $selectStmt->fetch(PDO::FETCH_ASSOC);
+    $activePaperID = $result['activePaperID'];
+    return $activePaperID;
+  } catch (PDOException $e) {
+    return false;
+  }
+}
+
+
 function deleteActivePaper($conn, $researchPaper)
 {
   $stmt = $conn->prepare("UPDATE ActivePaper SET status = 'inactive' WHERE researchPaper = :researchPaper;");

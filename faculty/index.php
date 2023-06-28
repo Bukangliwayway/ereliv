@@ -21,6 +21,7 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js">
   </script>
+  
 
   <!-- bootstrap-multiselect links -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -108,11 +109,7 @@
               Categories
             </button>
 
-            <a href="#addauthormodal" class="btn btn-outline-primary mb-2 mt-auto " data-bs-toggle="modal">
-              <i class="bi bi-plus-lg"></i>
-              Author
-            </a>
-            <a href="#signoutmodal" class="btn btn-outline-danger mb-2" id="signoutBtn" data-bs-toggle="modal">
+            <a href="#signoutmodal" class="btn btn-outline-danger mb-2 mt-auto" id="signoutBtn" data-bs-toggle="modal">
               <i class="bi bi-box-arrow-right"></i>
               Sign Out
             </a>
