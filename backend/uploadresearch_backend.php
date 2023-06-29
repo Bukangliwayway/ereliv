@@ -20,6 +20,14 @@ try {
 
   $type = $_POST['type'];
 
+  if (!isValidDate($datepublished)) {
+    $response['message'] = 'Invalid Date Format. Please try again.';
+    $response['status'] = 'error';
+    header('Content-Type: application/json');
+    echo json_encode($response);
+    exit;
+  }
+
   $programIDs = json_decode($programs, true);
   $authorIDs = json_decode($authors, true);
   $interestIDs = json_decode($interests, true);

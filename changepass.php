@@ -34,8 +34,8 @@ $current_url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
   <div
     class="container-fluid rounded d-flex flex-column align-items-center justify-content-center vh-100 vw-100 rand-bg"
     style="background-image: url('<?php echo $img_src ?>')">
-    <div class="p-5 bg-light">
-      <h1 class="mb-3 text-uppercase">Change Password</h1>
+    <div class="p-5 bg-light border border-smoke rounded">
+      <h1 class="mb-3 text-capitalized">Change Password</h1>
       <form id="changepassForm" class="d-flex flex-column gap-3">
         <input type="hidden" name="redirect" value="<?php echo $current_url ?>" />
         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
@@ -86,8 +86,11 @@ $current_url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
             // Display a Toastr success message
             toastr[data.status](data.message);
 
-            // Reset the form after successful submission
+            // Reset the form after submission
             $("#changepassForm")[0].reset();
+
+            if(data.status == 'success') window.location.href = "index.php";
+
           },
           error: function (xhr, status, error) {
             // Handle error response here
@@ -99,7 +102,6 @@ $current_url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
             $('#loadingSpinner').removeClass('d-flex');
             $('#loadingSpinner').addClass('d-none');
             $('#changepassForm').css('pointer-events', 'auto');
-
           }
         });
       });

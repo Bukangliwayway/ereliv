@@ -60,9 +60,12 @@ $(document).ready(function () {
       data: formData,
       success: function (response) {
         displayToastr(response.status, response.message);
-        if (response.status === "success") clearFields();
+        if (response.status === "success") {
+          clearFields();
+          document.getElementById("myworksBtn").click();
+        }
       },
-      error: function () {
+      error: function (response) {
         // Handle error response here
         displayToastr("error", "An error occurred. Please try again.");
       },

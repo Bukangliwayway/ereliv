@@ -22,7 +22,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/ereliv/backend/randbg_generate.php';
     <div class="col-md-8 rand-bg d-none d-sm-block" style="background-image: url('<?php echo $img_src ?>')"></div>
     <div
       class="col-md-4 col-sm-auto d-flex flex-column just justify-content-center align-items-center text-center gap-3 contain-form">
-      <a href="http://localhost/ereliv/">
+      <a href="index.php">
         <img src="assets/puplogo.png" alt="logohehe" width="60%" class="align-self-center" />
       </a>
       <h1 class="fs-2 fw-bold text-uppercase">

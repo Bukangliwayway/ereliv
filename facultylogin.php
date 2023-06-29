@@ -57,7 +57,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/ereliv/backend/randbg_generate.php';
         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
         <button type="submit" class="btn btn-primary">Sign In</button>
       </form>
-      <a href="#staticBackdrop" id="forgot-pass"
+      <a href="#resetPassModal" id="forgot-pass"
         class="link-danger link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover text-capitalize"
         data-bs-toggle="modal">
         <b>🗝️ I forgot my password</b>
@@ -76,18 +76,18 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/ereliv/backend/randbg_generate.php';
     </div>
   </div>
   <!-- Modal -->
-  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal fade" id="resetPassModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="resetPassModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="staticBackdropLabel">
+          <h1 class="modal-title fs-5" id="resetPassModalLabel">
             Password Reset
           </h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="container modal-body">
-          <form method="POST" action="backend/forgotpass_backend.php" class="container d-flex flex-row gap-3">
+          <form id="resetPassForm" class="container d-flex flex-row gap-3">
             <div class="form-floating">
               <input type="email" name="emailadd" class="form-control" placeholder="emailadd" required />
               <label for="email" class="form-label">Email Address</label>
@@ -141,6 +141,40 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/ereliv/backend/randbg_generate.php';
             $('#loadingSpinner').removeClass('d-flex');
             $('#loadingSpinner').addClass('d-none');
             $('#facultyloginForm').css('pointer-events', 'auto');
+
+          }
+        });
+      });
+      $('#resetPassForm').submit(function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        //Loading Routine
+        $('#loadingSpinner').removeClass('d-none');
+        $('#loadingSpinner').addClass('d-flex');
+        $('#resetPassForm').css({ 'pointer-events': 'none' });
+
+        var formData = $(this).serialize();
+
+        $.ajax({
+          type: 'POST',
+          url: 'backend/forgotpass_backend.php',
+          data: formData,
+          success: function (response) {
+            var data = JSON.parse(response);
+            displayToastr(data.status, data.message);
+          },
+          error: function (xhr, status, error) {
+            // Handle error response here
+            console.log(xhr.responseText);
+            toastr.error('An error occurred. Please try again.');
+          },
+          complete: function () {
+            // Revert Loading Routine back to normal
+            $('#loadingSpinner').removeClass('d-flex');
+            $('#loadingSpinner').addClass('d-none');
+            $('#resetPassForm').css('pointer-events', 'auto');
+            $('#resetPassModal').modal('hide');
+
 
           }
         });

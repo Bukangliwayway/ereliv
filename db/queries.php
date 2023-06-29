@@ -1099,4 +1099,11 @@ function getCategoriesInterest($conn, $search)
   $stmt->execute();
   return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+function isValidDate($date)
+{
+  $format = 'Y-m-d';
+  $dateTime = DateTime::createFromFormat($format, $date);
+  return $dateTime && $dateTime->format($format) === $date;
+}
 ?>
