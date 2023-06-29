@@ -32,13 +32,13 @@ if (!empty($researches)) {
     $output .= '<div class="p-3 d-flex flex-column gap-2" style="position:relative;">';
 
     // Button Pages 
-    $output .= '<div class="research-buttons d-flex justify-content-end fixed-upper-end gap-1 mt-3 mr-3">';
-    $output .= '<a class="editpaperswitch btn btn-sm btn-primary edit-button text-decoration-none" data-researchID="' . $research['researchID'] . '">Edit Paper</a>';
-    $output .= '<a href="#deletepapermodal" class="btn btn-sm btn-danger delete-button text-decoration-none" data-researchID="' . $research['researchID'] . '" data-bs-toggle="modal">Delete Paper</a>';
+    $output .= '<div class="research-buttons d-flex justify-content-end fixed-upper-end gap-1 mt-3 mr-1">';
+    $output .= '<a class="editpaperswitch btn btn-sm btn-outline-primary edit-button text-decoration-none" data-researchID="' . $research['researchID'] . '">Edit Paper</a>';
+    $output .= '<a href="#deletepapermodal" class="btn btn-sm btn-outline-danger delete-button text-decoration-none" data-researchID="' . $research['researchID'] . '" data-bs-toggle="modal">Delete Paper</a>';
     $output .= '</div>';
 
     // Research Title
-    $output .= '<a href="#displaypapermodal" class="d-flex text-dark research-title research-point text-decoration-none" data-bs-toggle="modal">';
+    $output .= '<a href="#displaypapermodal" class="d-flex text-dark research-title research-point text-decoration-none text-capitalize" data-bs-toggle="modal">';
     $output .= '<span class="research-title">' . $research['title'] . '</span>';
     $output .= '</a>';
 

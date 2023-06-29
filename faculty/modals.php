@@ -197,7 +197,7 @@
       <div class="container modal-body p-5 " style="position:relative;">
         <div class=" d-flex justify-content-end gap-1 fixed-upper-end mt-3 mr-3 d-flex gap-1"
           id="display-interests-modal"></div>
-          <h4 class="text-center" id="display-title-modal"></h4>
+          <h4 class="text-center text-capitalize" id="display-title-modal"></h4>
           <div class="text-reset d-flex flex-wrap justify-content-center gap-1 mb-2" id="display-authors-modal"></div>
           <div class="d-flex justify-content-center align-items-center gap-2">
             <div id="display-programs-modal" class="d-flex gap-1"></div>

@@ -1,15 +1,15 @@
 <?php require_once("../backend/session_faculty.php"); ?>
 
-<div class="row mx-auto d-flex flex-column justify-content-center  align-items-center p-5">
+<div class="row mx-auto d-flex flex-column justify-content-center  align-items-center">
   <div
-    class="d-flex flex-row gap-3 sticky-top col-lg-12 col-sm-auto d-flex flex-column justify-content-center align-items-stretch gap-3 mx-auto mt-1">
+    class="d-flex flex-row gap-3 sticky-top col-lg-12 col-sm-auto d-flex flex-column justify-content-center align-items-stretch gap-3 mx-auto mt-1 p-5 pb-3">
     <div class="input-group">
       <span class="input-group-text"><i class="bi bi-search"></i></span>
       <input type="text" id="search-myworks" name="search" class="form-control form-control-sm align-middle"
         placeholder="Search" required style="padding: 1.17rem 0.75rem;">
     </div>
-    <div id="myWorksResult" class="d-flex flex-column gap-3"></div>
   </div>
+  <div id="myWorksResult" class="d-flex flex-column gap-3 px-5"></div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
