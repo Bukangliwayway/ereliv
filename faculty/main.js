@@ -7,36 +7,44 @@ $(document).ready(function () {
   // UPLOADRESEARCH.PHP
   reloadMultiselects();
 
-  // // Datepicker initialization
-  // $("#date").datepicker({
-  //   format: "yyyy-mm-dd",
-  //   autoclose: true,
-  // });
+  function updateHiddenFields() {
+    var dataInputAuthors = document.getElementById("authors");
+    var dataInputPrograms = document.getElementById("programs");
+    var dataInputInterests = document.getElementById("interests");
+    var dataInputContent = document.getElementById("content");
 
-  var selectedOptionsAuthors = [];
-  var selectedOptionsPrograms = [];
-
-  var dataInputAuthors = document.getElementById("authors");
-  $("#author-select").on("change", function () {
-    selectedOptionsAuthors = $(this).val();
+    var selectedOptionsAuthors = $("#author-select").val();
     dataInputAuthors.value = JSON.stringify(selectedOptionsAuthors);
-  });
 
-  var dataInputPrograms = document.getElementById("programs");
-  $("#program-select").on("change", function () {
-    selectedOptionsPrograms = $(this).val();
+    var selectedOptionsPrograms = $("#program-select").val();
     dataInputPrograms.value = JSON.stringify(selectedOptionsPrograms);
-  });
 
-  var dataInputInterests = document.getElementById("interests");
-  $("#interest-select").on("change", function () {
-    selectedOptionsInterests = $(this).val();
+    var selectedOptionsInterests = $("#interest-select").val();
     dataInputInterests.value = JSON.stringify(selectedOptionsInterests);
-  });
+
+    var inputtedTextContent = tinymce.get("content-input").getContent();
+    dataInputContent.value = inputtedTextContent;
+  }
+
+  function clearFields() {
+    // Reset the form after successful upload
+    $("#uploadResearchForm")[0].reset();
+    // //Deselect the prev select
+    $("#author-select").multiselect("deselectAll");
+    $("#program-select").multiselect("deselectAll");
+    $("#interest-select").multiselect("deselectAll");
+    //reset all the hidden fields as well
+    document.getElementById("content").value = "";
+    document.getElementById("authors").value = "";
+    document.getElementById("interests").value = "";
+    document.getElementById("programs").value = "";
+    document.getElementById("researchID").value = "";
+  }
 
   $("#uploadResearchForm").submit(function (event) {
     event.preventDefault(); // Prevent the default form submission
 
+    updateHiddenFields(); // So that the hidden fields will have its value
     //Loading Routine
     $("#loadingSpinner").removeClass("d-none");
     $("#loadingSpinner").addClass("d-flex");
@@ -51,13 +59,8 @@ $(document).ready(function () {
       url: "../backend/uploadresearch_backend.php",
       data: formData,
       success: function (response) {
-        console.log(response);
         displayToastr(response.status, response.message);
-
-        if (response.status === "success") {
-          // Reset the form after successful upload
-          $("#uploadResearchForm")[0].reset();
-        }
+        if (response.status === "success") clearFields();
       },
       error: function () {
         // Handle error response here
@@ -326,9 +329,13 @@ $(document).ready(function () {
     }
   });
 
-  document.querySelector("#uploadresearchBtn").addEventListener('click', function(event) {
-     if (event.isTrusted) $("#uploadResearchForm")[0].reset();
-  });
+  document
+    .querySelector("#uploadresearchBtn")
+    .addEventListener("click", function (event) {
+      if (event.isTrusted) {
+        clearFields();
+      }
+    });
 
   //MODIFY CATEGORIES
 

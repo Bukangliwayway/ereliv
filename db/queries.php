@@ -1021,11 +1021,11 @@ function createActivePaper($conn, $facultyCreatorID, $researchPaper)
   return $conn->lastInsertId();
 }
 
-function updateActivePaper($conn, $facultyCreatorID, $researchPaper)
+function updateActivePaper($conn, $updatedResearchPaper, $oldResearchPaper)
 {
-  $stmt = $conn->prepare("UPDATE ActivePaper SET researchPaper = :researchPaper WHERE facultyCreatorID = :facultyCreatorID");
-  $stmt->bindParam(':researchPaper', $researchPaper);
-  $stmt->bindParam(':facultyCreatorID', $facultyCreatorID);
+  $stmt = $conn->prepare("UPDATE ActivePaper SET researchPaper = :updatedResearchPaper WHERE researchPaper = :oldResearchPaper");
+  $stmt->bindParam(':updatedResearchPaper', $updatedResearchPaper);
+  $stmt->bindParam(':oldResearchPaper', $oldResearchPaper);
 
   try {
     $stmt->execute();
@@ -1034,7 +1034,7 @@ function updateActivePaper($conn, $facultyCreatorID, $researchPaper)
   }
 
   $selectStmt = $conn->prepare("SELECT activePaperID FROM ActivePaper WHERE researchPaper = :researchPaper");
-  $selectStmt->bindParam(':researchPaper', $researchPaper);
+  $selectStmt->bindParam(':researchPaper', $updatedResearchPaper);
 
   try {
     $selectStmt->execute();

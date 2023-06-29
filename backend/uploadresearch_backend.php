@@ -46,8 +46,7 @@ try {
     $activePaper = createActivePaper($conn, $facultyProposerID, $researchID);
     $response['message'] = 'Research has been Uploaded Successfully';
   } else {
-    $researchID = $_POST['researchID'];
-    $activePaper = updateActivePaper($conn, $facultyProposerID, $researchID);
+    $activePaper = updateActivePaper($conn, $researchID, $_POST['researchID']);
     $response['message'] = 'Research has been Updated Successfully';
   }
 
