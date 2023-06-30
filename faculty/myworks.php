@@ -198,6 +198,6 @@
     // Get the search query
     const search = $(this).val();
     e.preventDefault();
-    updateMyWorksListSearch('%');
+    updateMyWorksListSearch(search);
   });
 </script>
