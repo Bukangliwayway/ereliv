@@ -15,6 +15,8 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   //Initialize MyWorks
+  updateMyWorksListSearch('%');
+
   document.getElementById("myworksBtn").addEventListener("click", function () {
     updateMyWorksList();
   });
@@ -196,6 +198,6 @@
     // Get the search query
     const search = $(this).val();
     e.preventDefault();
-    updateMyWorksListSearch(search);
+    updateMyWorksListSearch('%');
   });
 </script>

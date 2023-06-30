@@ -914,6 +914,15 @@ function searchInterest($conn, $searchQuery)
 
   return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+function searchProgram($conn, $searchQuery)
+{
+  // Prepare the SQL query to fetch the related authors
+  $stmt = $conn->prepare("SELECT * FROM Program WHERE name LIKE :searchQuery");
+  $stmt->bindValue(':searchQuery', '%' . $searchQuery . '%');
+  $stmt->execute();
+
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
 function addAuthor($conn, $firstname, $lastname)
 {
@@ -1105,5 +1114,20 @@ function isValidDate($date)
   $format = 'Y-m-d';
   $dateTime = DateTime::createFromFormat($format, $date);
   return $dateTime && $dateTime->format($format) === $date;
+}
+
+function getActiveResearchPapers($conn, $searchTerm)
+{
+  $searchTerm = '%' . $searchTerm . '%';
+  $stmt = $conn->prepare("SELECT Research.*
+                          FROM ActivePaper
+                          JOIN Research ON ActivePaper.researchPaper = Research.researchID
+                          WHERE ActivePaper.status = 'active'
+                            AND (Research.abstract LIKE :searchTerm
+                                 OR Research.title LIKE :searchTerm
+                                 OR Research.keywords LIKE :searchTerm);");
+  $stmt->bindParam(':searchTerm', $searchTerm);
+  $stmt->execute();
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>

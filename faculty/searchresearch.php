@@ -1,123 +1,221 @@
-<!-- <?php require_once("../backend/session_faculty.php"); ?>
+<?php require_once("../backend/session_faculty.php"); ?>
 
-<div class="row mx-auto d-flex flex-column justify-content-center  align-items-center p-5">
-  <div class="col-lg-12 col-sm-auto d-flex flex-column justify-content-center align-items-stretch gap-1 mx-auto mt-1">
-    <form id="searchForm" class="d-flex justify-content-between gap-1">
-      <div class="form-floating w-100">
-        <input type="text" id="search" name="search" class="form-control form-control-sm" placeholder="search"
-          required />
-        <label for="search" class="form-label">Search</label>
+<div class="row mx-auto d-flex flex-column justify-content-center  align-items-center">
+  <div
+    class="d-flex flex-column gap-3 sticky-top col-lg-12 col-sm-auto justify-content-center align-items-stretch mx-auto mt-1 p-5 pb-3">
+    <div class="d-flex flex-row gap-3">
+      <div class="buttons d-flex flex-row gap-1">
+        <button id="searchByAuthor" class="btn btn-outline-primary d-flex align-items-center gap-2">
+          <i class="bi bi-people-fill"></i> Authors
+        </button>
+        <button id="searchByInterest" class="btn btn-outline-primary d-flex align-items-center gap-2">
+          <i class="bi bi-tag-fill"></i> Interests
+        </button>
+        <button id="searchByProgram" class="btn btn-outline-primary d-flex align-items-center gap-2">
+          <i class="bi bi-journal-bookmark"></i> Program
+        </button>
       </div>
-      <input type="hidden" name="criteria">
-      <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-      <button class="btn btn-primary btn-sm w-25" type="submit">
-        <i class="bi bi-search"></i> Search
-      </button>
-    </form>
-    <div id="researchResults" class="d-flex flex-column gap-3"></div>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-search"></i></span>
+        <input type="text" id="searchResearches" name="search" class="form-control form-control-sm align-middle"
+          placeholder="Search" required style="padding: 1.17rem 0.75rem;">
+      </div>
+    </div>
+    <div id="categoryToggle" class="round shadow d-none">
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-search"></i></span>
+        <input type="text" id="searchCategories" name="search" class="form-control form-control-sm align-middle"
+          placeholder="Search" required style="padding: 1.17rem 0.75rem;">
+      </div>
+      <div id="searchCategoriesResult" class="d-flex flex-column gap-3"></div>
+    </div>
   </div>
-</div>
-
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <div id="searchResearchesResult" class="d-flex flex-column gap-3 px-5"></div>
+</div> 
 <script>
-  // Define the attachEventListeners function
-  function attachEventListeners() {
+  
+
+  updateSearchResult('%');
+
+  $(document).on("click", function (event) {
+    var target = $(event.target);
+    var searchResult = $("#categoryToggle");
+
+    // Check if the clicked element is outside the search result div
+    if (!target.closest("#categoryToggle, #searchByAuthor, #searchByInterest, #searchByProgram").length && !target.is("#categoryToggle, #searchByAuthor, #searchByInterest, #searchByProgram")) {
+      // Hide the search result div
+      searchResult.addClass("d-none");
+    }
+  });
+
+  async function loadCategoriesResult(table, search) {
+    try {
+      // Fetch the CSRF token from the server
+      const response = await fetch("../backend/getcsrftoken.php");
+      if (response.ok) {
+        const csrfToken = await response.text();
+
+        // Prepare the request data
+        const requestData = {
+          table: table,
+          search: search,
+          csrf_token: csrfToken,
+        };
+
+        // Make the request to load faculty accounts
+        const ajaxRequest = $.ajax({
+          url: "../backend/updatesearchcategories.php",
+          type: "POST",
+          data: requestData,
+        });
+
+        ajaxRequest.done(function (response) {
+          // Update the table content
+          $("#searchCategoriesResult").html(response);
+          researchEventListeners();
+        });
+
+        ajaxRequest.fail(function (xhr, status, error) {
+          console.log(error);
+        });
+      } else {
+        // Unable to fetch CSRF token, handle the error
+        console.error("Error fetching CSRF token:", response.status);
+        displayToastr("error", "An error occurred. Please try again.");
+      }
+    } catch (error) {
+      // General error occurred, handle it
+      console.error("Error:", error);
+      displayToastr("error", "An error occurred. Please try again.");
+    }
+  }
+
+  const searchByInterests = document.querySelector("#searchByInterest");
+  searchByInterests.addEventListener("click", function () {
+    const interestID = this.getAttribute("data-interestID");
+    const name = this.getAttribute("data-name");
+    $("#searchByAuthor, #searchByInterest, #searchByProgram").removeClass("active");
+    $(this).addClass("active");
+    loadCategoriesResult('Interest', '%');
+    $("#categoryToggle").removeClass('d-none');
+  });
+
+  const searchByAuthors = document.querySelector("#searchByAuthor");
+  searchByAuthors.addEventListener("click", function () {
+    const authorID = this.getAttribute("data-interestID");
+    const name = this.getAttribute("data-name");
+    $("#searchByAuthor, #searchByInterest, #searchByProgram").removeClass("active");
+    $(this).addClass("active");
+    loadCategoriesResult('Author', '%');
+    $("#categoryToggle").removeClass('d-none');
+  });
+
+  const searchByPrograms = document.querySelector("#searchByProgram");
+  searchByPrograms.addEventListener("click", function () {
+    const programID = this.getAttribute("data-interestID");
+    const name = this.getAttribute("data-name");
+    $("#searchByAuthor, #searchByInterest, #searchByProgram").removeClass("active");
+    $(this).addClass("active");
+    loadCategoriesResult('Program', '%');
+    $("#categoryToggle").removeClass('d-none');
+  });
+
+  function getActiveCategory() {
+    var categoryMap = {
+      "searchByAuthor": "Author",
+      "searchByInterest": "Interest",
+      "searchByProgram": "Program"
+    };
+
+    var activeButton = $("#searchByAuthor, #searchByInterest, #searchByProgram").filter(".active");
+    return categoryMap[activeButton.attr("id")] || null;
+  }
+
+  $(document).on("input", "#searchCategories", function (e) {
+    const query = $(this).val();
+    e.preventDefault();
+    loadCategoriesResult(getActiveCategory(), query);
+  });
+
+  // // Define the attachEventListeners function
+  function researchEventListeners() {
     // Select all the links with the specified class
-    var links = document.querySelectorAll('.research-link');
+    var links = document.querySelectorAll('.search-research-link');
 
     links.forEach(function (link) {
       // Assign a click event handler to the link
       link.addEventListener('click', function (event) {
         event.preventDefault();
-        var researchID = this.id;
-        var researchTitle = this.querySelector('.research-title').textContent;
-        var researchAbstract = this.querySelector('.research-abstract').getAttribute('data-full-text');
-        var researchKeywords = this.querySelector('.research-keywords').getAttribute('data-full-text');
-        var researchPublishDate = this.querySelector('.research-publish-date').textContent;
-        var researchUploader = this.querySelector('.research-uploader').textContent;
-        var researchProgram = this.querySelector('.research-programs').innerHTML;
-        var researchAuthor = this.querySelector('.research-authors').innerHTML;
+        var researchTitle = this.querySelector('.search-research-title').textContent;
+        var researchAbstract = this.querySelector('.search-research-abstract').getAttribute('data-full-text');
+        var researchKeywords = this.querySelector('.search-research-keywords').getAttribute('data-full-text');
+        var researchPublishDate = this.querySelector('.search-research-publish-date').textContent;
+        var researchProgram = this.querySelector('.search-research-programs').innerHTML;
+        var researchAuthor = this.querySelector('.search-research-authors').innerHTML;
+        var researchInterest = this.querySelector('.search-research-interest').innerHTML;
+        var researchUploader = this.querySelector('.search-research-uploader').getAttribute('data-full-text');
 
-        document.getElementById('research-title-modal').textContent = researchTitle;
-        document.getElementById('research-abstract-modal').innerHTML = researchAbstract;
-        document.getElementById('research-keywords-modal').textContent = researchKeywords;
-        document.getElementById('research-publish-date-modal').textContent = researchPublishDate;
-        document.getElementById('research-programs-modal').innerHTML = researchProgram;
-        document.getElementById('research-authors-modal').innerHTML = researchAuthor;
-        document.getElementById('research-uploader-modal').innerHTML = researchUploader;
+        // displaypapermodal
+        document.getElementById('display-title-modal').textContent = researchTitle;
+        document.getElementById('display-abstract-modal').innerHTML = researchAbstract;
+        document.getElementById('display-keywords-modal').textContent = researchKeywords;
+        document.getElementById('display-publish-date-modal').textContent = researchPublishDate;
+        document.getElementById('display-programs-modal').innerHTML = researchProgram;
+        document.getElementById('display-authors-modal').innerHTML = researchAuthor;
+        document.getElementById('display-interests-modal').innerHTML = researchInterest;
+        document.getElementById('display-uploader-modal').textContent = "Uploaded By: " + researchUploader;
       });
     });
   }
 
-  // Update research list on DOMContentLoaded event
-  window.addEventListener('DOMContentLoaded', function () {
-    // Trigger search on page load
-    updateResearchList();
-  });
-
-  // Truncate the content
-  function truncateContent(element) {
-    var words = $(element).text().trim().split(' ');
-    if (words.length > 20) {
-      var truncatedText = words.slice(0, 20).join(' ') + '...';
-      $(element).data('truncated-text', truncatedText)
-        .data('full-text', $(element).text())
-        .text(truncatedText)
-        .addClass('truncated');
-    }
-  }
-
-  // Update research list function
-  async function updateResearchList() {
+  async function updateSearchResult(search) {
     try {
-      const searchForm = document.getElementById('searchForm');
-      const formData = new FormData(searchForm);
-
-      const response = await fetch('../backend/updateresearches.php', {
-        method: 'POST',
-        body: formData,
-      });
-
+      // Fetch the CSRF token from the server
+      const response = await fetch("../backend/getcsrftoken.php");
       if (response.ok) {
-        const researchContainer = document.getElementById('researchResults');
-        researchContainer.innerHTML = await response.text();
-        attachEventListeners(); // Call the attachEventListeners function
+        const csrfToken = await response.text();
 
-        $('.research-abstract').each(function () {
-          truncateContent(this);
+        // Prepare the request data
+        const requestData = {
+          userID: '<?php echo $_SESSION['userID']; ?>',
+          type: "faculty",
+          search: search,
+          csrf_token: csrfToken,
+        };
+
+        // Make the request to load faculty accounts
+        const ajaxRequest = $.ajax({
+          url: "../backend/updatesearchresult.php",
+          type: "POST",
+          data: requestData,
         });
 
-        $('.research-keywords').each(function () {
-          truncateContent(this);
+        ajaxRequest.done(function (response) {
+          // Update the table content
+          $("#searchResearchesResult").html(response);
+          researchEventListeners();
         });
 
-        $('.research-title').each(function () {
-          truncateContent(this);
+        ajaxRequest.fail(function (xhr, status, error) {
+          console.log(error);
         });
-
       } else {
-        console.error('Error updating research list:', response.status);
-        displayToastr('error', 'An error occurred. Please try again.');
+        // Unable to fetch CSRF token, handle the error
+        console.error("Error fetching CSRF token:", response.status);
+        displayToastr("error", "An error occurred. Please try again.");
       }
     } catch (error) {
-      console.error('Error:', error);
-      displayToastr('error', 'An error occurred. Please try again.');
+      // General error occurred, handle it
+      console.error("Error:", error);
+      displayToastr("error", "An error occurred. Please try again.");
     }
   }
 
-  // Truncate text on document ready
-  $(document).ready(function () {
-    $('.truncate').each(function () {
-      var words = $(this).text().trim().split(' ');
-      if (words.length > 20) {
-        var truncatedText = words.slice(0, 20).join(' ') + '...';
-        $(this).data('truncated-text', truncatedText)
-          .data('full-text', $(this).text())
-          .text(truncatedText)
-          .addClass('truncated');
-      }
-    });
+  $(document).on("input", "#searchResearches", function (e) {
+    // Get the search query
+    const search = $(this).val();
+    e.preventDefault();
+    updateSearchResult(search);
   });
 
-</script>  -->
+</script> 
