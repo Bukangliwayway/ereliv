@@ -3,11 +3,26 @@ include_once 'csrfTokenCheck.php';
 include '../db/db.php';
 include '../db/queries.php';
 
-$userID = $_POST['userID'];
-if (!empty($_POST['search']))
-  $search = $_POST['search'];
+$userID = isset($_POST['userID']) ? $_POST['userID'] : '';
+$search = isset($_POST['search']) ? $_POST['search'] : '';
+$categoryID = isset($_POST['categoryID']) ? $_POST['categoryID'] : '';
+$type = isset($_POST['type']) ? $_POST['type'] : '';
 
-$researches = getActiveResearchPapers($conn, $search);
+
+switch ($type) {
+  case 'Program':
+    $researches = searchResearchByProgramID($conn, $categoryID, $search);
+    break;
+  case 'Author':
+    $researches = searchResearchByAuthorID($conn, $categoryID, $search);
+    break;
+  case 'Interest':
+    $researches = searchResearchByInterestID($conn, $categoryID, $search);
+    break;
+  default:
+    $researches = getActiveResearchPapers($conn, $search);
+    break;
+}
 
 $output = ''; // Initialize an empty string
 $output .= '<div class="row">';
@@ -17,6 +32,9 @@ foreach ($researches as $research) {
   $programs = getPrograms($conn, $research['researchID']);
   $interests = getInterests($conn, $research['researchID']);
 
+  // if(!empty($type)){
+    
+  // }
 
   // // Generate HTML for the research item
   $output .= '<div href="#displaypapermodal" class="research-point search-research-link border border-smoke rounded my-1" data-bs-toggle="modal">';
@@ -53,6 +71,7 @@ foreach ($researches as $research) {
       $output .= ', ';
     }
   }
+
 
   $output .= '</div>';
 

@@ -14,7 +14,7 @@ if ($table == 'Author') {
   foreach ($categories as $author) {
 
     $output .= '  
-            <button class="btn btn-outline-primary shadow-sm searchByAuthor"
+            <button class="btn btn-outline-primary shadow-sm searchByAuthorChildren"
                     data-authorID=' . $author['authorID'] . '
                     data-firstname=' . $author['firstname'] . '
                     data-lastname=' . $author['lastname'] . '>
@@ -29,7 +29,7 @@ if ($table == 'Interest') {
   $categories = searchInterest($conn, $search);
   foreach ($categories as $interest) {
     $output .= ' 
-              <button class="btn btn-outline-primary shadow-sm searchByInterest"
+              <button class="btn btn-outline-primary shadow-sm searchByInterestChildren"
                       data-interestID=' . $interest['interestID'] . '
                       data-name=' . $interest['name'] . '>
                 ' . ucfirst(strtolower($interest['name'])) . '
@@ -42,7 +42,7 @@ if ($table == 'Program') {
   $categories = searchProgram($conn, $search);
   foreach ($categories as $program) {
     $output .= ' 
-              <button class="btn btn-outline-primary shadow-sm searchByProgram text-uppercase"
+              <button class="btn btn-outline-primary shadow-sm searchByProgramChildren text-uppercase"
                       data-programID=' . $program['programID'] . '
                       data-name=' . $program['name'] . '>
                 ' . ucfirst(strtolower($program['name'])) . '

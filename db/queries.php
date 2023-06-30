@@ -1119,7 +1119,7 @@ function isValidDate($date)
 function getActiveResearchPapers($conn, $searchTerm)
 {
   $searchTerm = '%' . $searchTerm . '%';
-  $stmt = $conn->prepare("SELECT Research.*
+  $stmt = $conn->prepare("SELECT Research.*, DATE_FORMAT(Research.datepublished, '%d %M %Y') AS datepublished
                           FROM ActivePaper
                           JOIN Research ON ActivePaper.researchPaper = Research.researchID
                           WHERE ActivePaper.status = 'active'
@@ -1130,4 +1130,50 @@ function getActiveResearchPapers($conn, $searchTerm)
   $stmt->execute();
   return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+function searchResearchByAuthorID($conn, $authorID, $search)
+{
+  $stmt = $conn->prepare("SELECT DISTINCT r.*, DATE_FORMAT(r.datepublished, '%d %M %Y') AS datepublished
+                          FROM ResearchAuthorList ral
+                          JOIN ActivePaper ap ON ral.researchID = ap.researchPaper
+                          JOIN Research r ON ral.researchID = r.researchID
+                          WHERE ral.authorID = :authorID
+                          AND ap.status = 'active'
+                          AND (r.abstract LIKE :search OR r.title LIKE :search OR r.keywords LIKE :search);");
+  $stmt->bindParam(':authorID', $authorID);
+  $stmt->bindValue(':search', "%$search%");
+  $stmt->execute();
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function searchResearchByInterestID($conn, $interestID, $search)
+{
+  $stmt = $conn->prepare("SELECT DISTINCT r.*, DATE_FORMAT(r.datepublished, '%d %M %Y') AS datepublished
+                          FROM ResearchInterestList ral
+                          JOIN ActivePaper ap ON ral.researchID = ap.researchPaper
+                          JOIN Research r ON ral.researchID = r.researchID
+                          WHERE ral.interestID = :interestID
+                          AND ap.status = 'active'
+                          AND (r.abstract LIKE :search OR r.title LIKE :search OR r.keywords LIKE :search);");
+  $stmt->bindParam(':interestID', $interestID);
+  $stmt->bindValue(':search', "%$search%");
+  $stmt->execute();
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function searchResearchByProgramID($conn, $programID, $search)
+{
+  $stmt = $conn->prepare("SELECT DISTINCT r.*, DATE_FORMAT(r.datepublished, '%d %M %Y') AS datepublished
+                          FROM ResearchProgramList ral
+                          JOIN ActivePaper ap ON ral.researchID = ap.researchPaper
+                          JOIN Research r ON ral.researchID = r.researchID
+                          WHERE ral.programID = :programID
+                          AND ap.status = 'active'
+                          AND (r.abstract LIKE :search OR r.title LIKE :search OR r.keywords LIKE :search);");
+  $stmt->bindParam(':programID', $programID);
+  $stmt->bindValue(':search', "%$search%");
+  $stmt->execute();
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 ?>

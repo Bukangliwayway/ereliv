@@ -13,7 +13,7 @@
   transform: translate(0%, 0%);
 }
 
-.research-title {
+.research-title, .search-research-title {
   font-size: 1.1rem;
   width: 60ch;
 }
