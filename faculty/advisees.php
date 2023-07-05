@@ -167,7 +167,6 @@
         actionModal.setAttribute('data-advisee-status', adviseeStatus);
       });
     });
-
     document.querySelector('.adviseeSwitch').addEventListener('click', function (event) {
       event.preventDefault(); // Prevent form from submitting normally
       $('#displayadviseemodal').modal('hide');

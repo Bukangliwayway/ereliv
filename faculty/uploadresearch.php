@@ -73,3 +73,301 @@
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+$(document).ready(function () {
+  // UPLOADRESEARCH.PHP
+
+  tinymce.init({
+    selector: "textarea",
+    plugins: "",
+    toolbar:
+      "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough",
+    height: 250,
+    menubar: false,
+    setup: function (editor) {
+      editor.on("change", function () {
+        document.getElementById("content").value = tinymce
+          .get("content-input")
+          .getContent();
+      });
+    },
+  });
+
+  reloadMultiselects();
+});
+
+function updateHiddenFields() {
+  var dataInputAuthors = document.getElementById("authors");
+  var dataInputPrograms = document.getElementById("programs");
+  var dataInputInterests = document.getElementById("interests");
+  var dataInputContent = document.getElementById("content");
+
+  var selectedOptionsAuthors = $("#author-select").val();
+  dataInputAuthors.value = JSON.stringify(selectedOptionsAuthors);
+
+  var selectedOptionsPrograms = $("#program-select").val();
+  dataInputPrograms.value = JSON.stringify(selectedOptionsPrograms);
+
+  var selectedOptionsInterests = $("#interest-select").val();
+  dataInputInterests.value = JSON.stringify(selectedOptionsInterests);
+
+  var inputtedTextContent = tinymce.get("content-input").getContent();
+  dataInputContent.value = inputtedTextContent;
+}
+
+function clearFields() {
+  // Reset the form after successful upload
+  $("#uploadResearchForm")[0].reset();
+  // //Deselect the prev select
+  $("#author-select").multiselect("deselectAll");
+  $("#program-select").multiselect("deselectAll");
+  $("#interest-select").multiselect("deselectAll");
+  //reset all the hidden fields as well
+  document.getElementById("content").value = "";
+  document.getElementById("authors").value = "";
+  document.getElementById("interests").value = "";
+  document.getElementById("programs").value = "";
+  document.getElementById("researchID").value = "";
+}
+
+$("#uploadResearchForm").submit(function (event) {
+  event.preventDefault(); // Prevent the default form submission
+
+  updateHiddenFields(); // So that the hidden fields will have its value
+  //Loading Routine
+  $("#loadingSpinner").removeClass("d-none");
+  $("#loadingSpinner").addClass("d-flex");
+  $("#facultyForm").css({ "pointer-events": "none" });
+
+  // Serialize form data
+  var formData = $(this).serialize();
+
+  // Perform AJAX request
+  $.ajax({
+    type: "POST",
+    url: "../backend/uploadresearch_backend.php",
+    data: formData,
+    success: function (response) {
+      displayToastr(response.status, response.message);
+      if (response.status === "success") {
+        clearFields();
+        document.getElementById("myworksBtn").click();
+      }
+    },
+    error: function (response) {
+      // Handle error response here
+      displayToastr("error", "An error occurred. Please try again.");
+    },
+    complete: function () {
+      // Revert Loading Routine back to normal
+      $("#loadingSpinner").removeClass("d-flex");
+      $("#loadingSpinner").addClass("d-none");
+      $("#facultyForm").css("pointer-events", "auto");
+    },
+  });
+});
+
+function reloadMultiselects() {
+  require(["bootstrap-multiselect"], function () {
+    $("#interest-select").multiselect({
+      includeSelectAllOption: true,
+      buttonWidth: 250,
+      enableFiltering: true,
+    });
+  });
+
+  require(["bootstrap-multiselect"], function () {
+    $("#program-select").multiselect({
+      includeSelectAllOption: true,
+      buttonWidth: 250,
+      enableFiltering: true,
+    });
+  });
+
+  require(["bootstrap-multiselect"], function () {
+    $("#author-select").multiselect({
+      includeSelectAllOption: true,
+      buttonWidth: 250,
+      enableFiltering: true,
+    });
+  });
+  loadAuthorSelect();
+  loadProgramSelect();
+  loadInterestSelect();
+}
+
+async function loadAuthorSelect() {
+  try {
+    // Fetch the CSRF token from the server
+    const response = await fetch("../backend/getcsrftoken.php");
+    if (response.ok) {
+      const csrfToken = await response.text();
+
+      // Prepare the request data
+      const requestData = {
+        table: "Author",
+        csrf_token: csrfToken,
+      };
+
+      // Make the request to load faculty accounts
+      const ajaxRequest = $.ajax({
+        url: "../backend/getCategories.php",
+        type: "POST",
+        data: requestData,
+      });
+
+      ajaxRequest.done(function (response) {
+        var authorSelect = $("#author-select");
+
+        // Clear existing options
+        authorSelect.empty();
+
+        // Add newauthorSelect options
+        $.each(response, function (index, authorData) {
+          var fullName =
+            authorData.lastname.charAt(0).toUpperCase() +
+            authorData.lastname.slice(1) +
+            ", " +
+            authorData.firstname.charAt(0).toUpperCase() +
+            authorData.firstname.slice(1);
+          var option = $("<option>", {
+            value: authorData.authorID,
+            text: fullName,
+          });
+          authorSelect.append(option);
+        });
+
+        // rebuild the Multiselect dropdown
+        authorSelect.multiselect("rebuild");
+        attachEventListeners();
+      });
+
+      ajaxRequest.fail(function (xhr, status, error) {
+        console.log(error);
+      });
+    } else {
+      // Unable to fetch CSRF token, handle the error
+      console.error("Error fetching CSRF token:", response.status);
+      displayToastr("error", "An error occurred. Please try again.");
+    }
+  } catch (error) {
+    // General error occurred, handle it
+    console.error("Error:", error);
+    displayToastr("error", "An error occurred. Please try again.");
+  }
+}
+
+async function loadProgramSelect() {
+  try {
+    // Fetch the CSRF token from the server
+    const response = await fetch("../backend/getcsrftoken.php");
+    if (response.ok) {
+      const csrfToken = await response.text();
+
+      // Prepare the request data
+      const requestData = {
+        table: "Program",
+        csrf_token: csrfToken,
+      };
+
+      // Make the request to load faculty accounts
+      const ajaxRequest = $.ajax({
+        url: "../backend/getCategories.php",
+        type: "POST",
+        data: requestData,
+      });
+
+      ajaxRequest.done(function (response) {
+        var programSelect = $("#program-select");
+
+        // Clear existing options
+        programSelect.empty();
+
+        // Add newprogramSelect options
+        $.each(response, function (index, programData) {
+          var option = $("<option>", {
+            value: programData.programID,
+            text: programData.name.toUpperCase(),
+          });
+          programSelect.append(option);
+        });
+
+        // rebuild the Multiselect dropdown
+        programSelect.multiselect("rebuild");
+        attachEventListeners();
+      });
+
+      ajaxRequest.fail(function (xhr, status, error) {
+        console.log(error);
+      });
+    } else {
+      // Unable to fetch CSRF token, handle the error
+      console.error("Error fetching CSRF token:", response.status);
+      displayToastr("error", "An error occurred. Please try again.");
+    }
+  } catch (error) {
+    // General error occurred, handle it
+    console.error("Error:", error);
+    displayToastr("error", "An error occurred. Please try again.");
+  }
+}
+
+async function loadInterestSelect() {
+  try {
+    // Fetch the CSRF token from the server
+    const response = await fetch("../backend/getcsrftoken.php");
+    if (response.ok) {
+      const csrfToken = await response.text();
+
+      // Prepare the request data
+      const requestData = {
+        table: "Interest",
+        csrf_token: csrfToken,
+      };
+
+      // Make the request to load faculty accounts
+      const ajaxRequest = $.ajax({
+        url: "../backend/getCategories.php",
+        type: "POST",
+        data: requestData,
+      });
+
+      ajaxRequest.done(function (response) {
+        var interestSelect = $("#interest-select");
+
+        // Clear existing options
+        interestSelect.empty();
+
+        // Add new options
+        $.each(response, function (index, interestData) {
+          var option = $("<option>", {
+            value: interestData.interestID,
+            text:
+              interestData.name.charAt(0).toUpperCase() +
+              interestData.name.slice(1).toLowerCase(),
+          });
+          interestSelect.append(option);
+        });
+
+        // rebuild the Multiselect dropdown
+        interestSelect.multiselect("rebuild");
+        attachEventListeners();
+      });
+
+      ajaxRequest.fail(function (xhr, status, error) {
+        console.log(error);
+      });
+    } else {
+      // Unable to fetch CSRF token, handle the error
+      console.error("Error fetching CSRF token:", response.status);
+      displayToastr("error", "An error occurred. Please try again.");
+    }
+  } catch (error) {
+    // General error occurred, handle it
+    console.error("Error:", error);
+    displayToastr("error", "An error occurred. Please try again.");
+  }
+}
+
+</script>

@@ -147,6 +147,10 @@
   </div>
 
   <script>
+    const displayToastr = (type, message) => {
+      toastr[type](message);
+    };
+
     const indexButton = document.querySelectorAll(".toggle-btn");
     const containers = document.querySelectorAll(".toggle-visibility");
 

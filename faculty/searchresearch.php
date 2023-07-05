@@ -3,7 +3,7 @@
 <div class="row mx-auto d-flex flex-column justify-content-center  align-items-center">
 
   <div
-    class="d-flex flex-column gap-3 sticky-top col-lg-12 col-sm-auto justify-content-center align-items-stretch mx-auto mt-1 p-5 pb-3">
+    class="d-flex flex-column gap-3 sticky-top col-lg-12 col-sm-auto justify-content-center align-items-stretch mx-auto mt-1 p-5 pb-3 bg-white">
 
     <div class="d-flex flex-row gap-3">
       <div class="buttons d-flex flex-row gap-1">
@@ -238,8 +238,6 @@
         updateSearchByCategories(activeCategoryID, activeType, '%');
       });
     });
-
-
   }
 
   async function updateSearchResult(search) {
