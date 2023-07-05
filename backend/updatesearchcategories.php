@@ -18,7 +18,7 @@ if ($table == 'Author') {
                     data-authorID=' . $author['authorID'] . '
                     data-firstname=' . $author['firstname'] . '
                     data-lastname=' . $author['lastname'] . '>
-              ' . ucfirst(strtolower($author['firstname'])) . ' ' . ucfirst(strtolower($author['lastname'])) . '
+              ' . ucwords(strtolower($author['firstname'])) . ' ' . ucwords(strtolower($author['lastname'])) . '
             </button>
 
   ';
@@ -32,7 +32,7 @@ if ($table == 'Interest') {
               <button class="btn btn-outline-primary shadow-sm searchByInterestChildren"
                       data-interestID=' . $interest['interestID'] . '
                       data-name=' . $interest['name'] . '>
-                ' . ucfirst(strtolower($interest['name'])) . '
+                ' . ucwords(strtolower($interest['name'])) . '
               </button>
   ';
   }
@@ -45,7 +45,7 @@ if ($table == 'Program') {
               <button class="btn btn-outline-primary shadow-sm searchByProgramChildren text-uppercase"
                       data-programID=' . $program['programID'] . '
                       data-name=' . $program['name'] . '>
-                ' . ucfirst(strtolower($program['name'])) . '
+                ' . ucwords(strtolower($program['name'])) . '
               </button>
   ';
   }

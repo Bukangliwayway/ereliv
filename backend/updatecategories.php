@@ -21,7 +21,7 @@ if ($table == 'Author') {
                     data-firstname=' . $author['firstname'] . '
                     data-lastname=' . $author['lastname'] . '
             >
-              ' . ucfirst(strtolower($author['firstname'])) . ' ' . ucfirst(strtolower($author['lastname'])) . '
+              ' . ucwords(strtolower($author['firstname'])) . ' ' . ucwords(strtolower($author['lastname'])) . '
             </button>
               <button class="btn btn-outline-danger shadow-sm deleteauthorbutton"
                       data-bs-target="#deleteauthormodal"
@@ -48,7 +48,7 @@ if ($table == 'Interest') {
                       data-interestID=' . $interest['interestID'] . '
                       data-name=' . $interest['name'] . '
               >
-                ' . ucfirst(strtolower($interest['name'])) . '
+                ' . ucwords(strtolower($interest['name'])) . '
               </button>
               <button class="btn btn-outline-danger shadow-sm deleteinterestbutton"
                       data-bs-target="#deleteinterestmodal"

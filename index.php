@@ -1,7 +1,6 @@
 <?php
 require_once("backend/session_active.php");
 include_once $_SERVER['DOCUMENT_ROOT'] . '/ereliv/backend/randbg_generate.php';
-
 ?>
 <!DOCTYPE html>
 <html lang="en">

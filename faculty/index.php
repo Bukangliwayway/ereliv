@@ -21,7 +21,7 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js">
   </script>
-  
+
 
   <!-- bootstrap-multiselect links -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -54,7 +54,7 @@
   <?php
   include '../db/db.php';
   include '../db/queries.php';
-  include 'modals.php'; 
+  include 'modals.php';
 
   ?>
   <div id="loadingSpinner" class="position-fixed top-0 start-0 d-none justify-content-center align-items-baseline pt-5"
@@ -97,6 +97,11 @@
               My Works
             </button>
 
+            <button class="btn btn-outline-success mb-2 toggle-btn" id="adviseesBtn" data-container="adviseesContainer">
+              <i class="bi bi-person-circle"></i>
+              Advisees
+            </button>
+
             <button class="btn btn-outline-success mb-2 toggle-btn" id="searchresearchBtn"
               data-container="searchresearchContainer">
               <i class="bi bi-search"></i>
@@ -128,6 +133,9 @@
       <div id="myworksContainer" class="d-none toggle-visibility h-100">
         <?php include 'myworks.php'; ?>
       </div>
+      <div id="adviseesContainer" class="d-none toggle-visibility h-100">
+        <?php include 'advisees.php'; ?>
+      </div>
       <div id="searchresearchContainer" class="d-none toggle-visibility h-100">
         <?php include 'searchresearch.php'; ?>
       </div>
@@ -137,7 +145,52 @@
     </div>
 
   </div>
- 
+
+  <script>
+    const indexButton = document.querySelectorAll(".toggle-btn");
+    const containers = document.querySelectorAll(".toggle-visibility");
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+      // Function to toggle visibility of div containers
+      const toggleView = (containerToShow) => {
+        // Hide all div containers
+        containers.forEach((container) => {
+          container.classList.add("d-none");
+        });
+
+        // Show the selected container
+        containerToShow.classList.remove("d-none");
+      };
+
+      // Add click event listener to the button container
+      document.addEventListener("click", (event) => {
+        const target = event.target;
+
+        // Check if the clicked element is a button
+        if (target.classList.contains("toggle-btn")) {
+          const containerId = target.dataset.container;
+          const containerToShow = document.getElementById(containerId);
+
+          // Toggle the visibility of div containers
+          toggleView(containerToShow);
+
+          // Toggle the active class on indexButton
+          indexButton.forEach((button) => {
+            button.classList.toggle("active", button === target);
+          });
+        }
+      });
+
+    });
+    document
+      .querySelector("#uploadresearchBtn")
+      .addEventListener("click", function (event) {
+        if (event.isTrusted) {
+          clearFields();
+        }
+      });
+  </script>
 
 </body>
 

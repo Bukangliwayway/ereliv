@@ -21,8 +21,8 @@
     updateMyWorksList();
   });
 
-  // Define the attachEventListeners function
-  function attachEventListeners() {
+  // Define the myworksEventsListener function
+  function myworksEventsListener() {
     // Select all the links with the specified class
     var links = document.querySelectorAll('.research-link');
 
@@ -132,7 +132,7 @@
         ajaxRequest.done(function (response) {
           // Update the table content
           $("#myWorksResult").html(response);
-          attachEventListeners();
+          myworksEventsListener();
         });
 
         ajaxRequest.fail(function (xhr, status, error) {
@@ -176,7 +176,7 @@
         ajaxRequest.done(function (response) {
           // Update the table content
           $("#myWorksResult").html(response);
-          attachEventListeners();
+          myworksEventsListener();
         });
 
         ajaxRequest.fail(function (xhr, status, error) {

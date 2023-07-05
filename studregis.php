@@ -231,6 +231,11 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/ereliv/backend/randbg_generate.php';
             var data = JSON.parse(response);
             // Display a Toastr success message
             displayToastr(data.status, data.message);
+            // Display a Toastr success message
+            if (data.status === 'success') {
+              // Redirect to the student panel
+              $('#studregisForm').trigger('reset');
+            }
           },
           error: function (xhr, status, error) {
             // Handle error response here

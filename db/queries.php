@@ -1176,4 +1176,28 @@ function searchResearchByProgramID($conn, $programID, $search)
   return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+
+function getAdvisees($conn, $facultyID, $search)
+{
+  $stmt = $conn->prepare("SELECT Student.*, Section.name AS sectionname, DATE_FORMAT(Student.
+                            dateregistered, '%d %M %Y') AS date
+                          FROM Adviserteam
+                          JOIN Student ON Adviserteam.studentID = Student.studentID
+                          LEFT JOIN Section ON Student.sectionID = Section.sectionID
+                          WHERE Adviserteam.facultyID = :facultyID
+                          AND (Student.lastname LIKE CONCAT('%', :search, '%') OR Student.firstname LIKE CONCAT('%', :search, '%'))
+                          ORDER BY CASE Student.priority
+                              WHEN 'High' THEN 1
+                              WHEN 'Medium' THEN 2
+                              WHEN 'Low' THEN 3
+                              ELSE 4 -- For any other priority values (optional)
+                          END, Student.dateregistered ASC;
+                          ");
+  $stmt->bindParam(':facultyID', $facultyID);
+  $stmt->bindParam(':search', $search);
+  $stmt->execute();
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
 ?>

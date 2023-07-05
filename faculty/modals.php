@@ -197,14 +197,14 @@
       <div class="container modal-body p-5 " style="position:relative;">
         <div class=" d-flex justify-content-end gap-1 fixed-upper-end mt-3 mr-3 d-flex gap-1"
           id="display-interests-modal"></div>
-          <h4 class="text-center text-capitalize" id="display-title-modal"></h4>
-          <div class="text-reset d-flex flex-wrap justify-content-center gap-1 mb-2" id="display-authors-modal"></div>
-          <div class="d-flex justify-content-center align-items-center gap-2">
-            <div id="display-programs-modal" class="d-flex gap-1"></div>
-            <span>|</span>
-            <span id="display-publish-date-modal"></span>
-            <span>|</span>
-            <span class="text-capitalize" id="display-uploader-modal"></span>
+        <h4 class="text-center text-capitalize" id="display-title-modal"></h4>
+        <div class="text-reset d-flex flex-wrap justify-content-center gap-1 mb-2" id="display-authors-modal"></div>
+        <div class="d-flex justify-content-center align-items-center gap-2">
+          <div id="display-programs-modal" class="d-flex gap-1"></div>
+          <span>|</span>
+          <span id="display-publish-date-modal"></span>
+          <span>|</span>
+          <span class="text-capitalize" id="display-uploader-modal"></span>
         </div>
         <hr>
         <div id="display-abstract-modal"></div>
@@ -228,8 +228,8 @@
       </div>
       <div class="container modal-body">
         <form id="deletePaperForm" class="container d-flex flex-column gap-3">
-            <span>Research Title:</span>
-            <h4 id="delete-title-modal"></h4>
+          <span>Research Title:</span>
+          <h4 id="delete-title-modal"></h4>
           <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
           <input id="delete-id-modal" type="hidden" name="researchID">
           <button type="submit" class="btn btn-danger">Delete</button>
@@ -239,7 +239,43 @@
   </div>
 </div>
 
-<script>
-
-
-</script>
+<div class="modal fade" id="displayadviseemodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 text-capitalize text-center">
+          Student Details
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="container modal-body d-flex flex-column align-items-center justify-content-center">
+        <div class="d-flex justify-content-end gap-1 ml-auto d-flex gap-1">
+          <span id="display-advisee-priority-modal"></span>
+          <span id="display-advisee-status-modal"></span>
+        </div>
+        <div class="d-flex flex-column align-items-center justify-content-center">
+          <h4 class=" text-center text-capitalize" id="display-advisee-name-modal">
+          </h4>
+          <span class="text-uppercase text-muted" id="display-advisee-studentnumber-modal"></span>
+        </div>
+        <hr>
+        <div class="d-flex flex-column align-items-center justify-content-center">
+          <span class="text-muted">Program and Section </span>
+          <div class="d-flex justify-content-center align-items-center gap-2">
+            <span class="text-uppercase" id="display-advisee-program-modal"></span>
+            <span>|</span>
+            <span class="text-capitalize" id="display-advisee-section-modal"></span>
+          </div>
+        </div>
+        <hr>
+        <div class="d-flex gap-1 flex-column align-items-center justify-content-center">
+          <span class="text-capitalize text-muted">Date Registered </span>
+          <span id="display-advisee-date-modal"></span>
+        </div>
+        <hr>
+        <button type="submit" id="display-advisee-action-modal" class="adviseeSwitch"></button>
+      </div>
+    </div>
+  </div>
+</div>
