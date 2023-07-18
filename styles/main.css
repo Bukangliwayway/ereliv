@@ -1,0 +1,48 @@
+* {
+  box-sizing: border-box;
+  top: 0;
+  right: 0;
+}
+
+body {
+  background: whitesmoke;
+}
+
+.contain-form {
+  background: rgba(0, 13, 255, 0.2);
+}
+
+.contain-professional {
+  background: rgb(200, 200, 200);
+  border: 1px solid rgb(56, 56, 56);
+  border-radius: 5%;
+}
+
+.rand-bg {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+}
+
+.bwct {
+  padding-top: 10vh;
+}
+
+.cb {
+  box-sizing: content-box;
+}
+
+.cp-b {
+  box-sizing: content-box;
+  padding: 20px;
+}
+
+.custom-bolder {
+  font-weight: bolder;
+}
+
+.bg-professional {
+  background: rgb(200, 200, 200);
+  /* border: 1px solid rgb(56, 56, 56); */
+}
