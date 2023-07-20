@@ -2,11 +2,10 @@
 
 <div class="row m-0 mx-auto d-flex flex-column justify-content-center  align-items-center p-5">
   <div
-    class="col-lg-12 col-sm-auto d-flex flex-column justify-content-center align-items-stretch text-center gap-3 mx-auto border border-smoke mt-1 py-5">
-    <h1 class="fs-2 fw-bold text-uppercase">
+    class="col-lg-12 col-sm-auto d-flex flex-column justify-content-center align-items-stretch text-center gap-3 mx-auto shadow mt-1 py-5 rounded">
+    <h1 class="fs-2 fw-bold text-capitalize text-muted mb-3">
       Publish research
     </h1>
-    <hr class="m-0 mb-3">
     <form id="uploadResearchForm" class="d-flex flex-column gap-3 px-3">
       <div class="form-floating mb-3">
         <input type="text" name="title" class="form-control upload-title" placeholder="title" required />

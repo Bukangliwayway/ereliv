@@ -840,6 +840,55 @@ function getAuthors($conn, $researchID)
   return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function getProgramsAnalytics($conn)
+{
+  $query = "SELECT
+                p.name AS programName,
+                COUNT(rp.researchID) AS programCardinality
+            FROM
+                Program p
+            LEFT JOIN
+                ResearchProgramList prl ON p.programID = prl.programID
+            LEFT JOIN
+                ActivePaper ap ON prl.researchID = ap.researchPaper AND ap.status = 'active'
+            LEFT JOIN
+                Research rp ON ap.researchPaper = rp.researchID
+            GROUP BY
+                p.name
+            ORDER BY
+                programCardinality DESC;";
+
+  $stmt = $conn->prepare($query);
+  $stmt->execute();
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getStatusesAnalytics($conn)
+{
+  $query = "SELECT r.researchstatus, COUNT(*) AS num_of_research
+            FROM Research r
+            INNER JOIN ActivePaper ap ON r.researchID = ap.researchPaper
+            WHERE ap.status = 'active'
+            GROUP BY r.researchstatus;";
+
+  $stmt = $conn->prepare($query);
+  $stmt->execute();
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getClassificationsAnalytics($conn)
+{
+  $query = "SELECT r.researchclassification, COUNT(*) AS num_of_research
+            FROM Research r
+            INNER JOIN ActivePaper ap ON r.researchID = ap.researchPaper
+            WHERE ap.status = 'active'
+            GROUP BY r.researchclassification;";
+
+  $stmt = $conn->prepare($query);
+  $stmt->execute();
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 function getPrograms($conn, $researchID)
 {
   $query = "SELECT Program.*

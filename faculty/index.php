@@ -7,6 +7,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PUPQC Research Management Sytem</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- highcharts -->
+  <link rel="stylesheet" href="https://code.highcharts.com/css/highcharts.css">
+  <script src="https://code.highcharts.com/highcharts.js"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -46,7 +51,6 @@
   <!-- toastr -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
   <script src="main.js"></script>
-  <link rel="stylesheet" href="style.css">
 
 </head>
 
@@ -64,66 +68,89 @@
     </div>
   </div>
 
-  <div class=" d-flex flex-row">
-    <nav class="col-3 navbar navbar-expand-lg navbar-dark bg-dark flex-column min-vh-100">
-      <div class="d-flex flex-column align-items-stretch p-3">
-        <a class="navbar-brand mx-auto my-3 text-center" href="http://localhost/ereliv/faculty">
-          <img src="../assets/puplogo.png" alt="logo hehe" class="img-fluid" style="max-width: 80%;" />
-        </a>
-        <h2 class="text-center text-success text-capitalize mb-4"><i class="bi bi-person-fill"></i>
-          <?php echo $_SESSION['username']; ?>
-        </h2>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
+  <!-- <div
+    class="d-flex flex-row align-items-center very-light-blue-bg justify-content-between px-5 py-3 fixed-top top-div">
+    <div class="d-flex flex-row align-items-center gap-3">
+      <img src="../assets/puplogo.png" class="puplogo" alt="pup logo here" />
+      <h2 class="text-center sapphire-blue-text text-capitalize mb-0"><i class="bi bi-person-fill"></i>
+        <? // php echo $_SESSION['username']; ?>
+      </h2>
+    </div>
+  </div> -->
+
+  <div class="top-filler"></div>
+
+  <div class=" d-flex flex-row position-relative">
+    <div class="col-1">
+      <!-- Empty column to reserve space for the fixed-positioned nav -->
+    </div>
+    <nav
+      class="col-1 navbar navbar-expand-lg navbar-primary very-light-blue-bg d-flex flex-column min-vh-100 position-fixed">
+
+      <button class="navbar-toggler mb-5" type="button" data-bs-toggle="collapse"
+        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+        aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse d-flex flex-column justify-content-start mt-5" id="navbarSupportedContent"
+        style="height:55vh;">
+
+        <button
+          class="btn btn-outline-primary mb-2 gap-1 fs-5 toggle-btn d-flex flex-column align-items-center justify-content-center bi fs-6 bi-house-door"
+          id="homeBtn" data-container="homeContainer">
+          <div class="toggle-desc">Home</div>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <div class="d-flex flex-column flex-grow-1" style="height:55vh;">
-            <button class="btn btn-outline-success mb-2 toggle-btn" id="uploadresearchBtn"
-              data-container="uploadresearchContainer">
-              <i class="bi bi-upload"></i>
-              Publish
-            </button>
+        <button
+          class="btn btn-outline-primary mb-2 gap-1 fs-5 toggle-btn d-flex flex-column align-items-center justify-content-center bi fs-6 bi-upload"
+          id="uploadresearchBtn" data-container="uploadresearchContainer">
+          <div class="toggle-desc">Publish</div>
+        </button>
 
-            <!-- <button class="btn btn-outline-success mb-2 toggle-btn" id="notificationsBtn"
+        <!-- <button class="btn btn-outline-primary mb-2 toggle-btn d-flex flex-column align-items-center justify-content-center" id="notificationsBtn"
               data-container="notificationsContainer">
-              <i class="bi bi-bell-fill"></i>
+              <i class="bi fs-6 bi-bell-fill"></i>
               Notifications
             </button> -->
 
-            <button class="btn btn-outline-success mb-2 toggle-btn" id="myworksBtn" data-container="myworksContainer">
-              <i class="bi bi-clipboard-data"></i>
-              My Works
-            </button>
+        <button
+          class="btn btn-outline-primary mb-2 gap-1 fs-5 toggle-btn d-flex flex-column align-items-center justify-content-center bi fs-6 bi-clipboard-data"
+          id="myworksBtn" data-container="myworksContainer">
+          <div class="toggle-desc">Works</div>
+        </button>
 
-            <!-- <button class="btn btn-outline-success mb-2 toggle-btn" id="adviseesBtn" data-container="adviseesContainer">
-              <i class="bi bi-person-circle"></i>
+        <!-- <button class="btn btn-outline-primary mb-2 toggle-btn d-flex flex-column align-items-center justify-content-center" id="adviseesBtn" data-container="adviseesContainer">
+              <i class="bi fs-6 bi-person-circle"></i>
               Advisees
             </button> -->
 
-            <button class="btn btn-outline-success mb-2 toggle-btn" id="searchresearchBtn"
-              data-container="searchresearchContainer">
-              <i class="bi bi-search"></i>
-              Research
-            </button>
+        <button
+          class="btn btn-outline-primary mb-2 gap-1 fs-5 toggle-btn d-flex flex-column align-items-center justify-content-center bi fs-6 bi-search"
+          id="searchresearchBtn" data-container="searchresearchContainer">
+          <div class="toggle-desc">Research</div>
+        </button>
 
-            <button class="btn btn-outline-success mb-2 toggle-btn" id="modifycategoriesBtn"
-              data-container="modifycategoriesContainer">
-              <i class="bi bi-pencil"></i>
-              Categories
-            </button>
+        <button
+          class="btn btn-outline-primary mb-2 gap-1 fs-5 toggle-btn d-flex flex-column align-items-center justify-content-center bi fs-6 bi-pencil"
+          id="modifycategoriesBtn" data-container="modifycategoriesContainer">
+          <div class="toggle-desc">Categories</div>
+        </button>
 
-            <a href="#signoutmodal" class="btn btn-outline-danger mb-2 mt-auto" id="signoutBtn" data-bs-toggle="modal">
-              <i class="bi bi-box-arrow-right"></i>
-              Sign Out
-            </a>
+        <a href="#signoutmodal" class="btn btn-outline-danger d-flex flex-column align-items-center mt-auto"
+          id="signoutBtn" data-bs-toggle="modal">
+          <i class="bi fs-6 bi-box-arrow-right"></i>
+          <div class="toggle-desc">
+            Sign Out
           </div>
-        </div>
+        </a>
       </div>
     </nav>
 
     <div class="container-fluid p-0">
+      <div id="homeContainer" class="d-none toggle-visibility h-100">
+        <?php include 'home.php'; ?>
+      </div>
       <div id="uploadresearchContainer" class="d-none toggle-visibility h-100">
         <?php include 'uploadresearch.php'; ?>
       </div>
@@ -153,6 +180,11 @@
 
     const indexButton = document.querySelectorAll(".toggle-btn");
     const containers = document.querySelectorAll(".toggle-visibility");
+
+    window.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('homeBtn').click();
+      $(".top-filler").height($(".top-div").outerHeight());
+    });
 
     document.addEventListener("DOMContentLoaded", function () {
 
@@ -194,6 +226,15 @@
           clearFields();
         }
       });
+
+    document
+      .querySelector("#homeBtn")
+      .addEventListener("click", function (event) {
+        if (event.isTrusted) {
+          updateProgramBarChart();
+        }
+      });
+
   </script>
 
 </body>

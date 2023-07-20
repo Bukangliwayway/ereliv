@@ -5,12 +5,13 @@
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5 text-capitalize text-center">
-          Sign Out?
+          Sign Out
         </h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="container modal-body">
-        <form method="POST" action="../backend/session_out.php" class="container d-flex flex-row gap-3">
+        <p class="text-muted">Are you sure you want to sign out? Logging out will end your current session and any unsaved changes will be lost. Please ensure you have saved your work before proceeding with the sign-out process.</p>
+        <form method="POST" action="../backend/session_out.php" class="container d-flex flex-row gap-3 align-items-center">
           <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
           <button type="submit" class="btn btn-danger">Yes</button>
           <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">No</button>
