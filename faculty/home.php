@@ -7,9 +7,16 @@
     /* Set your desired background color here */
   }
 </style>
+<div class="d-flex flex-column align-items-center py-3 sticky-top bg-light shadow-sm">
 
+  <h2 class="m-0 p-0 text-center sapphire-blue-text text-capitalize mb-0 gap-3">
+    <i class="bi bi-person-fill"></i>
+    <?php echo $_SESSION['username']; ?>
+  </h2>
+</div>
 
 <div class="row mx-auto d-flex flex-wrap justify-content-center  align-items-center gap-3 mt-3">
+
   <div id="programBarChart" class="custom-chart-container col-11 shadow-sm p-3"></div>
   <div id="statusesPieChart" class="custom-chart-container col-5 shadow-sm p-3"></div>
   <div id="classificationsPieChart" class="custom-chart-container col-5 shadow-sm p-3"></div>
@@ -157,7 +164,6 @@
         });
 
         ajaxRequest.done(function (response) {
-          console.log(response);
 
           const pieChartData = response.map((data) => {
             return {
@@ -233,7 +239,6 @@
         });
 
         ajaxRequest.done(function (response) {
-          console.log(response);
 
           const pieChartData = response.map((data) => {
             return {

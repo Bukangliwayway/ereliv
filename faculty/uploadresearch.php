@@ -247,6 +247,7 @@
           url: "../backend/uploadresearch_backend.php",
           data: formData,
           success: function (response) {
+            console.log(response);
             displayToastr(response.status, response.message);
             if (response.status === "success") {
               clearFields();

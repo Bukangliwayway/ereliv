@@ -38,7 +38,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/ereliv/backend/randbg_generate.php';
       <a href="http://localhost/ereliv/">
         <img src="assets/puplogo.png" alt="logohehe" width="60%" class="align-self-center" />
       </a>
-      <h1 class="fs-2 fw-bold text-uppercase">PUPQC Faculty Login Form</h1>
+      <h1 class="fs-2 fw-bold text-uppercase">PUPQC Login Form</h1>
       <form id="facultyloginForm" class="d-flex flex-column gap-1 px-3">
         <div class="form-floating mb-3">
           <input type="text" id="emailadd" name="emailadd" class="form-control" placeholder="emailadd" required />

@@ -3,6 +3,8 @@ include_once '../backend/csrfTokenCheck.php';
 include '../db/db.php';
 include '../db/queries.php';
 
+require '../vendor/autoload.php';
+
 // Initialize the response array
 $response = array();
 try {
@@ -46,6 +48,22 @@ try {
   $authorIDs = json_decode($authors, true);
   $interestIDs = json_decode($interests, true);
 
+
+
+  $client = Elastic\Elasticsearch\ClientBuilder::create()
+    ->setHosts(['https://localhost:9200'])
+    ->setBasicAuthentication('elastic', 'I_1ghHrS7B6qTK6mwg_F')
+    ->setSSLVerification(false)
+    ->build();
+
+  // Remove the Prev Paper if there is:
+  if (!empty($researchID)) {
+    $response = $client->delete([
+      'index' => 'research',
+      'id' => $researchID,
+    ]);
+  }
+
   // Create the Research
   $researchID = createResearchFaculty($conn, $title, $abstract, $introduction, $methodology, $results, $discussion, $conclusion, $datepublished, $keywords, $status, $proposer, $facultyProposerID, $advisorID, $researchstatus, $researchclassification);
 
@@ -64,6 +82,57 @@ try {
     linkInterestAndResearch($conn, $interestID, $researchID);
   }
 
+
+  // ElasticIndex
+  $doc = [
+    'index' => 'research',
+    'id' => $researchID,
+    'body' => [
+      'title' => $title,
+      'datepublished' => $datepublished,
+      'keywords' => $keywords,
+      'status' => $status,
+      'proposer' => $proposer,
+      'facultyProposerID' => $facultyProposerID,
+      'advisorID' => $advisorID,
+      'researchstatus' => $researchstatus,
+      'researchclassification' => $researchclassification,
+      'abstract' => $abstract,
+      'introduction' => $introduction,
+      'methodology' => $methodology,
+      'discussion' => $discussion,
+      'results' => $results,
+      'conclusion' => $conclusion,
+      'programs' => $programs,
+      'author' => $authors,
+      'interest' => $interests
+    ]
+  ];
+
+  $params = [
+    'index' => 'research',
+    'id' => $researchID,
+    'body' => [
+      'doc' => $doc['body']
+    ]
+  ];
+  
+  // ElasticIndex
+  
+  try {
+    $client->index($doc);
+  } catch (Exception $e) {
+    // Handle the exception
+    $response['status'] = 'error';
+    $response['message'] = 'An error occurred while indexing the document in Elasticsearch: ' . $e->getMessage();
+    // Return the response as JSON
+    header('Content-Type: application/json');
+    echo json_encode($response);
+    exit;
+  }
+  
+  $response = $doc;
+
   if (empty($_POST['researchID'])) {
     $activePaper = createActivePaper($conn, $facultyProposerID, $researchID);
     $response['message'] = 'Research has been Uploaded Successfully';
@@ -73,12 +142,14 @@ try {
   }
 
   $response['status'] = 'success';
+
   createEditHistory($conn, $activePaper, $researchID, $facultyProposerID);
 } catch (Exception $e) {
   // Set error response
   $response['status'] = 'error';
   $response['message'] = 'An error occurred. Please try again.';
 }
+
 // Return the response as JSON
 header('Content-Type: application/json');
 echo json_encode($response);

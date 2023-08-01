@@ -33,7 +33,7 @@ foreach ($researches as $research) {
   $interests = getInterests($conn, $research['researchID']);
 
   // if(!empty($type)){
-    
+
   // }
 
   // // Generate HTML for the research item
@@ -86,16 +86,9 @@ foreach ($researches as $research) {
   $output .= '</div>'; // Close p-3 div
 
   $output .= '<input type="hidden" class="search-research-abstract" data-full-text="' . htmlspecialchars($research['abstract'], ENT_QUOTES) . '">';
-  $output .= '<input type="hidden" class="search-research-introduction" data-full-text="' . htmlspecialchars($research['introduction'], ENT_QUOTES) . '">';
-  $output .= '<input type="hidden" class="search-research-methodology" data-full-text="' . htmlspecialchars($research['methodology'], ENT_QUOTES) . '">';
-  $output .= '<input type="hidden" class="search-research-results" data-full-text="' . htmlspecialchars($research['results'], ENT_QUOTES) . '">';
-  $output .= '<input type="hidden" class="search-research-discussion" data-full-text="' . htmlspecialchars($research['discussion'], ENT_QUOTES) . '">';
-  $output .= '<input type="hidden" class="search-research-conclusion" data-full-text="' . htmlspecialchars($research['conclusion'], ENT_QUOTES) . '">';
   $output .= '<input type="hidden" class="search-research-keywords" data-full-text="' . $research['keywords'] . '">';
   $output .= '<input type="hidden" class="search-research-uploader" data-full-text="' . $research['proposer'] . '">';
   $output .= '<input type="hidden" class="search-research-id" data-full-text="' . $research['researchID'] . '">';
-  $output .= '<input type="hidden" class="search-research-status" data-full-text="' . $research['researchstatus'] . '">';
-  $output .= '<input type="hidden" class="search-research-classification" data-full-text="' . $research['researchclassification'] . '">';
 
   $authorIDs = array_map(function ($author) {
     return $author["authorID"];

@@ -355,7 +355,6 @@ function linkSectionAndProgram($conn, $name, $programID)
   return true;
 }
 
-
 function getSectionID($conn, $name)
 {
   $stmt = $conn->prepare("SELECT sectionID FROM Section WHERE name = :name");
@@ -364,6 +363,36 @@ function getSectionID($conn, $name)
   $result = $stmt->fetch();
   $id = $result['sectionID'];
   return strval($id);
+}
+
+function getAuthorName($conn, $authorID)
+{
+  $stmt = $conn->prepare("SELECT * FROM Author WHERE authorID = :authorID");
+  $stmt->bindParam(':authorID', $authorID);
+  $stmt->execute();
+  $result = $stmt->fetch();
+  $name = $result['name'];
+  return $name;
+}
+
+function getProgramName($conn, $programID)
+{
+  $stmt = $conn->prepare("SELECT * FROM Program WHERE programID = :programID");
+  $stmt->bindParam(':programID', $programID);
+  $stmt->execute();
+  $result = $stmt->fetch();
+  $name = $result['name'];
+  return $name;
+}
+
+function getInterestName($conn, $interestID)
+{
+  $stmt = $conn->prepare("SELECT * FROM Interest WHERE interestID = :interestID");
+  $stmt->bindParam(':interestID', $interestID);
+  $stmt->execute();
+  $result = $stmt->fetch();
+  $name = $result['name'];
+  return $name;
 }
 
 function sectionDuplicateCheck($conn, $name)

@@ -168,64 +168,18 @@
     links.forEach(function (link) {
       link.addEventListener('click', function (event) {
         event.preventDefault();
-        var researchID = this.querySelector('.search-research-id').getAttribute('data-full-text');
         var researchTitle = this.querySelector('.search-research-title').textContent;
         var researchAbstract = this.querySelector('.search-research-abstract').getAttribute('data-full-text');
-        var researchIntroduction = this.querySelector('.search-research-introduction').getAttribute('data-full-text');
-        var researchMethodology = this.querySelector('.search-research-methodology').getAttribute('data-full-text');
-        var researchResults = this.querySelector('.search-research-results').getAttribute('data-full-text');
-        var researchDiscussion = this.querySelector('.search-research-discussion').getAttribute('data-full-text');
-        var researchConclusion = this.querySelector('.search-research-conclusion').getAttribute('data-full-text');
         var researchKeywords = this.querySelector('.search-research-keywords').getAttribute('data-full-text');
-        var researchStatus = this.querySelector('.search-research-status').getAttribute('data-full-text');
-        var researchClassification = this.querySelector('.search-research-classification').getAttribute('data-full-text');
         var researchPublishDate = this.querySelector('.search-research-publish-date').textContent;
-        var researchUploader = this.querySelector('.search-research-uploader').getAttribute('data-full-text');
         var researchProgram = this.querySelector('.search-research-programs').innerHTML;
         var researchAuthor = this.querySelector('.search-research-authors').innerHTML;
         var researchInterest = this.querySelector('.search-research-interest').innerHTML;
-        var researchProgramRaw = JSON.parse(this.querySelector('.search-research-raw-programs').value);
-        var researchAuthorRaw = JSON.parse(this.querySelector('.search-research-raw-authors').value);
-        var researchInterestRaw = JSON.parse(this.querySelector('.search-research-raw-interests').value);
+        var researchUploader = this.querySelector('.search-research-uploader').getAttribute('data-full-text');
 
         // displaypapermodal
         document.getElementById('display-title-modal').textContent = researchTitle;
-
-        document.querySelectorAll('.research-section').forEach(section => {
-          section.classList.remove('d-none');
-          section.classList.add('d-none');
-        });
-
-        if (researchAbstract.trim() !== '') {
-          document.getElementById('abstract-section').classList.toggle('d-none');
-          document.getElementById('display-abstract-modal').innerHTML = researchAbstract;
-        }
-
-        if (researchIntroduction.trim() !== '') {
-          document.getElementById('introduction-section').classList.toggle('d-none');
-          document.getElementById('display-introduction-modal').innerHTML = researchIntroduction;
-        }
-
-        if (researchMethodology.trim() !== '') {
-          document.getElementById('methodology-section').classList.toggle('d-none');
-          document.getElementById('display-methodology-modal').innerHTML = researchMethodology;
-        }
-
-        if (researchResults.trim() !== '') {
-          document.getElementById('results-section').classList.toggle('d-none');
-          document.getElementById('display-results-modal').innerHTML = researchResults;
-        }
-
-        if (researchDiscussion.trim() !== '') {
-          document.getElementById('discussion-section').classList.toggle('d-none');
-          document.getElementById('display-discussion-modal').innerHTML = researchDiscussion;
-        }
-
-        if (researchConclusion.trim() !== '') {
-          document.getElementById('conclusion-section').classList.toggle('d-none');
-          document.getElementById('display-conclusion-modal').innerHTML = researchConclusion;
-        }
-
+        document.getElementById('display-abstract-modal').innerHTML = researchAbstract;
         document.getElementById('display-keywords-modal').textContent = researchKeywords;
         document.getElementById('display-publish-date-modal').textContent = researchPublishDate;
         document.getElementById('display-programs-modal').innerHTML = researchProgram;
