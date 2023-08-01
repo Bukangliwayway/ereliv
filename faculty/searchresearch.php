@@ -7,13 +7,13 @@
 
     <div class="d-flex flex-row gap-3">
       <div class="buttons d-flex flex-row gap-1">
-        <button id="searchByAuthor" class="btn btn-outline-primary d-flex align-items-center gap-2">
+        <button id="searchByAuthor" class="btn btn-outline-primary d-flex align-items-center gap-2 maincategorybtn">
           <i class="bi bi-people-fill"></i> Authors
         </button>
-        <button id="searchByInterest" class="btn btn-outline-primary d-flex align-items-center gap-2">
+        <button id="searchByInterest" class="btn btn-outline-primary d-flex align-items-center gap-2 maincategorybtn">
           <i class="bi bi-tag-fill"></i> Interests
         </button>
-        <button id="searchByProgram" class="btn btn-outline-primary d-flex align-items-center gap-2">
+        <button id="searchByProgram" class="btn btn-outline-primary d-flex align-items-center gap-2 maincategorybtn">
           <i class="bi bi-journal-bookmark"></i> Program
         </button>
       </div>
@@ -30,7 +30,7 @@
         <input type="text" id="searchCategories" name="search" class="form-control form-control-sm align-middle"
           placeholder="Search" required style="padding: 1.17rem 0.75rem;">
       </div>
-      <div id="searchCategoriesResult" class="d-flex flex-column gap-3"></div>
+      <div id="searchCategoriesResult" class="d-inline-flex flex-wrap gap-3 p-3 align-items-center"></div>
     </div>
 
     <div id="categoryPaperToggle" class="round shadow-sm d-none">
@@ -40,8 +40,9 @@
           placeholder="Search" required style="padding: 1.17rem 0.75rem;">
       </div>
       <div class="d-flex flex-column p-2">
-        <span class="text-muted text-lowercase">Search results for:</span>
-        <h4 id="displayCategoryType" class="p-2 text-capitalize">sample lang bih</h4>
+        <span class="text-muted text-muted text-capitalize"> <i class="bi bi-filter"></i>
+          Filters</span>
+        <div class="d-flex flex-wrap p-2 gap-1" id="activecategories"></div>
       </div>
     </div>
   </div>
@@ -49,8 +50,10 @@
 </div>
 <script>
 
-  var activeCategoryID = ''; // Represents the Active ID in Search with Category Modal
-  var activeType = ''; // Represents the Active ID in Search with Category Modal
+  var activePrograms = [];
+  var activeAuthors = [];
+  var activeInterests = [];
+
   updateSearchResult('%');
 
   $(document).on("click", function (event) {
@@ -116,7 +119,6 @@
     $("#categoryToggle").removeClass('d-none');
     $("#categoryPaperToggle").toggleClass("d-none", true);
 
-
   });
 
   const searchByAuthors = document.querySelector("#searchByAuthor");
@@ -164,6 +166,7 @@
     var searchByAuthorsChildren = document.querySelectorAll('.searchByAuthorChildren');
     var searchByProgramsChildren = document.querySelectorAll('.searchByProgramChildren');
     var searchByInterestsChildren = document.querySelectorAll('.searchByInterestChildren');
+    var categoryFilters = document.querySelectorAll('.categoryfilter');
 
     links.forEach(function (link) {
       link.addEventListener('click', function (event) {
@@ -200,9 +203,6 @@
         authorFirstName = this.getAttribute('data-firstname');
         authorLastName = this.getAttribute('data-lastname');
 
-        document.getElementById('displayCategoryType').innerHTML = '<i class="bi bi-person-fill mr-1"></i>' + authorFirstName + ' ' + authorLastName;
-
-
         updateSearchByCategories(activeCategoryID, activeType, '%');
       });
     });
@@ -217,7 +217,6 @@
         activeCategoryID = this.getAttribute('data-programID');
         programName = this.getAttribute('data-name');
 
-        document.getElementById('displayCategoryType').innerHTML = '<i class="bi bi-journal-bookmark mr-1"></i>' + programName;
 
         updateSearchByCategories(activeCategoryID, activeType, '%');
       });
@@ -233,9 +232,113 @@
         activeCategoryID = this.getAttribute('data-interestID');
         interestName = this.getAttribute('data-name');
 
-        document.getElementById('displayCategoryType').innerHTML = '<i class="bi bi-tag-fill mr-1"></i>' + interestName;
-
         updateSearchByCategories(activeCategoryID, activeType, '%');
+      });
+    });
+
+    categoryFilters.forEach(function (categoryFilter) {
+      categoryFilter.addEventListener('click', function (event) {
+        event.preventDefault();
+
+        var btn = document.createElement("button");
+        btn.classList.add("btn", "btn-outline-primary", "shadow-sm", "active");
+        var icon = document.createElement("i");
+        var xbutton = document.createElement("i");
+        xbutton.classList.add("bi", "bi-x-circle", "mr-2", "red-icon", "rounded-circle", "removecategory");
+        xbutton.setAttribute('data-id', this.getAttribute('data-id'));
+        xbutton.setAttribute('data-name', this.getAttribute('data-name'));
+        xbutton.setAttribute('data-type', this.getAttribute('data-type'));
+        btn.id = this.getAttribute('data-id') + "btn";
+        var text = document.createTextNode(this.getAttribute('data-name'));
+
+        switch (this.getAttribute('data-type')) {
+          case 'interest':
+            if (activeInterests.includes(this.getAttribute('data-id'))) break;
+            btn.appendChild(xbutton);
+            icon.classList.add("bi", "bi-tag-fill", "mr-1");
+            btn.appendChild(icon);
+            btn.appendChild(text);
+            activeInterests.push(this.getAttribute('data-id'));
+            $('#activecategories').append(btn);
+            break;
+          case 'program':
+            if (activePrograms.includes(this.getAttribute('data-id'))) break;
+            btn.appendChild(xbutton);
+            icon.classList.add("bi", "bi-journal-bookmark", "mr-1");
+            btn.appendChild(icon);
+            btn.appendChild(text);
+            activePrograms.push(this.getAttribute('data-id'));
+            $('#activecategories').append(btn);
+            break;
+          case 'author':
+            if (activeAuthors.includes(this.getAttribute('data-id'))) break;
+            btn.appendChild(xbutton);
+            icon.classList.add("bi", "bi-person-fill", "mr-1");
+            btn.appendChild(icon);
+            btn.appendChild(text);
+            activeAuthors.push(this.getAttribute('data-id'));
+            $('#activecategories').append(btn);
+            break;
+        }
+      });
+    });
+
+    //   var maincategories = document.querySelectorAll('.maincategorybtn');
+    //   maincategories.forEach(function (maincategory) {
+    //     maincategory.addEventListener('click', function (event) {
+    //       var parentElement = document.querySelector("#searchCategoriesResult");
+    //       var children = Array.from(parentElement.children);
+    //       children.forEach(function (child) {
+    //         console.log('i rannn ' + child.getAttribute('data-name'));
+    //         switch (child.getAttribute('data-type')) {
+    //           case 'interest':
+    //         activeInterests.forEach(function (interest) {
+    //           if (child.getAttribute('data-id') == interest) {
+    //             child.classList.add("active");
+    //           } else {
+    //             child.classList.remove("active");
+    //           }
+    //         });
+    //         break;
+    //           case 'author':
+    //         activeAuthors.forEach(function (author) {
+    //           if (child.getAttribute('data-id') == author) {
+    //             child.classList.add("active");
+    //           } else {
+    //             child.classList.remove("active");
+    //           }
+    //         });
+    //         break;
+    //           case 'program':
+    //         activePrograms.forEach(function (program) {
+    //           if (child.getAttribute('data-id') == program) {
+    //             child.classList.add("active");
+    //           } else {
+    //             child.classList.remove("active");
+    //           }
+    //         });
+    //         break;
+    //           default:
+    //         break;
+    //       }
+    //       });
+    //   });
+    // });
+
+    document.querySelectorAll('.removecategory').forEach(removecategory => {
+      removecategory.addEventListener('click', function (event) {
+        switch (removecategory.getAttribute('data-type')) {
+          case 'interest':
+            activeInterests = activeInterests.filter(item => item !== removecategory.getAttribute('data-id'));
+            break;
+          case 'program':
+            activePrograms = activePrograms.filter(item => item !== removecategory.getAttribute('data-id'));
+            break;
+          case 'author':
+            activeAuthors = activeAuthors.filter(item => item !== removecategory.getAttribute('data-id'));
+            break;
+        }
+        this.parentNode.remove();
       });
     });
   }
@@ -252,6 +355,9 @@
           userID: '<?php echo $_SESSION['userID']; ?>',
           search: search,
           csrf_token: csrfToken,
+          activePrograms: activePrograms,
+          activeAuthors: activeAuthors,
+          activeInterests: activeInterests,
         };
 
         // Make the request to load faculty accounts

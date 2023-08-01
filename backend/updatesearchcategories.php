@@ -7,50 +7,59 @@ $output = '';
 $search = isset($_POST["search"]) ? $_POST["search"] : '';
 $table = $_POST["table"];
 
-$output .= '<div class="d-inline-flex flex-wrap gap-3 p-3 align-items-center">';
 
 if ($table == 'Author') {
+
   $categories = searchAuthor($conn, $search);
   foreach ($categories as $author) {
-
     $output .= '  
-            <button class="btn btn-outline-primary shadow-sm searchByAuthorChildren"
-                    data-authorID=' . $author['authorID'] . '
-                    data-firstname=' . $author['firstname'] . '
-                    data-lastname=' . $author['lastname'] . '>
-              ' . ucwords(strtolower($author['firstname'])) . ' ' . ucwords(strtolower($author['lastname'])) . '
+    <button class="btn btn-outline-primary shadow-sm searchByAuthorChildren categoryfilter"
+    data-id=' . $author['authorID'] . '
+                    data-name="' . ucwords($author['firstname'] . ' ' . $author['lastname']) . '"
+                    data-type="author" >
+                    ' . ucwords(strtolower($author['firstname'])) . ' ' . ucwords(strtolower($author['lastname'])) . '
             </button>
-
   ';
   }
 }
 
 if ($table == 'Interest') {
+
   $categories = searchInterest($conn, $search);
   foreach ($categories as $interest) {
     $output .= ' 
-              <button class="btn btn-outline-primary shadow-sm searchByInterestChildren"
-                      data-interestID=' . $interest['interestID'] . '
-                      data-name=' . $interest['name'] . '>
-                ' . ucwords(strtolower($interest['name'])) . '
-              </button>
-  ';
+    <button class="btn btn-outline-primary shadow-sm searchByInterestChildren categoryfilter"
+    data-id=' . $interest['interestID'] . '
+    data-name=' . $interest['name'] . '
+    data-type="interest">
+    ' . ucwords(strtolower($interest['name'])) . '
+    </button>
+    ';
   }
 }
 
 if ($table == 'Program') {
+
   $categories = searchProgram($conn, $search);
   foreach ($categories as $program) {
     $output .= ' 
-              <button class="btn btn-outline-primary shadow-sm searchByProgramChildren text-uppercase"
-                      data-programID=' . $program['programID'] . '
-                      data-name=' . $program['name'] . '>
+                <button class="btn btn-outline-primary shadow-sm searchByProgramChildren text-uppercase categoryfilter"
+                data-id=' . $program['programID'] . '
+                data-name=' . $program['name'] . '
+                data-type="program">
                 ' . ucwords(strtolower($program['name'])) . '
-              </button>
+                </button>
   ';
   }
 }
 
-$output .= '</div>';
+if (count($categories) == 11) {
+  $output .= '  
+  <button class="btn btn-outline-primary shadow-sm" disabled>
+  More...
+            </button>
+            ';
+}
+
 echo $output;
 ?>

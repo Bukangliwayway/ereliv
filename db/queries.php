@@ -968,7 +968,7 @@ function deleteInterest($conn, $interestID)
 function searchInterest($conn, $searchQuery)
 {
   // Prepare the SQL query to fetch the related authors
-  $stmt = $conn->prepare("SELECT * FROM Interest WHERE name LIKE :searchQuery");
+  $stmt = $conn->prepare("SELECT * FROM Interest WHERE name LIKE :searchQuery LIMIT 11");
   $stmt->bindValue(':searchQuery', '%' . $searchQuery . '%');
   $stmt->execute();
 
@@ -977,7 +977,7 @@ function searchInterest($conn, $searchQuery)
 function searchProgram($conn, $searchQuery)
 {
   // Prepare the SQL query to fetch the related authors
-  $stmt = $conn->prepare("SELECT * FROM Program WHERE name LIKE :searchQuery");
+  $stmt = $conn->prepare("SELECT * FROM Program WHERE name LIKE :searchQuery LIMIT 11");
   $stmt->bindValue(':searchQuery', '%' . $searchQuery . '%');
   $stmt->execute();
 
@@ -1011,7 +1011,7 @@ function editAuthor($conn, $firstname, $lastname, $authorID)
 function searchAuthor($conn, $searchQuery)
 {
   // Prepare the SQL query to fetch the related authors
-  $stmt = $conn->prepare("SELECT * FROM Author WHERE firstname LIKE :searchQuery OR lastname LIKE :searchQuery");
+  $stmt = $conn->prepare("SELECT * FROM Author WHERE firstname LIKE :searchQuery OR lastname LIKE :searchQuery LIMIT 11");
   $stmt->bindValue(':searchQuery', '%' . $searchQuery . '%');
   $stmt->execute();
 
@@ -1257,6 +1257,47 @@ function getAdvisees($conn, $facultyID, $search)
   $stmt->bindParam(':search', $search);
   $stmt->execute();
   return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+
+function checkElasticsearchConnection()
+{
+
+$ch = curl_init();
+
+// Set the Elasticsearch URL
+curl_setopt($ch, CURLOPT_URL, "https://localhost:9200");
+
+// Set the request timeout
+curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+
+// Set the HTTP method to GET
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+
+// Set the username and password for authentication
+curl_setopt($ch, CURLOPT_USERPWD, "elastic:I_1ghHrS7B6qTK6mwg_F");
+
+// Allow insecure connections
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+// Return the response instead of printing it
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+// Execute the request
+$response = curl_exec($ch);
+
+// Get the HTTP status code
+$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+curl_close($ch);
+
+// Close the cURL resource
+if ($statusCode === 200) {
+    return true; // Elasticsearch is active and the system is connecting
+  } else {
+    return false; // There was an issue with the connection to Elasticsearch
+  }
 }
 
 
