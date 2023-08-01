@@ -371,8 +371,7 @@ function getAuthorName($conn, $authorID)
   $stmt->bindParam(':authorID', $authorID);
   $stmt->execute();
   $result = $stmt->fetch();
-  $name = $result['name'];
-  return $name;
+  return ucwords($result['firstname'].' '.$result['lastname']);
 }
 
 function getProgramName($conn, $programID)
