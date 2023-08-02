@@ -1,3 +1,4 @@
+
 <?php
 include_once 'csrfTokenCheck.php';
 include '../db/db.php';
@@ -8,11 +9,13 @@ if (checkElasticsearchConnection()) {
 
   $userID = isset($_POST['userID']) ? $_POST['userID'] : '';
   $search = isset($_POST['search']) ? $_POST['search'] : '';
-  $programs = json_decode($_POST['activePrograms']);
-  $authors = json_decode($_POST['activeAuthors']);
-  $interests = json_decode($_POST['activeInterests']);
+  $programs = $_POST['activePrograms'];
+  $authors = $_POST['activeAuthors'];
+  $interests = $_POST['activeInterests'];
   $categoryID = isset($_POST['categoryID']) ? $_POST['categoryID'] : '';
   $type = isset($_POST['type']) ? $_POST['type'] : '';
+
+  // if(!empty($programs)) send_message_and_redirect(print_r($programs),'');
 
   $client = Elastic\Elasticsearch\ClientBuilder::create()
     ->setHosts(['https://localhost:9200'])
@@ -31,16 +34,38 @@ if (checkElasticsearchConnection()) {
     ]
   ];
 
+
   if (!empty($programs)) {
-    $searchParams['body']['query']['bool']['should'][] = ['terms' => ['program.programID' => $programs]];
+    $searchParams['body']['query']['bool']['should'][] = [
+      'nested' => [
+        'path' => 'program',
+        'query' => [
+          'terms' => ['program.programID' => $programs]
+        ]
+      ]
+    ];
   }
 
   if (!empty($authors)) {
-    $searchParams['body']['query']['bool']['should'][] = ['terms' => ['author.authorID' => $authors]];
+    $searchParams['body']['query']['bool']['should'][] = [
+      'nested' => [
+        'path' => 'author',
+        'query' => [
+          'terms' => ['author.authorID' => $authors]
+        ]
+      ]
+    ];
   }
 
   if (!empty($interests)) {
-    $searchParams['body']['query']['bool']['should'][] = ['terms' => ['interest.interestID' => $interests]];
+    $searchParams['body']['query']['bool']['should'][] = [
+      'nested' => [
+        'path' => 'interest',
+        'query' => [
+          'terms' => ['interest.interestID' => $interests]
+        ]
+      ]
+    ];
   }
 
   if (!empty($search)) {
@@ -67,9 +92,10 @@ if (checkElasticsearchConnection()) {
         'fuzziness' => '2'
       ]
     ];
-  } else {
-    $searchParams['body']['query'] = ['match_all' => new stdClass()];
-  }
+  } 
+  // else {
+  //   $searchParams['body']['query'] = ['match_all' => new stdClass()];
+  // }
 
   try {
     $result = $client->search($searchParams);
@@ -169,7 +195,7 @@ if (checkElasticsearchConnection()) {
 
     $output .= '</div>'; // Close p-3 div
 
-   
+
     $output .= '<input type="hidden" class="search-abstract" data-full-text="' . htmlspecialchars($research['abstract'], ENT_QUOTES) . '">';
     $output .= '<input type="hidden" class="search-introduction" data-full-text="' . htmlspecialchars($research['introduction'], ENT_QUOTES) . '">';
     $output .= '<input type="hidden" class="search-methodology" data-full-text="' . htmlspecialchars($research['methodology'], ENT_QUOTES) . '">';

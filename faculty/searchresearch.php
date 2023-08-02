@@ -54,8 +54,10 @@
   var activeAuthors = [];
   var activeInterests = [];
 
-  updateSearchResult('');
-
+  document.getElementById('searchresearchBtn').addEventListener('click', function () {
+    updateSearchResult('');
+  });
+  
   $(document).on("click", function (event) {
     var target = $(event.target);
     var searchResult = $("#categoryToggle");
@@ -173,7 +175,7 @@
         event.preventDefault();
         var researchTitle = this.querySelector('.search-title').textContent;
         var researchAbstract = this.querySelector('.search-abstract').getAttribute('data-full-text');
-       var researchIntroduction = this.querySelector('.search-introduction').getAttribute('data-full-text');
+        var researchIntroduction = this.querySelector('.search-introduction').getAttribute('data-full-text');
         var researchMethodology = this.querySelector('.search-methodology').getAttribute('data-full-text');
         var researchResults = this.querySelector('.search-results').getAttribute('data-full-text');
         var researchDiscussion = this.querySelector('.search-discussion').getAttribute('data-full-text');
@@ -223,7 +225,7 @@
         programName = this.getAttribute('data-name');
 
 
-        // updateSearchByCategories(activeCategoryID, activeType, '%');
+        updateSearchByCategories(activeCategoryID, activeType, '%');
       });
     });
 
@@ -237,14 +239,13 @@
         activeCategoryID = this.getAttribute('data-interestID');
         interestName = this.getAttribute('data-name');
 
-        // updateSearchByCategories(activeCategoryID, activeType, '%');
+        updateSearchByCategories(activeCategoryID, activeType, '%');
       });
     });
 
     categoryFilters.forEach(function (categoryFilter) {
       categoryFilter.addEventListener('click', function (event) {
         event.preventDefault();
-
         var btn = document.createElement("button");
         btn.classList.add("btn", "btn-outline-primary", "shadow-sm", "active");
         var icon = document.createElement("i");
@@ -285,6 +286,7 @@
             $('#activecategories').append(btn);
             break;
         }
+        updateSearchResult('');
       });
     });
 
@@ -344,6 +346,7 @@
             break;
         }
         this.parentNode.remove();
+        updateSearchResult('');
       });
     });
   }
@@ -448,7 +451,7 @@
     // Get the search query
     const search = $(this).val();
     e.preventDefault();
-    // updateSearchByCategories(activeCategoryID, activeType, search);
+    updateSearchByCategories(activeCategoryID, activeType, search);
   });
 
 </script>
