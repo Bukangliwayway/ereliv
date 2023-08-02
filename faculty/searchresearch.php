@@ -54,7 +54,7 @@
   var activeAuthors = [];
   var activeInterests = [];
 
-  updateSearchResult('%');
+  updateSearchResult('');
 
   $(document).on("click", function (event) {
     var target = $(event.target);
@@ -171,14 +171,19 @@
     links.forEach(function (link) {
       link.addEventListener('click', function (event) {
         event.preventDefault();
-        var researchTitle = this.querySelector('.search-research-title').textContent;
-        var researchAbstract = this.querySelector('.search-research-abstract').getAttribute('data-full-text');
-        var researchKeywords = this.querySelector('.search-research-keywords').getAttribute('data-full-text');
-        var researchPublishDate = this.querySelector('.search-research-publish-date').textContent;
-        var researchProgram = this.querySelector('.search-research-programs').innerHTML;
-        var researchAuthor = this.querySelector('.search-research-authors').innerHTML;
-        var researchInterest = this.querySelector('.search-research-interest').innerHTML;
-        var researchUploader = this.querySelector('.search-research-uploader').getAttribute('data-full-text');
+        var researchTitle = this.querySelector('.search-title').textContent;
+        var researchAbstract = this.querySelector('.search-abstract').getAttribute('data-full-text');
+       var researchIntroduction = this.querySelector('.search-introduction').getAttribute('data-full-text');
+        var researchMethodology = this.querySelector('.search-methodology').getAttribute('data-full-text');
+        var researchResults = this.querySelector('.search-results').getAttribute('data-full-text');
+        var researchDiscussion = this.querySelector('.search-discussion').getAttribute('data-full-text');
+        var researchConclusion = this.querySelector('.search-conclusion').getAttribute('data-full-text');
+        var researchKeywords = this.querySelector('.search-keywords').getAttribute('data-full-text');
+        var researchPublishDate = this.querySelector('.search-publish-date').textContent;
+        var researchProgram = this.querySelector('.search-programs').innerHTML;
+        var researchAuthor = this.querySelector('.search-authors').innerHTML;
+        var researchInterest = this.querySelector('.search-interest').innerHTML;
+        var researchUploader = this.querySelector('.search-uploader').getAttribute('data-full-text');
 
         // displaypapermodal
         document.getElementById('display-title-modal').textContent = researchTitle;
@@ -203,7 +208,7 @@
         authorFirstName = this.getAttribute('data-firstname');
         authorLastName = this.getAttribute('data-lastname');
 
-        updateSearchByCategories(activeCategoryID, activeType, '%');
+        // updateSearchByCategories(activeCategoryID, activeType, '%');
       });
     });
 
@@ -218,7 +223,7 @@
         programName = this.getAttribute('data-name');
 
 
-        updateSearchByCategories(activeCategoryID, activeType, '%');
+        // updateSearchByCategories(activeCategoryID, activeType, '%');
       });
     });
 
@@ -232,7 +237,7 @@
         activeCategoryID = this.getAttribute('data-interestID');
         interestName = this.getAttribute('data-name');
 
-        updateSearchByCategories(activeCategoryID, activeType, '%');
+        // updateSearchByCategories(activeCategoryID, activeType, '%');
       });
     });
 
@@ -371,6 +376,7 @@
           // Update the table content
           $("#searchResearchesResult").html(response);
           researchEventListeners();
+          console.log(response);
         });
 
         ajaxRequest.fail(function (xhr, status, error) {
@@ -442,7 +448,7 @@
     // Get the search query
     const search = $(this).val();
     e.preventDefault();
-    updateSearchByCategories(activeCategoryID, activeType, search);
+    // updateSearchByCategories(activeCategoryID, activeType, search);
   });
 
 </script>

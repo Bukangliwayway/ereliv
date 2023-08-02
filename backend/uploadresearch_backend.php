@@ -5,6 +5,8 @@ include '../db/queries.php';
 
 require '../vendor/autoload.php';
 
+
+
 // Initialize the response array
 $response = array();
 try {
@@ -23,7 +25,7 @@ try {
   $keywords = filter_input(INPUT_POST, 'keywords', FILTER_SANITIZE_STRING);
   $proposer = $_SESSION['username'];
   $facultyProposerID = $_SESSION['userID'];
-  $facultyProposerIName = $_SESSION['username'];
+  $facultyProposerName = $_SESSION['username'];
   $advisorID = $_SESSION['userID'];
   $advisorName = $_SESSION['username'];
   $type = filter_input(INPUT_POST, 'type', FILTER_SANITIZE_STRING);
@@ -52,7 +54,6 @@ try {
   $interestIDs = json_decode($interests, true);
 
 
-
   $client = Elastic\Elasticsearch\ClientBuilder::create()
     ->setHosts(['https://localhost:9200'])
     ->setBasicAuthentication('elastic', 'I_1ghHrS7B6qTK6mwg_F')
@@ -62,34 +63,39 @@ try {
 
   // Remove the Prev Paper if there is:
   if (!empty($researchID)) {
-    $response = $client->delete([
-      'index' => 'research',
-      'id' => $researchID,
-    ]);
+    try {
+      $response = $client->delete([
+        'index' => 'research',
+        'id' => $researchID,
+      ]);
+    } catch (Exception $e) {
+      // Handle exception
+      $response['message'] = "An error occurred: {$e->getMessage()}\n";
+      $response['status'] = "error";
+    }
   }
 
   // Create the Research
   $researchID = createResearchFaculty($conn, $title, $abstract, $introduction, $methodology, $results, $discussion, $conclusion, $datepublished, $keywords, $status, $proposer, $facultyProposerID, $advisorID, $researchstatus, $researchclassification);
 
 
-  $authorArray = [];
+  $author = [];
   foreach ($authorIDs as $authorID) {
     linkAuthorAndResearch($conn, $authorID, $researchID);
-    $authorArray[] = getAuthorName($conn, $authorID);
+    $author[] = getAuthor($conn, $authorID);
   }
 
-  $programArray = [];
+  $program = [];
   foreach ($programIDs as $programID) {
     linkProgramAndResearch($conn, $programID, $researchID);
-    $programArray[] = getProgramName($conn, $programID);
+    $program[] = getProgram($conn, $programID);
   }
 
-  $interestArray = [];
+  $interest = [];
   foreach ($interestIDs as $interestID) {
     linkInterestAndResearch($conn, $interestID, $researchID);
-    $interestArray[] = getInterestName($conn, $interestID);
+    $interest[] = getInterest($conn, $interestID);
   }
-
 
   // ElasticIndex
   $doc = [
@@ -97,12 +103,15 @@ try {
     'id' => $researchID,
     'body' => [
       'title' => $title,
+      'researchID' => $researchID,
       'datepublished' => $datepublished,
       'keywords' => $keywords,
       'status' => $status,
       'proposer' => $proposer,
-      'facultyProposerName' => $facultyProposerIName,
+      'facultyProposerName' => $facultyProposerName,
+      'facultyProposerID' => $facultyProposerID,
       'advisorName' => $advisorName,
+      'advisorID' => $advisorID,
       'researchstatus' => $researchstatus,
       'researchclassification' => $researchclassification,
       'abstract' => $abstract,
@@ -111,9 +120,9 @@ try {
       'discussion' => $discussion,
       'results' => $results,
       'conclusion' => $conclusion,
-      'programs' => $programArray,
-      'author' => $authorArray,
-      'interest' => $interestArray
+      'program' => $program,
+      'author' => $author,
+      'interest' => $interest
     ]
   ];
 

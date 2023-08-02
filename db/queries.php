@@ -365,33 +365,34 @@ function getSectionID($conn, $name)
   return strval($id);
 }
 
-function getAuthorName($conn, $authorID)
+function getAuthor($conn, $authorID)
 {
   $stmt = $conn->prepare("SELECT * FROM Author WHERE authorID = :authorID");
   $stmt->bindParam(':authorID', $authorID);
   $stmt->execute();
-  $result = $stmt->fetch();
-  return ucwords($result['firstname'].' '.$result['lastname']);
+  $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  return $result;
 }
 
-function getProgramName($conn, $programID)
+function getProgram($conn, $programID)
 {
   $stmt = $conn->prepare("SELECT * FROM Program WHERE programID = :programID");
   $stmt->bindParam(':programID', $programID);
   $stmt->execute();
-  $result = $stmt->fetch();
-  $name = $result['name'];
-  return $name;
+  $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  return $result;
 }
 
-function getInterestName($conn, $interestID)
+function getInterest($conn, $interestID)
 {
   $stmt = $conn->prepare("SELECT * FROM Interest WHERE interestID = :interestID");
   $stmt->bindParam(':interestID', $interestID);
   $stmt->execute();
-  $result = $stmt->fetch();
-  $name = $result['name'];
-  return $name;
+  $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  return $result;
 }
 
 function sectionDuplicateCheck($conn, $name)
@@ -1264,36 +1265,36 @@ function getAdvisees($conn, $facultyID, $search)
 function checkElasticsearchConnection()
 {
 
-$ch = curl_init();
+  $ch = curl_init();
 
-// Set the Elasticsearch URL
-curl_setopt($ch, CURLOPT_URL, "https://localhost:9200");
+  // Set the Elasticsearch URL
+  curl_setopt($ch, CURLOPT_URL, "https://localhost:9200");
 
-// Set the request timeout
-curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+  // Set the request timeout
+  curl_setopt($ch, CURLOPT_TIMEOUT, 5);
 
-// Set the HTTP method to GET
-curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+  // Set the HTTP method to GET
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
 
-// Set the username and password for authentication
-curl_setopt($ch, CURLOPT_USERPWD, "elastic:I_1ghHrS7B6qTK6mwg_F");
+  // Set the username and password for authentication
+  curl_setopt($ch, CURLOPT_USERPWD, "elastic:I_1ghHrS7B6qTK6mwg_F");
 
-// Allow insecure connections
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  // Allow insecure connections
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-// Return the response instead of printing it
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  // Return the response instead of printing it
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-// Execute the request
-$response = curl_exec($ch);
+  // Execute the request
+  $response = curl_exec($ch);
 
-// Get the HTTP status code
-$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+  // Get the HTTP status code
+  $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-curl_close($ch);
+  curl_close($ch);
 
-// Close the cURL resource
-if ($statusCode === 200) {
+  // Close the cURL resource
+  if ($statusCode === 200) {
     return true; // Elasticsearch is active and the system is connecting
   } else {
     return false; // There was an issue with the connection to Elasticsearch
