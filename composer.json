@@ -1,10 +1,11 @@
 {
-    "require": {
-        "elasticsearch/elasticsearch": "^8.8"
-    },
-    "config": {
-        "allow-plugins": {
-            "php-http/discovery": true
-        }
+  "require": {
+    "elasticsearch/elasticsearch": "^8.8",
+    "symfony/deprecation-contracts": "^3.0"
+  },
+  "config": {
+    "allow-plugins": {
+      "php-http/discovery": true
     }
+  }
 }
