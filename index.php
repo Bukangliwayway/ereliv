@@ -21,18 +21,18 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/ereliv/backend/randbg_generate.php';
     <div class="col-md-8 rand-bg d-none d-sm-block" style="background-image: url('<?php echo $img_src ?>')"></div>
     <div
       class="col-md-4 col-sm-auto d-flex flex-column just justify-content-center align-items-center text-center gap-3 contain-form">
-      <a href="index.php">
+      <!-- <a href="index.php">
         <img src="assets/puplogo.png" alt="logohehe" width="60%" class="align-self-center" />
-      </a>
+      </a> -->
       <h1 class="fs-2 fw-bold text-uppercase">
-        PUPQC Research Paper Management
+        Research Paper Management
       </h1>
       <p class="select-role-text fw-light m-0">
         Please select your role by clicking one of the button below.
       </p>
-      <div class="d-flex justify-content-stretch flex-column gap-2 w-100">
-        <a href="studlogin.php" class="btn btn-primary">Student</a>
+      <div class="d-flex justify-content-stretch flex-column gap-2 w-100 mb-3">
         <a href="facultylogin.php" class="btn btn-danger">Faculty </a>
+        <a href="adminlogin.php" class="btn btn-dark">Admin</a>
       </div>
       <p class="fw-light">
         By using this service, you understood and agree to the PUP Online
