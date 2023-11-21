@@ -292,13 +292,14 @@
         displayToastr(data.status, data.message);
         $("#deletePaperForm")[0].reset();
       },
-      error: function () {
+      error: function (response) {
         // Hide loading animation
         $("#loadingSpinner").removeClass("d-flex");
         $("#loadingSpinner").addClass("d-none");
         $("#deletePaperForm").css("pointer-events", "auto");
 
         // Handle error response here
+        console.log(response);
         displayToastr("error", "An error occurred. Please try again.");
       },
       complete: function () {

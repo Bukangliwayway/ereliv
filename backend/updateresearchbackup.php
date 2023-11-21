@@ -5,8 +5,6 @@ include '../db/db.php';
 include '../db/queries.php';
 
 
-
-
 if (checkElasticsearchConnection()) {
 
   $userID = isset($_POST['userID']) ? $_POST['userID'] : '';
@@ -17,36 +15,62 @@ if (checkElasticsearchConnection()) {
   $categoryID = isset($_POST['categoryID']) ? $_POST['categoryID'] : '';
   $type = isset($_POST['type']) ? $_POST['type'] : '';
 
+  // if(!empty($programs)) send_message_and_redirect(print_r($programs),'');
+
+  $client = Elastic\Elasticsearch\ClientBuilder::create()
+    ->setHosts(['https://localhost:9200'])
+    ->setBasicAuthentication('elastic', 'I_1ghHrS7B6qTK6mwg_F')
+    ->setSSLVerification(false)
+    ->build();
 
   $searchParams = [
-      'size' => 20, // Limit the number of results to 20
+    'index' => 'research',
+    'body' => [
       'query' => [
-          'bool' => [
-              'should' => []
-          ]
+        'bool' => [
+          'should' => []
+        ]
       ]
+    ]
   ];
 
+
   if (!empty($programs)) {
-    $searchParams['query']['bool']['should'][] = [
-      'terms' => ['program.programID' => $programs]
+    $searchParams['body']['query']['bool']['should'][] = [
+      'nested' => [
+        'path' => 'program',
+        'query' => [
+          'terms' => ['program.programID' => $programs]
+        ]
+      ]
     ];
   }
 
   if (!empty($authors)) {
- $searchParams['query']['bool']['should'][] = [
-   'terms' => ['author.authorID' => $authors]
- ];
-}
+    $searchParams['body']['query']['bool']['should'][] = [
+      'nested' => [
+        'path' => 'author',
+        'query' => [
+          'terms' => ['author.authorID' => $authors]
+        ]
+      ]
+    ];
+  }
 
-if (!empty($interests)) {
- $searchParams['query']['bool']['should'][] = [
-   'terms' => ['interest.interestID' => $interests]
- ];
-}
+  if (!empty($interests)) {
+    $searchParams['body']['query']['bool']['should'][] = [
+      'nested' => [
+        'path' => 'interest',
+        'query' => [
+          'terms' => ['interest.interestID' => $interests]
+        ]
+      ]
+    ];
+  }
 
   if (!empty($search)) {
-    $searchParams['query']['bool']['should'][] = [
+
+    $searchParams['body']['query']['bool']['should'][] = [
       'multi_match' => [
         'query' => $search,
         'fields' => [
@@ -69,51 +93,22 @@ if (!empty($interests)) {
       ]
     ];
   } 
-try {
-   $ch = curl_init();
+  // else {
+  //   $searchParams['body']['query'] = ['match_all' => new stdClass()];
+  // }
 
-   // Set cURL options
-   $url = 'https://polytechnic-universi-8886090444.us-east-1.bonsaisearch.net:443/research/_search';
-   $headers = array('Content-Type: application/json');
-   $credentials = 'm35p75o9i6:7aav4zf2bd';
-   $jsonData = json_encode($searchParams);
+  try {
+    $result = $client->search($searchParams);
+  } catch (Exception $e) {
+    // Handle the exception
+    $response['status'] = 'error';
+    $response['message'] = 'nana: ' . $e->getMessage();
 
-
-   
-   // Set cURL options
-   curl_setopt($ch, CURLOPT_URL, $url);
-   curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-   curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-   curl_setopt($ch, CURLOPT_USERPWD, $credentials);
-   curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-   // Execute cURL session
-   $resultSearch = curl_exec($ch);
-   
-   // Check for cURL errors
-   if (curl_errno($ch)) {
-     throw new Exception('cURL error: ' . curl_error($ch));
-    }
-    
-    // Close cURL session
-    curl_close($ch);
-    
-    // Decode the JSON response into an associative array
-    $result = json_decode($resultSearch, true);
-
-} catch (Exception $e) {
-   // Handle the exception
-   $response['status'] = 'error';
-   $response['message'] = 'nana: ' . $e->getMessage();
-
-   // Return the response as JSON
-   header('Content-Type: application/json');
-   echo json_encode($response);
-   exit;
-}
-
-
+    // Return the response as JSON
+    header('Content-Type: application/json');
+    echo json_encode($response);
+    exit;
+  }
 
   $researches = [];
   foreach ($result['hits']['hits'] as $hit) {
@@ -144,8 +139,6 @@ try {
 
   $output = ''; // Initialize an empty string
   $output .= '<div class="row">';
-
-
   foreach ($researches as $research) {
     // Loop through each research item
     $authors = $research['author'];

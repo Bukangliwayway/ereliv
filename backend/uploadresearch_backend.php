@@ -4,11 +4,12 @@ include '../db/db.php';
 include '../db/queries.php';
 
 require '../vendor/autoload.php';
-
-
-
 // Initialize the response array
+
+
 $response = array();
+
+$curlResponse = array();
 try {
   $researchID = $_POST['researchID'];
   $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
@@ -49,25 +50,36 @@ try {
     exit;
   }
 
+
+
   $programIDs = json_decode($programs, true);
   $authorIDs = json_decode($authors, true);
   $interestIDs = json_decode($interests, true);
 
 
-  $client = Elastic\Elasticsearch\ClientBuilder::create()
-    ->setHosts(['https://localhost:9200'])
-    ->setBasicAuthentication('elastic', 'I_1ghHrS7B6qTK6mwg_F')
-    ->setSSLVerification(false)
-    ->build();
-
 
   // Remove the Prev Paper if there is:
   if (!empty($researchID)) {
     try {
-      $response = $client->delete([
-        'index' => 'research',
-        'id' => $researchID,
-      ]);
+      $ch = curl_init();
+      // Set cURL options
+      $url = 'https://polytechnic-universi-8886090444.us-east-1.bonsaisearch.net:443/research/_doc/' . $researchID;
+      $headers = array('Content-Type: application/json');
+      $credentials = 'm35p75o9i6:7aav4zf2bd';
+      // Set cURL options
+      curl_setopt($ch, CURLOPT_URL, $url);
+      curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+      curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+      curl_setopt($ch, CURLOPT_USERPWD, $credentials);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      // Execute cURL session
+      $resultDelete = curl_exec($ch);
+      // Check for cURL errors
+      if (curl_errno($ch)) {
+        throw new Exception('cURL error: ' . curl_error($ch));
+      }
+      // Close cURL session
+      curl_close($ch);
     } catch (Exception $e) {
       // Handle exception
       $response['message'] = "An error occurred: {$e->getMessage()}\n";
@@ -97,78 +109,175 @@ try {
     $interest[] = getInterest($conn, $interestID);
   }
 
-  // ElasticIndex
-  $doc = [
-    'index' => 'research',
-    'id' => $researchID,
-    'body' => [
-      'title' => $title,
-      'researchID' => $researchID,
-      'datepublished' => $datepublished,
-      'keywords' => $keywords,
-      'status' => $status,
-      'proposer' => $proposer,
-      'facultyProposerName' => $facultyProposerName,
-      'facultyProposerID' => $facultyProposerID,
-      'advisorName' => $advisorName,
-      'advisorID' => $advisorID,
-      'researchstatus' => $researchstatus,
-      'researchclassification' => $researchclassification,
-      'abstract' => $abstract,
-      'introduction' => $introduction,
-      'methodology' => $methodology,
-      'discussion' => $discussion,
-      'results' => $results,
-      'conclusion' => $conclusion,
-      'program' => $program,
-      'author' => $author,
-      'interest' => $interest
-    ]
-  ];
 
-  $params = [
-    'index' => 'research',
-    'id' => $researchID,
-    'body' => [
-      'doc' => $doc['body']
-    ]
-  ];
+// ElasticIndex
+$doc = [
+ 'index' => 'research',
+ 'id' => $researchID,
+ 'body' => [
+   'title' => $title,
+   'researchID' => $researchID,
+   'datepublished' => $datepublished,
+   'keywords' => $keywords,
+   'status' => $status,
+   'proposer' => $proposer,
+   'facultyProposerName' => $facultyProposerName,
+   'facultyProposerID' => $facultyProposerID,
+   'advisorName' => $advisorName,
+   'advisorID' => $advisorID,
+   'researchstatus' => $researchstatus,
+   'researchclassification' => $researchclassification,
+   'abstract' => $abstract,
+   'introduction' => $introduction,
+   'methodology' => $methodology,
+   'discussion' => $discussion,
+   'results' => $results,
+   'conclusion' => $conclusion,
+   'program' => $program,
+   'author' => $author,
+   'interest' => $interest
+ ]
+];
 
-  // ElasticIndex
 
-  try {
-    $client->index($doc);
-  } catch (Exception $e) {
-    // Handle the exception
-    $response['status'] = 'error';
-    $response['message'] = 'An error occurred while indexing the document in Elasticsearch: ' . $e->getMessage();
-    // Return the response as JSON
-    header('Content-Type: application/json');
-    echo json_encode($response);
-    exit;
-  }
+// Initialize a new cURL session
+$ch = curl_init();
 
-  $response = $doc;
+// Set the URL for the Elasticsearch endpoint
+curl_setopt($ch, CURLOPT_URL, 'https://polytechnic-universi-8886090444.us-east-1.bonsaisearch.net:443/research');
 
-  if (empty($_POST['researchID'])) {
-    $activePaper = createActivePaper($conn, $facultyProposerID, $researchID);
-    $response['message'] = 'Research has been Uploaded Successfully';
-  } else {
-    $activePaper = updateActivePaper($conn, $researchID, $_POST['researchID']);
-    $response['message'] = 'Research has been Updated Successfully';
-  }
+// Set the HTTP method to HEAD
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'HEAD');
 
-  $response['status'] = 'success';
+// Don't output the response
+curl_setopt($ch, CURLOPT_NOBODY, true);
 
-  createEditHistory($conn, $activePaper, $researchID, $facultyProposerID);
-} catch (Exception $e) {
-  // Set error response
-  $response['status'] = 'error';
-  $response['message'] = 'An error occurred. Please try again.';
+// Set the username and password for basic authentication
+curl_setopt($ch, CURLOPT_USERPWD, 'm35p75o9i6:7aav4zf2bd');
+
+// Execute the cURL request
+curl_exec($ch);
+
+// Get the HTTP response code
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+// Close the cURL session
+curl_close($ch);
+
+// If the HTTP response code is not 200, the index does not exist, so create it
+if($httpCode != 200) {
+    // Initialize a new cURL session
+    $ch = curl_init();
+
+    // Set the URL for the Elasticsearch endpoint
+    curl_setopt($ch, CURLOPT_URL, 'https://polytechnic-universi-8886090444.us-east-1.bonsaisearch.net:443/research');
+
+    // Don't output the response
+    curl_setopt($ch, CURLOPT_NOBODY, true);
+
+    // Set the HTTP method to PUT
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+
+    // Set the Content-Type header to application/json
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+
+    // Provide the settings data that you're sending
+    $settingsData = json_encode([
+        'settings' => [
+            'number_of_shards' => 1,
+            'number_of_replicas' => 1
+        ]
+    ]);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $settingsData);
+
+    // Set the username and password for basic authentication
+    curl_setopt($ch, CURLOPT_USERPWD, 'm35p75o9i6:7aav4zf2bd');
+
+    // Execute the cURL request and get the response
+    $curlResponse = curl_exec($ch);
+
+    // Check for errors
+    if ($curlResponse === false) {
+        // Handle error
+        die('Error: ' . curl_error($ch));
+    }
+
+    // Close the cURL session
+    curl_close($ch);
 }
 
-// Return the response as JSON
+
+
+
+// Convert the doc array to JSON
+$jsonData = json_encode($doc['body']);
+
+// Initialize a new cURL session
+$ch = curl_init();
+
+// Set the URL for the Elasticsearch endpoint
+curl_setopt($ch, CURLOPT_URL, 'https://polytechnic-universi-8886090444.us-east-1.bonsaisearch.net:443/research/_doc/' . $researchID);
+
+
+// Don't output the response
+curl_setopt($ch, CURLOPT_NOBODY, true);
+
+// Set the HTTP method to PUT
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+
+// Set the Content-Type header to application/json
+curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+
+// Provide the JSON data that you're sending
+curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+
+// Set the username and password for basic authentication
+curl_setopt($ch, CURLOPT_USERPWD, 'm35p75o9i6:7aav4zf2bd');
+
+// Execute the cURL request and get the response
+$curlResponse = curl_exec($ch);
+
+
+
+// Check for errors
+if ($curlResponse === false) {
+ // Handle error
+ $response['status'] = 'error';
+ $response['message'] = 'An error occurred while indexing the document in Elasticsearch: ' . curl_error($ch);
+ 
+} else {
+  // Handle response
+  $response['status'] = 'success';
+  $response['message'] = 'Research has been Uploaded Successfully';
+}
+
+// Close the cURL session
+curl_close($ch);
+
+
+
+if (empty($_POST['researchID'])) {
+  $activePaper = createActivePaper($conn, $facultyProposerID, $researchID);
+  $response['message'] = 'Research has been Uploaded Successfully';
+} else {
+  $activePaper = updateActivePaper($conn, $researchID, $_POST['researchID']);
+  $response['message'] = 'Research has been Updated Successfully';
+}
+
+
+$response['status'] = 'success';
+
+createEditHistory($conn, $activePaper, $researchID, $facultyProposerID);
+
+
 header('Content-Type: application/json');
 echo json_encode($response);
 exit;
+} catch (Exception $e) {
+  // Set error response
+  $response['status'] = 'error';
+  $response['message'] = "An error occurred: {$e->getMessage()}\n";
+}
+
 ?>
+

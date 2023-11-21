@@ -5,18 +5,31 @@ include '../db/queries.php';
 
 $researchPaper = filter_input(INPUT_POST, 'researchID', FILTER_SANITIZE_STRING);
 
-$client = Elastic\Elasticsearch\ClientBuilder::create()
-  ->setHosts(['https://localhost:9200'])
-  ->setBasicAuthentication('elastic', 'I_1ghHrS7B6qTK6mwg_F')
-  ->setSSLVerification(false)
-  ->build();
+$ch = curl_init();
 
-// Remove in Elastic
-$response = $client->delete([
-  'index' => 'research',
-  'id' => $researchPaper,
-]);
+  // Set cURL options
+  $url = 'https://polytechnic-universi-8886090444.us-east-1.bonsaisearch.net:443/research/_doc/' . $researchPaper;
+  $headers = array('Content-Type: application/json');
+  $credentials = 'm35p75o9i6:7aav4zf2bd';
 
+  // Set cURL options
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+  curl_setopt($ch, CURLOPT_USERPWD, $credentials);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+  // Execute cURL session
+  $resultDelete = curl_exec($ch);
+
+  
+  // Check for cURL errors
+  if (curl_errno($ch)) {
+    throw new Exception('cURL error: ' . curl_error($ch));
+  }
+  
+  // Close cURL session
+  curl_close($ch);
 
 if (deleteActivePaper($conn, $researchPaper)) {
   $response['status'] = 'success';

@@ -1073,11 +1073,11 @@ function createEditHistory($conn, $activePaperID, $paperUpdate, $approver)
   try {
     $stmt->execute();
   } catch (PDOException $e) {
-    send_message_and_redirect("Error: " . $e->getMessage() . ' ' . $activePaperID . ' ' . $paperUpdate . ' ' . $approver, "http://localhost/ereliv/student/");
     return false;
   }
   return true;
 }
+
 function createActivePaper($conn, $facultyCreatorID, $researchPaper)
 {
   $stmt = $conn->prepare("INSERT INTO ActivePaper (facultyCreatorID, researchPaper) Values (:facultyCreatorID, :researchPaper)");
@@ -1086,6 +1086,7 @@ function createActivePaper($conn, $facultyCreatorID, $researchPaper)
   try {
     $stmt->execute();
   } catch (PDOException $e) {
+    send_message_and_redirect("Error: " . $e->getMessage(), "http://localhost/ereliv/faculty/");
     return false;
   }
   return $conn->lastInsertId();
@@ -1114,6 +1115,7 @@ function updateActivePaper($conn, $updatedResearchPaper, $oldResearchPaper)
   } catch (PDOException $e) {
     return false;
   }
+  return $conn->lastInsertId();
 }
 
 
@@ -1261,45 +1263,50 @@ function getAdvisees($conn, $facultyID, $search)
 }
 
 
-
 function checkElasticsearchConnection()
 {
+ $ch = curl_init();
 
-  $ch = curl_init();
+ // Set the Elasticsearch URL
+ curl_setopt($ch, CURLOPT_URL, 'https://polytechnic-universi-8886090444.us-east-1.bonsaisearch.net:443/research');
 
-  // Set the Elasticsearch URL
-  curl_setopt($ch, CURLOPT_URL, "https://localhost:9200");
+ // Don't output the response
+ curl_setopt($ch, CURLOPT_NOBODY, true);
 
-  // Set the request timeout
-  curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+ // Set the request timeout
+ curl_setopt($ch, CURLOPT_TIMEOUT, 5);
 
-  // Set the HTTP method to GET
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+ // Set the HTTP method to GET
+ curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
 
-  // Set the username and password for authentication
-  curl_setopt($ch, CURLOPT_USERPWD, "elastic:I_1ghHrS7B6qTK6mwg_F");
+ // Set the username and password for authentication
+ curl_setopt($ch, CURLOPT_USERPWD, 'm35p75o9i6:7aav4zf2bd');
 
-  // Allow insecure connections
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+ // Allow insecure connections
+ curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-  // Return the response instead of printing it
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+ // Return the response instead of printing it
+ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-  // Execute the request
-  $response = curl_exec($ch);
+ // Set the Content-Type header to application/json
+ curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
 
-  // Get the HTTP status code
-  $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+ // Execute the request
+ $response = curl_exec($ch);
 
-  curl_close($ch);
+ // Get the HTTP status code
+ $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-  // Close the cURL resource
-  if ($statusCode === 200) {
-    return true; // Elasticsearch is active and the system is connecting
-  } else {
-    return false; // There was an issue with the connection to Elasticsearch
-  }
+ curl_close($ch);
+
+ // Close the cURL resource
+ if ($statusCode === 200) {
+   return true; // Elasticsearch is active and the system is connecting
+ } else {
+   return false; // There was an issue with the connection to Elasticsearch
+ }
 }
+
 
 
 ?>

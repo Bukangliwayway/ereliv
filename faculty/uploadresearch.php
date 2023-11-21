@@ -247,6 +247,7 @@
           url: "../backend/uploadresearch_backend.php",
           data: formData,
           success: function (response) {
+            console.log("success: ");
             console.log(response);
             displayToastr(response.status, response.message);
             if (response.status === "success") {
@@ -256,6 +257,8 @@
           },
           error: function (response) {
             // Handle error response here 
+            console.log("error: ");
+            console.log(response);
             displayToastr("error", "An error occurred. Please try again.");
           },
           complete: function () {
@@ -268,7 +271,7 @@
       }
     } catch (error) {
       // General error occurred, handle it
-      console.error("Error:", error);
+      console.log(JSON.parse(response.responseText));
       displayToastr("error", "An error occurred. Please try again.");
     }
   });
