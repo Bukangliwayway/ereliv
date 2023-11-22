@@ -1,4 +1,3 @@
-
 <?php
 include_once 'csrfTokenCheck.php';
 include '../db/db.php';
@@ -11,9 +10,9 @@ if (checkElasticsearchConnection()) {
 
   $userID = isset($_POST['userID']) ? $_POST['userID'] : '';
   $search = isset($_POST['search']) ? $_POST['search'] : '';
-  $programs = $_POST['activePrograms'];
-  $authors = $_POST['activeAuthors'];
-  $interests = $_POST['activeInterests'];
+  $programs = isset($_POST['activePrograms']) ? $_POST['activePrograms'] : '';
+  $authors = isset($_POST['activeAuthors']) ? $_POST['activeAuthors'] : '';
+  $interests = isset($_POST['activeInterests']) ? $_POST['activeInterests'] : '';
   $categoryID = isset($_POST['categoryID']) ? $_POST['categoryID'] : '';
   $type = isset($_POST['type']) ? $_POST['type'] : '';
 

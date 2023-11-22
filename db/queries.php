@@ -1306,7 +1306,4 @@ function checkElasticsearchConnection()
    return false; // There was an issue with the connection to Elasticsearch
  }
 }
-
-
-
 ?>

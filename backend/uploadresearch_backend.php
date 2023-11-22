@@ -218,10 +218,6 @@ $ch = curl_init();
 // Set the URL for the Elasticsearch endpoint
 curl_setopt($ch, CURLOPT_URL, 'https://polytechnic-universi-8886090444.us-east-1.bonsaisearch.net:443/research/_doc/' . $researchID);
 
-
-// Don't output the response
-curl_setopt($ch, CURLOPT_NOBODY, true);
-
 // Set the HTTP method to PUT
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
 
@@ -234,10 +230,31 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
 // Set the username and password for basic authentication
 curl_setopt($ch, CURLOPT_USERPWD, 'm35p75o9i6:7aav4zf2bd');
 
+// // Don't output the response
+// curl_setopt($ch, CURLOPT_NOBODY, true);
+
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
 // Execute the cURL request and get the response
 $curlResponse = curl_exec($ch);
 
+// Get the HTTP response code
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
+
+if($httpCode != 201) {
+  $response['status'] = 'error';
+  $response['message'] = 'An error occurred while indexing the document in Elasticsearch: ' . $curlResponse;
+  $response['nani'] = 'Nanii: ' . $httpCode;
+  $response['aaaaa'] = 'aaaaa: ' . $researchID;
+  header('Content-Type: application/json');
+  echo json_encode($response);
+  curl_close($ch);
+  exit;
+}
+
+// Close the cURL session
+curl_close($ch);
 
 // Check for errors
 if ($curlResponse === false) {
@@ -255,7 +272,6 @@ if ($curlResponse === false) {
 curl_close($ch);
 
 
-
 if (empty($_POST['researchID'])) {
   $activePaper = createActivePaper($conn, $facultyProposerID, $researchID);
   $response['message'] = 'Research has been Uploaded Successfully';
@@ -263,7 +279,6 @@ if (empty($_POST['researchID'])) {
   $activePaper = updateActivePaper($conn, $researchID, $_POST['researchID']);
   $response['message'] = 'Research has been Updated Successfully';
 }
-
 
 $response['status'] = 'success';
 
